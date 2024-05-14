@@ -1,0 +1,167 @@
+<!-- page9 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>compilation steps</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<link rel="stylesheet" href="style.css"></head><body>
+
+Conclusion
+If you're interesting in the compiler specifics, we should have
+a high level overview of it... keep mind there may also be optimi-
+zation steps interspersed throughout the process, as well as specific
+implementations/intermediate representations specific to C/GCC...
+This is how the compiler will read &amp; produce `.o` file(s)
+It doesnt need to see the full definition of a function to
+compile code that calls it; it only needs to know get the
+function's signature (its return type and parameter type)
+
+Preprocessor
+This involves processing the source code before actual compilation begins.
+for macro expansion, it'll replace macros w/ their corresponding code
+per `#define` statement. Then it processes `#include` directives to
+include the content of headers into the source code. Conditions
+are handled such as; `#ifdef`, `#ifndef`, `#else`, `#elif` and `#endif`
+directives to include (or exclude) portions of code based on preprocessor-
+defined conditions. Comments are removed as well during this time.
+And lastly, it generates line information for the compiler to use
+in error messages and debugging.
+
+Lexer
+In order to intuit the lexical analysis and any subsuquent stages, we have
+to understand what it means to do such a thing. In summary, we arent making
+a regular program, but rather we're defining a language construct or a comp-
+onent of how that language construct comes to be. We begin first w/ the input
+source code itself, which is recognized as lexemes. This means that the lexer
+identifies fundamental constructs such as literals, keywords, literals, operators,
+identifiers, whitespace. Then each construct is associated w/ a token TYPE and a
+VALUE, representing its category and specific content. For example, the character(s)
+`5` might be recognized as a numeric, literal token called `NUMBER` with a
+value `5`, while the characters `int` might be recognized as a keyword token
+`TYPE_SPECIFIER`, w/ a value of `INT`. The output of the lexical analysis stage
+looks like a sequence of tokens, each representing the "recognized construct"
+in the input source code. While the lexer identifies tokens and their types
+values, it also processes individual characters to recognize token boundaries
+and patterns. For example, when the lexer encounters the characters `int`...
+it'll recognize that as being a keyword token (as in the bilateral method we
+described), but it also processes each character individually (i, n, t) and
+determines if they match the pattern for a said keyword token. So in other
+words, before a word becomes tokenized, each character has to be analyzed.
+
+Parser
+After lexical analysis it does infix to postfix conversion w/ a special algorithm. Then,
+takes the stream of tokens produced by the lexer and constructs an Abstract Syntax Tree (AST)
+using the Context Free Grammar (which describes the syntactic structure of the programming
+language) Production rules specify how it'll be composed of other constructs. One aspect
+to this would involve the precedence and associativity of operators. Parentheses ( ) are
+used to indicate grouping or precedence in expressions. They will help clarify the order
+of operations and ensure that expressions are evaluated correctly. Terminal symbols are
+those TOKEN/VALUES that the lexer produced. Non-Terminal symbols are a broader concept of
+token that says something about the relationship between both Terminal and non Terminal
+(For example an identifier and a declaration) So they can be expanded into sequences of
+terminal OR non-terminal symbols. Non-terminal symbols represent abstract syntactic cat-
+egories or constructs in the language, such as expressions, statements, declarations, etc.
+
+A parse tree is a hierarchical representation of the syntactic structure of a program,
+where each node is associated with a non-terminal symbol in the grammar, and each leaf
+corresponds to a terminal symbol in the input. Trees (such as a leftmost derivation)
+describe these structures where each right-hand production rule is replaced with the
+leftmost non-terminal symbol in the current sentential form, therefore starting from
+the left-most symbol and iterating through the rest of the grammar rules, we make a
+representation of the language that can be further analyzed or parsed. Parentheses and
+other grouping symbols in the input are reflected in the structure of the parse tree,
+along w/ their associated nodes (nodes that represent the grouping of expressions)
+
+A parse tree also has parse leaves, and these parse leaves are considered the terminal
+symbols at the bottom level of the parse tree. The bottom level is the "Last" remaining
+things evaluated in a tree such as a digit (e.g. 3), or a TOKEN that was once an identifier
+Once the parser reaches a parse leaf, it has successfully recognized a complete unit of the
+input language, and no further parsing is required for that subtree. In recursive descent
+parsing, each non terminal symbol in the grammar is associated with a parsing function.
+These parsing functions are responsible for recognizing and processing a prior language
+construct represented by the non-terminals, for example if there's a non-terminal symbol
+`Expr` representing an expression in the grammar, there would be a parsing function named
+`parseExpr` to handle expressions. The parsing process typically starts with a designated
+non-terminal symbol representing the entire statement. Each parsing function contributes to
+the construction of the parse tree, recursively building the tree from the root (start symbol)
+down to the leaves (terminal symbols) (The starting symbol serves as the entry point for
+parsing the input sentences) When the parser encounters a non-terminal symbol during parsing,
+it calls the associated parsing function to handle that symbol. These parsing functions are
+considered recursive, as they refer to a nested structure, for e.g... a parsing function for
+`Expr` may recursively call itself to handle sub-expressions. Each parsing function has a base
+case that handles terminal symbols in the input. When a parsing function encounters a terminal
+symbol, it matches the token against the expected input and consumes the token if it indeed matches.
+If the token does NOT match the expected input, the parsing function may report an error, where it'll
+backtrack and try alternative parsing paths to recover from errors.
+
+Semantic Analysis
+Checks the meaning and consistency of the program beyond its syntactic structure.
+It goes beyond the grammar rules and examines the program's semantics to catch potential
+errors and ensure that the program behaves as intended.
+
+Intermediate Code Gen
+The AST is translated into an intermediate code representation. This code is typically
+closer to the target machine code but remains independent of the specific hardware architecture.
+This code generation handles complex expressions, assignments, control flow, structures,
+and other language constructs, translating them into a form suitable for optimization.
+The compiler will manage a symbol table which keeps track of variable names, types,
+and other relevant information. This information is crucial for later stages.
+
+Optimization
+This stage invokes those simplifications that may require constant folding, reducing algebraic
+expressions, and common subexpression eliminiation. It analyzes and modifies the code structure
+to enhance control flow; This can include loop unrolling, loop fusion, and other techniques to
+enhance branch predition. It'll also examine how data is used and propogated through the program,
+renaming variables and eliminiating any dead code. Then it replaces function calls with the actuial
+code of the function, reducing the overhead of said call instructions. This optimization can span
+multiple functions, and it'll make sure to manage memory process registers and any concurrent loops.
+
+Code Generation
+Maps the abstract operations in the intermediate code to specific machine instructions or
+assembly language instructions; Assigns variables and values to processor registers,
+As well as optimizing exectution time and minimzing memory access. This means it'll
+determine how memory addresses are calculated and accessed, as well as the order of
+instructions theat make the most efficient use of the processor's resources.
+It also inserts code to handle exceptions and interrupts. Next, it allocates
+and manages space on the call stack for funtion parameters, local variables,
+and return addresses. Finally it'll generate the machine code or assembly
+based on the decisions made during instruction selection, register alloc-
+ation, and other considerations.
+
+Assembly<a href="asm.html#asm-anch" id="compiler-anch">go to page10</a>
+The compiler generates assembly code from the AST.
+This assembly code consists of human-readable mnemonics and operands that
+correspond to the machine instructions of the target architecture.
+
+Assembler
+Translates assembly language code into machine code. It takes the
+human-readable assembly code and converts it into the binary code
+that the computer's CPU can execute directly.
+The assembler performs tasks such as resolving symbolic addresses (like labels)
+to actual memory addresses, generating machine code instructions,
+and producing an object file containing the translation of binary
+instructions and additional information.
+
+Linking
+If your program consists of multiple source files or modules, the linker combines the
+object files and resolves references between them. It ensures that functions and variables
+used in one module are correctly linked to their definitions in other modules.
+The output of linking is typically an executable file that can be run independently.
+The linker may also incorporate external libraries into the executable.
+
+Loading
+Is responsible for taking the executable file produced by the linker and
+loading it into memory for execution. It sets up the program's entry point,
+initializes variables, and performs any necessary runtime tasks.
+
+Conclusion
+If a function is declared before its called in code, the compiler knows the function's
+signature and generates code that includes the necessary information for the linker.
+Thus the compiler can catch symbols/references during one of its stages of compilation.
+I like to imagine this as nodes within a long chain, which are representations of
+the longest chain of nodes in the program... This is sometimes the graphics library
+and the framework header... I will explain more about "systems of programming" on
+another page (see `output`)
+
+</body></html>
