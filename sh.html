@@ -35,10 +35,6 @@ to a relative or absolute file path location, wherein
 you could point and run that file relatively, as we said.
 We'll also describe how environment variables work.
 
-Backslash <b>\</b> allows a command to be continued,
-prompted on the following command line. It's also
-what's known as an 'escape character'
-
 Dollar sign <b>$</b> is a meta-character/sigil and
 tells the shell the next word is a variable.
 Of course within quotation marks its considered a regular
@@ -220,7 +216,25 @@ the command-to-follow replaces the current shell -&gt; which means
 no subshell is created during this ~ and the 'current process'
 is replaced with this new command.
 
-<em>ls, du, find and grep</em> are good examples of commands to get started w/
+<b>\e</b> is an example of an escape sequence. This means it interprets the backslash
+as escaping or doing something (such as a control character) w/ the proceeding character,
+however introducing the bracket <b>\e[</b> means that the beginning of an escape value
+has begun...
+
+In the context of pattern matching you have: character classes, anchors, escape
+sequences and assertions (which we'll go over)
+
+Hopefully you're aware of regular expressions (regex), and how things like
+python, grep and vim search have three different modes: literal, ANSI and optional-
+interpretations, and those are characteristic of such things as regular expressions.
+
+Regular expressions can be either ERE, BRE or PCRE (see more about compatibility and expressions)
+
+Apostrophes can often be used to preserve the literal interpretation of characters...
+A quote begins a sequence, and will continue a command until it encounters a closing
+quotation. You can also use a backslash to continue a command.
+
+<em>ls, find and grep</em> are good examples of commands to get started w/
 
   <b>ls</b>  is used to list files and directories.
 
@@ -228,10 +242,32 @@ is replaced with this new command.
 and <b>man command</b> to view a man page, <b>man man</b>  traverse page; <em>e, f, z, d, PgDn
 y, b, w, u, PgUp</em> <b>info</b> command to view a command in stand-alone info pages.</a>
 
-  <b>du -hs </b> h for human readable, s for total bytes w/ no recursion
+In the following examples I'm going to show how wildcards are used in different places.
+Wildcards and pattern substitution (patsubst specific to makefiles) can be used w/ a string
+and the symbol itself is replaced by a space-separated list of names of existing files that
+match one of the given file name patterns (try saying that five times faster).
 
-FIND PATH TYPE NAME are the keywords that help me remember which order of
-options proceeds after <b>find</b>
+If no existing file name matches a pattern, then the pattern is omitted from the output of the
+'wildcard' function. Note that is different from how unmatched wildcards behave in rules
+where they are used verbatim rather than ignored. More simply, using an asterisk matches
+any number of characters.
+
+So the shell expands these wildcards such as *, ?, and [] before passing arguments to commands.
+
+One use of the wildcard function is to get a list of all the C source files in a directory:
+
+  <b>$(wildcard *.c)</b>
+
+We can change the list of C source files into a list of object files by replacing the `<b>.c</b>`
+suffix with <b>`.o`</b> in the result:
+
+  <b>$(patsubst %.c,%.o,$(wildcard *.c))</b>
+
+You can of course emulate this in shell, however we're just going over the basic idea.
+In Unix systems you'll be running commands alot of the time, so one way i like to
+remember which order of options proceeds after e.g. <b>find</b> is by rememebering
+these keywords: FIND PATH TYPE NAME <em>(insert suitable mnemonic)</em>
+
 Keep in mind <b>-iname "example"</b> will not look for joined names such as
 <b>"anexample"</b>, however you can solve this when using <b>*</b> in a pattern.
 
@@ -240,11 +276,23 @@ Keep in mind <b>-iname "example"</b> will not look for joined names such as
 Basically we wrote look from the <b>/</b> directory of type <b>f</b>ilename
 for case-insensitive name "*thisword*", where the <b>*</b> is to avoid globbing.
 <em>In regular expressions a <b>.</b> dot is the pattern which matches any single
-character~combined with the asterisk operator <b>.*</b> it will match any number
+character~combined with the asterisk operator in <b>.*</b> and it will match any number
 of any characters.</em>
 <b>find</b> does a recursive search on any file or path in quotes, provided that the
 expression is successfully matched. There is other case-insensitive options
 such as <b>-ilname  -iregex  -iwholename</b>..
+
+One more example with <b>find</b>...
+
+  <b>find . -path "./dir?/file*.txt"</b>
+
+This command will find files with names like "file1.txt", "file2.txt", etc.,
+but only within directories named "dir1", "dir2", etc., in the current directory.
+So an asterisk in a globbing pattern will match zero or more characters, while the
+question mark matches exactly one character.
+
+The <b>-path</b> option is used to match the entire path of the file or directory
+against a specified pattern, and doesnt restrict to either~or.
 
 Pattern matching for words within files is accomplished with grep;
 
