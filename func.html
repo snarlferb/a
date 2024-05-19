@@ -1,4 +1,4 @@
-<!-- page2 -->
+<!-- page5 -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -138,24 +138,25 @@ you can call it now since it shares the same signature
   ThisFunction(&amp;SomeNewFunction);</span>
 
 you can use `typedef` in function pointers (not for regular functions)
-this is VERY useful for creating parameters (example from C11)
+this is VERY useful for creating parameters (example from C11 threads)
 <span class="alt-text">
   typedef struct thrd_t_struct thrd_t;
   typedef int (*thrd_start_t)(void*);
   int thrd_create(thrd_t *thr, thrd_start_t func, void *arg);</span>
 
-bearing in mind, im just demonstrating whats possible with functions.
+Since we made `thrd_start_t` a type, you can use it as a `type ofsomething`
+bearing in mind, im demonstrating whats possible with functions.
 once you understand function pointers and matching signatures,
 rest assured everything else will be a cakewalk.
 
-here's a function thats of `struct` type such as this constructor function
+here's a function thats of `struct` type...
 <span class="alt-text">
   struct unboundedint {
   };
 
   struct unboundedint constructor(int num_blocks) {
     struct unboundedint result;
-  }<span>
+  }</span>
 
 to continue exercising your mind on functions, go to these pages...
 
