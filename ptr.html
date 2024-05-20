@@ -45,6 +45,14 @@ from another function like so
     printf("access in another function %d\n", *ptr);
   }</span>
 
+one more example assigning a pointer to a type-casted value
+<span class="alt-text">
+  int *SRC_REG = (int *)0x1000;</span>
+
+explicit type casting w/ dereferencing would look like...
+<span class="alt-text">
+  DST_REG = *(int *)(SRC_REG + offset);</span>
+
 so in short, pointers allow direct access to a memory address
 providing a way to manipulate and interact with data at a low level
 its essential for tasks like memory allocation (`malloc`) and
@@ -52,6 +60,12 @@ working with complex data structures.
 passing a pointer to a function is often more efficient than passing
 large data structures by value
 this is because only the memory address is passed, not the whole data
+
+double pointers say something additional about a value that they're pointing to.
+in that its a way to get the "value of the value" that is, to hold the address
+of ANOTHER pointer `**ptr`
+
+dereferencing a double pointer allows access to the value of the variable, that the single pointer `*ptr` points to.
 
 another thing in regard to programming is the nature of control flow statements
 and how the start and end of the statement also marks the memory allocation boundary,
