@@ -51,7 +51,14 @@ The Address register is wired into dram. dram interprets that as a value and the
 sends back the associated address to the Instruction register. Next, opcode,
 or the first 4 bits of the address corresponds to Load-A instruction.
 The other bits of the address correspond to a dram address.
-Next, instructions are decoded and interpreted by the Control Unit.
+Here are some registers.... General-purpose register, stack pointer,
+status flag register, vector registor, control register... accumulator           =  stores data for ALU
+program counter       =  points to next instruction
+instruction register  =  stores instruction
+data register         =  stores data
+address register      =  stores address
+temporary register    =  stores temporary data
+input/ouput registers =  stores input and output data
 
 control unit () = which is responsible for decoding and executing instructions, determines
 how to translate each high-level instruction into the appropriate micro-operations.
