@@ -80,11 +80,10 @@ what we've learned so far..
 
 we can conclude that theres a difference between
 indexing, accessing and initializing. so lets continue.
-
 <span class="alt-text">
   int *arr = (int[]){1, 2, 3, 4, 5};</span>
 
-compound literals can be of any type except void,
+this is a compound literal. they can be of any type (except for void)
 as the purpose is to create an anonymous instance
 `(type name){}` of a specific type and initialize
 its members inline. You might see them used as
@@ -107,8 +106,6 @@ thats not to say you cant allocate a new array w/
 a larger size and copy the existing elements from
 the old array to the new one (then, continue adding elements)
 
-you would just need to use the same method we showed for
-assigning one function to another...
 <span class="alt-text">
   int MaxSize = 5;
   int *FixedArray = (int*)malloc(MaxSize * sizeof(int));</span>
