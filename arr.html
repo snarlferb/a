@@ -9,19 +9,40 @@
 </head><body>
 
 <div id="arr-anch">fly^p4rray</div>
-<span class="alt-text">
-  int arr[3];</span>
 
 if `int arr[3] = ...`, were to equal something
 then we could gain access and receive a
 normal integer value when specifying its index.
-the index of an array is random when uninitialized
-or else its determined by the initializer e.g.
+
+otherwise the index of an array is random when
+uninitialized or its being determined by the initializer e.g.
 <span class="alt-text">
   int arr[] = {3, 4, 5};</span>
 
-what is the size of this array?
-just count the elements starting from its 0th element
+btw what is the size of this array?
+just count the elements, the 0th element being the first number
+
+when you declare an array like
+<span class="alt-text">
+  int arr[3];</span>
+
+the name "arr" itself represents the address of the first
+element of the array. In other words its equivalent to a
+pointer to the first element of the array. Therefore, you can
+simply use the array name `arr` to point to the array...
+<span class="alt-text">
+  int *ptr = arr;</span>
+
+this is considered an "integer array" `int[]` w/ the name
+"arr" of size (3)... As such its created a pointer to
+the integer named "arr" (a contiguous block of memory
+w/ (3) integers).... however if we had declared `int *`
+(a pointer variable w/ the address of an integer)
+this would change what we could do with it.
+
+We could use the integer array to point to either;
+an array, or be used for dynamically allocating
+memory w/ a variable-size array (which we explain below)
 
 while we have an array we can also declare a pointer
 to an array of an unspecified size, cause why not,
@@ -85,7 +106,16 @@ assigning one function to another...
   int MaxSize = 5;
   int *FixedArray = (int*)malloc(MaxSize * sizeof(int));</span>
 
-and then you would iterate over the array in a forloop adding
+`malloc(MaxSize * sizeof(int))` dynamically allocates memory
+for an array of MaxSize integers. `sizeof(int)` is used to
+determine the size of each integer element in bytes, ensuring that
+enough memory is allocated for the entire array...
+
+while we're here, i can show how to make a variable-sized array
+<span class="alt-text">
+  int arr[MaxSize];</span>
+
+continuing on, you would iterate over the array in a forloop adding
 <span class="alt-text">
    FixedArray[i] = i + 1;</span>
 
