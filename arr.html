@@ -9,6 +9,8 @@
 </head><body>
 
 <div id="arr-anch">fly^p4rray</div>
+<span class="alt-text">
+  int arr[3];</span>
 
 if `int arr[3] = ...`, were to equal something
 then we could gain access and receive a
@@ -19,8 +21,19 @@ uninitialized or its being determined by the initializer e.g.
 <span class="alt-text">
   int arr[] = {3, 4, 5};</span>
 
-btw what is the size of this array?
-just count the elements, the 0th element being the first number
+we can also create individual characters and access the third
+element (or whichever you want) like so...
+<span class="alt-text">
+  char arr[3] = {'a', 'b', 'c'};
+  char element = arr[2];</span>
+
+we can do the same but w/ a string..
+<span class="alt-text">
+  char str[] = "abc";
+  char element = str[2];</span>
+
+so the size of our array is just the amount of said elements,
+the 0th element being the first number or character.
 
 when you declare an array like
 <span class="alt-text">
