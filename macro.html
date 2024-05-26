@@ -8,11 +8,31 @@
 <link rel="stylesheet" href="style.css"></head><body>
 
 <div id="macro-anch">macro</div>
+
+one utility of macro's is their simplification in rvalues... an rvalue represents
+parts of an expression (typically on the right side) that are attributed to some value.
+An lvalue is attributed to a given memory location... However they are more of a
+conventionary term more so than their semantic connotation - that says something
+about the "left" or "right" sidedness. Heres an example regarding rvalues...
+... prior to simplifying..
+<span class="alt-text">
+  int max_val = type_max(typeof(var));
+  int min_val = type_min(typeof(var));</span>
+
+when we change it to become a macro itll look like this to assign it.
+<span class="alt-text">
+  #define TYPE_MAX(val) type_max(val)
+  #define TYPE_MIN(val) type_min(val)
+  
+  int max_val = TYPE_MAX(var);
+  int min_val = TYPE_MIN(var);</span>
+
+the next macro shifts 2, to the left (n)bits, and subtracts 1
+
 <span class="alt-text">
   #define b(n) (2 &lt;&lt; (n))
   #define a(n) ((b(n))-1)</span>
 
-this macro shifts 2, to the left (n)bits, and subtracts 1.
 if you call b(3), it would be equivalent to 2 &lt;&lt; 3, resulting in 16
 if you call a(3), it would be equivalent to (2 &lt;&lt; 3) - 1
 resulting in 15, which is a binary number with three bits set to 1 (111 in binary)
@@ -46,7 +66,7 @@ the `(*ptr)` is just a textual replacement that occurs before actual compilation
 
 
 these are variations of the backslash (\) character
-in which it cancels-out the proceeding character
+in which it cancels-out the proceeding character (we talk about the behavior of backslash characters in other sections)
 but in any other case an escape sequence is determined by the proceeding character e.g. "\n" newline
 <span class="alt-text">
   char s1[] = "Ca\\ncel";
