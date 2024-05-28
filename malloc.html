@@ -7,6 +7,19 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <link rel="stylesheet" href="style.css"></head><body>
 
+malloc
+
+`malloc` and `free` are the go-to functions for most memory allocation needs in C programs:
+"managing a pool of data", is a perfect example. Many data structures are dynamic in size, i.e.
+The number of nodes in a linked list can grow or shrink as elements are added or removed,
+trees can expand or contract as data is inserted or deleted; And thus arrays can be dynamically
+resized to accommodate a changing number of elements.
+
+Here is the most simple example that illustrates this; metrics that track total memory on a device
+which comes in three parts: RAM-based memory consumed, local-memory storage, CPU% percentage of a given process.
+Thats why its like, "why is this app only 5Kb when clearly its doing a whole lot more. It stores 5 Kilobytes,
+but then its dynamically changing size and interacting with the system. THATS malloc!...
+
 `malloc` btw is just a void pointer:
 <span class="alt-text">
   void *malloc(size_t size);</span>

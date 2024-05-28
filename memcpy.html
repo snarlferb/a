@@ -7,7 +7,46 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <link rel="stylesheet" href="style.css"></head><body>
 
-for simplicity, let's just copy a subset of the source buffer
+memcpy
+
+memcpy is a standard library function in C that copies a specified number of bytes from a
+source memory location to a destination memory location. It is commonly used for copying
+blocks of memory, such as arrays or structures. The function operates quickly but has a
+limitation: it assumes that the source and destination memory regions do not overlap.
+
+if there is overlap, the behavior is undefined, which can lead to corrupted data.
+In contrast, memmove also copies a specified number of bytes from a source to a destination,
+but it is designed to handle overlapping memory regions safely. It ensures that the copy
+operation completes correctly even if the source and destination areas overlap.
+This makes memmove more versatile, though potentially slightly slower than
+memcpy due to the additional checks it performs. Assume we have boxes...
+
+[Box 1] [Box 2] [Box 3] [Box 4] [Box 5] [Box 6] [Box 7] [Box 8] [Box 9] [Box 10]
+   1       2       3       4       5       6       7       8       9       10
+
+when tryiong to move boxes or a region of to some other region w/ memcpy, it can lead
+to this overlap situation we see here...
+
+[Box 1] [Box 2] [Box 3] [Box 4] [Box 5] [Box 6] [Box 7] [Box 8] [Box 9] [Box 10]
+   1       2       1       2       3       4       5       8       9       10
+
+in other words, we were trying to copy the original `Box 1-7` to `Box 3-9` however we did
+not handle the overlap, and so the corruption occurred w/ `Box 1` went to `Box 3`,
+however the copying overwrote parts of the source data before it could finish.
+And the same happened when `Box 2` went to `Box 4`, and so on.
+
+obviously you dont want this kindve staggered behavior - which'll happen if the source
+and destination regions are overlapping. That is when you should use `memmove` or,
+`safe_copy` which is a user-implemented version of memcpy that takes advantage of
+a secure data type `rsize_t` (which provides context about the size/boundaries of
+memory regions) and which is safer to use. When correctly implemented it can also
+be used for this overlapping memory situation that we discussed.
+
+next, i thought id show an example of how one uses memcpy.
+memcpy btw is still used very often. its used any time you have non-shared regions
+of memory. blitting is a classic example of a situation where memcpy is used.
+
+for simplicity, let's just copy a subset of the source buffer.
 <span class="alt-text">
   #define BUFFER_SIZE 10
 
@@ -41,7 +80,7 @@ for simplicity, let's just copy a subset of the source buffer
     return 0;
   }</span>
 
-In this example, `memcpy` is used when the scaling factor is 1 to copy the
+in this example, `memcpy` is used when the scaling factor is 1 to copy the
 entire content of `sourceBuffer` to `destinationBuffer`. If the scaling factor
 is different, a hypothetical `resizeVideo` function is called to perform some
 resizing operation (in this case, just copying a subset of the source buffer)
