@@ -29,6 +29,8 @@ or declare `*ptr` again to dereference the original pointer
 you can use objects before they are explicitly assigned or defined
 this is called "forward declaration" and is the nature of a static-type system
 
+lets talk about parameters. they allow a function to encapsulate its behavior.
+
 you can use pointers when passing the address of a variable
 to a function. this function can then modify the original value
 through the pointer (note: you can also pass value, address,
@@ -44,6 +46,12 @@ from another function like so
   void anotherFunction(int *ptr) {
     printf("access in another function %d\n", *ptr);
   }</span>
+
+function parameters in C are local to the function in which they are defined.
+this means they exist only within the scope of that function and do not
+affect other functions. As such you can reuse parameter names across different
+functions without conflict. This local scope is very useful for modular and
+clear code design.
 
 one more example assigning a pointer to a type-casted value
 <span class="alt-text">
@@ -67,13 +75,4 @@ of ANOTHER pointer `**ptr`
 
 dereferencing a double pointer allows access to the value of the variable, that the single pointer `*ptr` points to.
 
-another thing in regard to programming is the nature of control flow statements
-and how the start and end of the statement also marks the memory allocation boundary,
-or rather, a new sequence of memory. You might then call the start or interrupt of a
-proceeding sequence "control flow transfer" or "control flow manipulation" -which again
-refers to the mechanism by which the program's execution flow is redirected based on the
-condition/loop. Its something you have to be conscious of in situations where specific
-sequences of memory matter (or more importantly) situations where the exact
-format-layout of the code matters. The same is the case where you have
-ordered vs non-ordered arrays. In C, these are ordered by default.
 </body></html>
