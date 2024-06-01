@@ -38,7 +38,7 @@ const Rules = `
     }
 
     .alt-text {
-        color: #FFEE9E;
+        color: #FFFFAF;
     }
 
     .reserve {
