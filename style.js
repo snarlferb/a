@@ -2,12 +2,11 @@
 const style = document.createElement('style');
 style.type = 'text/css'; // MIME type
 
-/* asterisk (*) = wildcard selector */
-/* test reset initial values w/ initial or reset/normalize */
-/* refactorExp and fix user-select and text-decoration */
+/* @syntax: asterisk (*) is for wildcard selectors */
+/* @remove: reset initial values w/ initial or reset/normalize */
+/* @fix: user-select and text-decoration */
 
-// Define font face rule
-const fontFaceRule = `
+const Rules = `
     @font-face {
         font-family: 'Fixedsys Excelsior 3.01';
         font-style: normal;
@@ -15,11 +14,8 @@ const fontFaceRule = `
         src: local('Fixedsys Excelsior 3.01'), url('Fixedsys Excelsior 3.01.woff') format('woff');
         /* Add additional font formats (e.g., WOFF2) for better browser compatibility */
     }
-`;
 
-const Rules = `
     body {
-        all: initial;
         background-color: #222222;
         white-space: pre-wrap;
         color: white;
