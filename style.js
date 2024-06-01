@@ -10,7 +10,9 @@ style.type = 'text/css'; // MIME type
 const fontFaceRule = `
     @font-face {
         font-family: 'Fixedsys Excelsior 3.01';
-        src: url('path/to/fixedsys-excelsior-3.01.woff') format('woff');
+        font-style: normal;
+        font-weight: 400;
+        src: local('Fixedsys Excelsior 3.01'), url('path/to/fixedsys-excelsior-3.01.woff') format('woff');
         /* Add additional font formats (e.g., WOFF2) for better browser compatibility */
     }
 `;
