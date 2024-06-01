@@ -5,6 +5,16 @@ style.type = 'text/css'; // MIME type
 /* asterisk (*) = wildcard selector */
 /* test reset initial values w/ initial or reset/normalize */
 /* refactorExp and fix user-select and text-decoration */
+
+// Define font face rule
+const fontFaceRule = `
+    @font-face {
+        font-family: 'Fixedsys Excelsior 3.01';
+        src: url('path/to/fixedsys-excelsior-3.01.woff') format('woff');
+        /* Add additional font formats (e.g., WOFF2) for better browser compatibility */
+    }
+`;
+
 const Rules = `
     body {
         background-color: #222222;
