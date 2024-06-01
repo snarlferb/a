@@ -1,60 +1,50 @@
 // Create a style element
 const style = document.createElement('style');
-style.type = 'text/css';
+style.type = 'text/ok';
 
-// Add @font-face rule
-const fontFaceRule = `
-    @font-face {
-        font-family: 'Fixedsys Excelsior 3.01';
-        font-style: normal;
-        font-weight: 400;
-        src: local('Fixedsys Excelsior 3.01'), url('Fixedsys Excelsior 3.01.woff') format('woff');
-    }
-`;
-style.appendChild(document.createTextNode(fontFaceRule));
-
-// Create a style element
-const style = document.createElement('style');
-style.type = 'text/css';
-
-// Define Rules
 /* asterisk (*) = wildcard selector */
 /* test reset initial values w/ initial or reset/normalize */
 /* refactorExp and fix user-select and text-decoration */
-// review these rules
 const Rules = `
-    document.body.style.backgroundColor = '#222222';
-    document.body.style.whiteSpace = 'pre-wrap';
-    document.body.style.color = 'white';
-    document.body.style.fontFamily = 'Fixedsys Excelsior 3.01';
-    document.body.style.fontStyle = 'normal';
-    document.body.style.fontSize = '22px';
-    document.querySelectorAll('a').forEach(a => {
-        a.style.textDecoration = 'none';
-        a.style.color = 'white';
-    });
-    document.querySelectorAll('.hl-hover').forEach(elem => {
-        elem.addEventListener('mouseover', function() {
-            this.style.backgroundColor = 'yellow';
-            this.style.color = 'black';
-            this.style.cursor = 'pointer';
-        });
-    });
-    document.querySelectorAll('.no-wrap').forEach(elem => {
-        elem.style.whiteSpace = 'nowrap';
-        elem.querySelectorAll('*').forEach(child => {
-            child.style.whiteSpace = 'inherit';
-        });
-    });
-    document.querySelectorAll('.reserve').forEach(elem => {
-        elem.style.color = 'blue';
-    });
-    document.querySelector('footer').style.backgroundColor = '#222222';
-    document.querySelector('footer').style.color = 'white';
-    document.querySelector('footer').style.padding = '10px';
-    document.querySelector('footer').style.position = 'fixed';
-    document.querySelector('footer').style.bottom = '0';
-    document.querySelector('footer').style.width = '100%';
+    body {
+        background-color: #222222;
+        white-space: pre-wrap;
+        color: white;
+        font-family: 'Fixedsys Excelsior 3.01';
+        font-style: normal;
+        font-size: 22px;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .hl-hover:hover {
+        background-color: yellow;
+        color: black;
+        cursor: pointer;
+    }
+
+    .no-wrap {
+        white-space: nowrap;
+    }
+    .no-wrap * {
+        white-space: inherit;
+    }
+
+    .reserve {
+        color: blue;
+    }
+
+    footer {
+        background-color: #222222;
+        color: white;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
 `;
 
 // Append rules to style element
@@ -62,4 +52,6 @@ style.appendChild(document.createTextNode(Rules));
 
 // Append the style element to the head
 document.head.appendChild(style);
+
+// Event listeners or dynamic class toggling here
 
