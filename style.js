@@ -1,6 +1,6 @@
 // Create a style element
 const style = document.createElement('style');
-style.type = 'text/ok';
+style.type = 'text/css'; // MIME type
 
 /* asterisk (*) = wildcard selector */
 /* test reset initial values w/ initial or reset/normalize */
