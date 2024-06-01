@@ -4,7 +4,9 @@ style.type = 'text/css'; // MIME type
 
 /* @syntax: asterisk (*) is for wildcard selectors */
 /* @remove: reset initial values w/ initial or reset/normalize */
-/* @fix: user-select and text-decoration */
+/* @remove: .no-wrap { @white-space: nowrap;  } */
+/* @remove: .no-wrap*{ @white-space: inherit; } */
+/* @fix: user-select and text-decoration if broken */
 
 const Rules = `
     @font-face {
@@ -33,13 +35,6 @@ const Rules = `
         background-color: yellow;
         color: black;
         cursor: pointer;
-    }
-
-    .no-wrap {
-        white-space: nowrap;
-    }
-    .no-wrap * {
-        white-space: inherit;
     }
 
     .alt-text {
