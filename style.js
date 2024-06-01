@@ -19,6 +19,7 @@ const fontFaceRule = `
 
 const Rules = `
     body {
+        all: initial;
         background-color: #222222;
         white-space: pre-wrap;
         color: white;
@@ -43,6 +44,10 @@ const Rules = `
     }
     .no-wrap * {
         white-space: inherit;
+    }
+
+    .alt-text {
+        color: yellow;
     }
 
     .reserve {
