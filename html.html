@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <title>html</title>
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
-<link rel="stylesheet" href="style.css"></head><body>
+<link rel="stylesheet" href="style.js"></head><body>
 
 What a URL is composed of:
  	    protocol://host:port/path#anchor
@@ -16,7 +16,36 @@ Prior to uploading to git hub, this command is deployed for test,
  mobile             192.168.0.1:8000/page.html
 
 What a document is composed of:
- anchors are used in html to jump you around in the document.
+
+First off, what do we call these things...
+
+<b>Comment</b>: <span class="alt-text">&lt;!-- This is a comment - that will not be displayed in the published html page --&gt;</span>
+
+<b>Tags</b> create elements. They are enclosed in angle brackets. There are opening tags and closing tags.
+<span class="alt-text">
+  Example: &lt;p&gt; and &lt;/p&gt;</span>
+
+<b>Attributes</b> provide additional information about HTML elements. They are included in the opening tag.
+Attributes come in several flavors: Quoted or unquoted attributes (w/ a string or numeric value), as well as boolean attributes. 
+<span class="alt-text">
+  Example: &lt;a href="https://example.com"&gt;&lt;/a&gt;</span>
+
+<b>Elements</b> consist of a start tag, content, and an end tag. If the tag doesn't have an end tag, it can be a void element.
+This is a regular element:
+<span class="alt-text">
+  Example: &lt;p&gt;Yadayada yada&lt;/p&gt;</span>
+The following is a void element. Void elements do not have any content or end tag, as they are considered "self-closing":
+<span class="alt-text">
+  Example: &lt;img src="image.jpg" alt="Description of image"&gt;</span>
+
+Anchors are used in html to jump you around in the document.
+Here's an example of a link that is also an anchor:
+<span class="alt-text">
+  &lt;a href="func.html#void-anch"&gt;Hyperlinked words that are anchored now&lt;/a&gt;
+  &lt;div id="eg-anch"&gt;Example words for other end of the link&lt;/div&gt;</span>
+
+I will go over what those tags and attributes mean.
+
  &lt;HTML&gt; ... &lt;/HTML&gt;           Encloses the entire document and
                                 overrides other filetyping mechanisms
  &lt;TITLE&gt; ... &lt;/TITLE&gt;          The title of the document
@@ -25,7 +54,18 @@ What a document is composed of:
  &lt;PRE&gt; ... &lt;/PRE&gt;             Encloses block of text to be shown verbatim.
   
 &lt;A NAME="..." HREF="URL"&gt; ... &lt;/A&gt;
-                             Creates a link (HREF) or (NAME) or both.
+                             Creates a link (HREF) or (NAME) or both. They are attributes, NAME being an example
+                             of something deprecated in HTML5 (which may or may not be true, test it for yourself)
+                             &lt;a&gt; being for hyperlinks, and &lt;href&gt; to specify the URL of the link.
+
+&lt;DIV&gt; ... &lt;/DIV&gt; is a block-level container element used to group other
+                             elements and apply/manipulate sections. So &lt;div&gt; may be called a tag
+                             (when referring to the specific parts) and an element (when referring to the whole structure).
+Example<span class="alt-text">
+  &lt;div id="main-content"&gt;&lt;/div&gt;</span>
+
+"main-content" is the value assigned to the id attribute. This value serves as the unique identifier for that particular element.
+
 Inlined image
  &lt;IMG ALIGN="..." SRC="URL" ALT="..."&gt;
                               Inserts an image from SRC, or text
@@ -34,16 +74,13 @@ Inlined image
 Text flow
  &lt;br&gt;                         Force a line break
  &lt;p&gt;                          Add a paragraph break
- <hr>                         </hr>Horizontal rule (pseuedo page break)(i prefer a dotted ln in a css block)
- 		   You can go to 'more settings' or use (ctrl u)
-                      or type <b>view-source:</b> <em>(before the web-address)</em>
-		   to view, copy, analyze the source code of any document.
+ <hr>                         </hr>Horizontal rule (pseuedo page break)(i sometimes prefer a dotted line)
 
-<span class=sntc>Issue: This line spacing was changed, doesnt work as intended.</span>
-<LI><span class=sntc>This&emsp;is&emsp;<tt>&amp;emsp;</tt></span>
-<LI><span class=sntc>This&ensp;is&ensp;<tt>&amp;ensp;</tt></span>
-<LI><span class=sntc>This is a regular space.</span>
-<LI><span class=sntc>This&nbsp;is&nbsp;<tt>&amp;nbsp;</tt></span>
+Hints
+You can go to 'more settings' or use (ctrl u)
+                      or type <b>view-source:</b> <em>(before the web-address)</em>
+		                   to view, copy, analyze the source code of any document.
+
 Entity name examples
 Overline	&#175;	&macr;	¯
 Pilcrow (paragraph)	&#182;	&para;	¶
@@ -57,4 +94,12 @@ UPPERCASE TAU 	&#932; 	&Tau; 	Τ
 lowercase tau 	&#964; 	&tau; 	τ
 UPPERCASE UPSILON 	&#933; 	&Upsilon; 	Υ
 lowercase upsilon 	&#965; 	&upsilon; 	υ
-</body></html>
+
+IGNORE BELOW HERE, TESTING...
+<span class=sntc>Issue: This line spacing was changed, doesnt work as intended.</span>
+<LI><span class=sntc>This&emsp;is&emsp;<tt>&amp;emsp;</tt></span>
+<LI><span class=sntc>This&ensp;is&ensp;<tt>&amp;ensp;</tt></span>
+<LI><span class=sntc>This is a regular space.</span>
+<LI><span class=sntc>This&nbsp;is&nbsp;<tt>&amp;nbsp;</tt></span>
+
+<script src="style.js"></script></body></html>
