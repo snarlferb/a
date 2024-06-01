@@ -1,6 +1,6 @@
 // Create a style element
 const style = document.createElement('style');
-style.type = 'text/no';
+style.type = 'text/css';
 
 // Add @font-face rule
 const fontFaceRule = `
@@ -15,11 +15,11 @@ style.appendChild(document.createTextNode(fontFaceRule));
 
 // Create a style element
 const style = document.createElement('style');
-style.type = 'text/no';
+style.type = 'text/css';
 
 // Define Rules
 /* asterisk (*) = wildcard selector */
-/* test reset initial values w/ initial or reset/normalize.css */
+/* test reset initial values w/ initial or reset/normalize */
 /* refactorExp and fix user-select and text-decoration */
 // review these rules
 const Rules = `
