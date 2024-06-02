@@ -9,16 +9,64 @@
 
 <div id="ctrl-anch">control flow</div>
 perhaps an appropriate place to start in regard to programming is to talk about the
-nature of control flow statements. The "start" and "end" of the statement also marks
-the memory allocation boundary, or rather a new sequence of memory. You might then call
-the start or interrupt of a proceeding sequence "control flow transfer" or "control flow
-manipulation" -which again refers to the mechanism by which the program's execution flow
-is redirected based on the condition /or loop. Its something you have to be conscious of
-in situations where specific sequences of memory matter (or more importantly) situations
-where the exact format-layout of the code matters. The same is the case where you have
-ordered vs non-ordered arrays. In C, these are ordered by default. Theres more we c..
-say about control flow, however im trying to conserve space and make this as concise
-as possible, and also to avoid seeming like a bottomless pit of information.
+nature of control flow statements. The if-statement allows you to execute a block of code
+if a specified condition is true/false or equal to, and likewise an else-statement
+provides an alternative branch or block of code to be executed if the condition is
+true/false or equal to. In that sense, switch statement are a way for multi-way
+branching sequences to be evaluated based on the value of some expression.
+
+then you of course have loops. Loops in C, are constructs that allow you to execute a
+block of code repeatedly until the respective conditions are no longer true.
+this eliminates the need to write the same code multiple times.
+
+the "start" and "end" of the statement also marks the memory allocation boundary, or
+rather a new sequence of memory. You might then call the start or redirection of a
+proceeding sequence "control flow transfer" or "control flow manipulation" -which again
+refers to the mechanism by which the program's execution flow is redirected based on the
+condition or loop. Its something you have to be conscious of in situations where specific
+sequences of memory matter (or more importantly) situations where the exact format-layout
+of the code matters. The same is the case where you have ordered vs non-ordered arrays.
+In C, these are ordered by default. 
+
+lets dig a little deeper. Control flow statements primarily work by altering the program
+counter (the CPU register that keeps track of the next instruction as explained)
+they don't directly navigate memory in the sense of manipulating memory addresses...
+when the if-statement is encountered, the condition is evaluated. If the condition is true
+the program counter is updated to point to the first instruction within the if-block.
+
+these instructions are then fetched and executed from memory. If the condition is false
+and an else block exists, the program counter is updated to point to the first instruction
+within the else block; Otherwise, the program continues execution from the next
+instruction after the if-statement.
+
+this also makes if-statements a great way to prevent some of the more deviant errors.
+its so easy to prevent these kinds of things if you know what you are doing; if you're in
+the habit of writing logs and debug messages - specifically, for situations where you're
+most concerned about having overflow errors (a max integer bound that could potentially
+wrap around) as well as memory leaks and null pointer exceptions, then here is how you
+would save yourself from it...
+<span class="alt-text">
+  int main() {
+  #define MAX_VAL 65535
+    unsigned int value = MAX_VAL;
+
+    if (value == UINT_MAX) {
+      printf("Overflow would occur!\n");
+    } else {
+      value++;
+      /*
+       * post increment means it stays that value til after assignment,
+       * thats not important to know for this demonstration but now you know
+       */
+      printf("Incremented value: %u\n", value);
+    }
+    return 0;
+  }</span>
+
+thus the increment will only happen if the program doesnt encounter the value at UINT_MAX,
+which'll consequently prevent the overflow... And we could talk about this endlessly,
+however im trying to conserve space and make this as clear as possible, while also
+trying not to appear like a bottomless pit of information.
 
 <div id="fmt-anch">format specifier</div>
 this example demonstrates the more common data types
@@ -53,22 +101,20 @@ the variable is visible only within the same translation unit (the same source f
 it specifies that the variable or function has external linkage (visible across multiple translation units)
 
 <div id="type-qualifier-anch">type qualifier</div>
-`const` it is used to specify that a variable's value cannot be modified after initialization
+`const` is used to specify that a variable's value cannot be modified after initialization
 consider it also a form of documentation and a contract with the caller that a function shouldnt
 attempt to modify the provided variable, i.e. its a constant (in one way or another)
 
-unary/binary operator
-
 logical operators: &amp;&amp;, ||, !
-arithmetic operators: +, -, *, /, %, ++, --
+arithmetic operators: +, -, *, /, %
+unary operators for arithmetic: ++, --
 something to note, about unary increment/decrement operators is that they affect a variable within its
 lifetime!... even if its being assigned as a product of another variable,
 relational operator: ==, !=, &gt;, &lt;, &gt;=, &lt;=
 bitwise operators: &amp;, |, ^, ~, &lt;&lt;, &gt;&gt;
 assignment operators: =, +=, -=, *=, /=, %=, &lt;&lt;=, &gt;&gt;=, &amp;=, ^=, |=
 
-
-todo: look up the following terms, as you can often get them mixed up,
+todo: look up the following terms if you want resolve any confusion that may be caused by like-terms, e.g.
 modifiers (modify other identifiers), quantifiers (in mathematics they specify quantities of a set)
 identifiers (the names of the entities in the programming language), delimeters (specify boundaries)
 </body></html>
