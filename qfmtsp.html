@@ -6,8 +6,7 @@
 <title>type</title>
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><script src="style.js"></script>
 </head><body>
-<b>operators</b>
-
+<div id="ctrl-anch">operators</div>
 logical operators: <span class="alt-text">&amp;&amp;, ||, !</span>
 arithmetic operators: <span class="alt-text">+, -, *, /, %</span>
 unary operators for arithmetic: <span class="alt-text">++, - -</span>
@@ -17,7 +16,8 @@ relational operator: <span class="alt-text">==, !=, &gt;, &lt;, &gt;=, &lt;=</sp
 bitwise operators: <span class="alt-text">&amp;, |, ^, ~, &lt;&lt;, &gt;&gt;</span>
 assignment operators: <span class="alt-text">=, +=, -=, *=, /=, %=, &lt;&lt;=, &gt;&gt;=, &amp;=, ^=, |=</span>
 
-<div id="ctrl-anch">control flow</div>
+control flow
+
 perhaps an appropriate place to start in regard to programming is to talk about the
 nature of control flow statements. The `if` statement allows you to execute a block of code
 if a specified condition is true/false or equal to, and likewise an `else` statement
@@ -61,11 +61,11 @@ to prevent integer overflows, memory leaks, and null pointer dereferences. Heres
   #define MAX_VAL 65535
     unsigned int value = MAX_VAL;
 
-    if (value == UINT_MAX) {
+    if (value == MAX_VAL) {
       printf("Overflow would occur!\n");
     } else {
       value++;
-      /*
+      /* very dumb example just for illustration purposes...
        * post increment means it stays that value til after assignment,
        * thats not important to know for this demonstration but now you know
        */
