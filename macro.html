@@ -90,11 +90,26 @@ this'll make sense as your brain unlocks the harder-to-grok details
 preserves the " " air-quotes around sequence
 
 note: the preprocessor also has specific ways in which it expands a variable
-such being, during the # hash operator
+such being, during the # hash operator. now if you read everything on the page about
+functions and function pointers, you would have learned that you can use them to
+make a `type` of some variable... You can do the same with macro's here:
+<span class="alt-text">
+  #define GIVE(return_type) return_type
+  #define A_Func(this) \
+      Generic(umbrella) \
+      That_A_Func(this)</span>
+
+now when you declare it as a function prototype, it'll look like...
+<span class="alt-text">
+  Generic(umbrella) That_A_Func(AnothType *this);</span>
+
+the purpose of the first line is to enable flexible declaration of function return types using macros,
+and without it the macro Generic(umbrella) would not be expanded correctly in the definition of `A_Func`.
+since the #define follows the first one, the definition of `GIVE` is still active, and it will be
+available for use within the definition of `A_Func`. So you can kinda see how the preprocessor works.
 
 the next example demonstrates an offset (youll remember we explained how
-structs use offsets to access members)
-note: on my machine 'size_t' is a 64 bit unsigned int
+structs use offsets to access members) note: on my machine `size_t`  is a 64 bit unsigned int
 <span class="alt-text">
   #define offset(s,m) ((size_t) &amp; (((s*)0)-&gt;m))
 
