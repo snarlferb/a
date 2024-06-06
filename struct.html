@@ -53,37 +53,46 @@ you can declare a struct like this
 you can also construct them as an anonymous structs w/ a tag
 <span class="alt-text">
   struct {
-      int x;
-      int y;
+    int x;
+    int y;
   } example;</span>
 
 using typedef to create an alias for the struct
 <span class="alt-text">
   typedef struct example example;</span>
 
-lets you declare w/ `example` as opposed to `struct example`
-i.e. it lets you create a type alias
+lets you declare w/
+<span class="alt-text">
+  example;</span>
 
-adding `typedef` is most typically done like this
+as opposed to reusing `struct example`... or in other words,
+it lets you create a type alias.
+
+and since you've created a typedefined name, it can be used as
+a type of some member in a new struct. Note, this is also a common
+way typedefined structs are created:
 <span class="alt-text">
   typedef struct {
-      int x;
-      int y;
-  } example;</span>
+      example yadaYada;
+  } demonstrate;</span>
 
 and since youve already included `typedef`, you can omit the `struct` keyword
-in the declaration
+in the declaration as we had mentioned.
 <span class="alt-text">
-  example newA;</span>
+  demonstrate newA;</span>
 
-quick note, typedef also means that the type (in this case `example`)
-is available for use as a type of function..
+<em>or you can access and manipulate its members, like `newA.yadaYada`, just as
+you would with any other struct variable</em>
+
+quick note, typedef also means that the type (in this case `demonstrate`)
+is available for use as a "type of function"..
 <span class="alt-text">
-  example CreateFunction(){
+  demonstrate CreateFunction(){
+    // initialize/add arguments or any operation.
   }</span>
 
 `typedef` in a struct definition not only creates a type alias
-but also makes the struct name visible in a broader scope
+but also makes the struct name visible in a broader scope, and
 designated intializers provide a way of explicitly
 intitializing struct members
 <span class="alt-text">
@@ -112,16 +121,30 @@ to their respect devices
   ExtID A = {.ex = device1.deviceID};
   ExtID B = {.ex = device2.deviceID};</span>
 
-Accessing and printing device information
+accessing and printing device information
 <span class="alt-text">
   printf("Device A - ID: %d, Description: %s\n", A.ex, device1.description);
   printf("Device B - ID: %d, Description: %s\n", B.ex, device2.description);</span>
 
-if you learned about function pointers...
+lets suppose i have a struct that i want to declare.
+<span class="alt-text">
+  typedef struct SymbolTable Symb</span>
+
+because it is a pointer, i need to refer to instances of `*Symb` as if it is a pointer.
+However if it wasnt a pointer then you would define those instances of it regularly...
+<span class="alt-text">
+  struct NewStruct {
+      Symb newMember;
+  }</span>
+
+having a member of type `Symb` now would essentially be like
+having a pointer to a `struct SymbolTable`
+
+Next, if you learned about function pointers...
 <span class="alt-text">
   typedef struct {
-      const char *group_name;
-      void (*action)();
+    const char *group_name;
+    void (*action)();
   } AutoGroup;</span>
 
 then here is something cool you can do...
