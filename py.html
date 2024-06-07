@@ -181,7 +181,7 @@ It is also recommended by python to use a getter method associated w/ private/pu
 
 <b>Rememberance</b>
 - `list` look the most like a regular array to me, so its probably better to think of lists first, <em>"arrlist"</em>
-- `dictionary` <em>{'a collection/interpolation of key values'}</em> i call it a <em>"KeyPair Set"</em> 🗝️📙
+- `dictionary` <em>{'a collection/interpolation of key values'}</em> i call it a <em>"KeyPair Set"</em>
 - `tuple` <em>("immutable")</em> you could think of a tuple as a regular function, in array form (3rd evolution),
   more over, a tuple just means a finite sequence/ordered list of numbers.
 
@@ -199,7 +199,12 @@ Hash `#` denotes a comment, and you can use `"""` triple quotes around internal 
 <b>Other Types</b>
 - `bytearray` is a smaller type of list. `bytes` represents an immutable sequence of bytes. `bool`, `int`, `complex` and `str` are also all immutable types
 
-<b>To solidify this understanding now, look at how a linear function is implemented</b>
+If you link to `import numpy as np` you have access to vectors
+<span class="alt-text">
+  arr = np.array([1, 2, 3])</span>
+
+Note, that it is distinct from a tuple because its mutable.
+Moving on, lets look at how a linear function can be implemented
 <span class="alt-text">
   def linear_function(x):
       m = 1  # Slope
