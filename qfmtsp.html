@@ -29,14 +29,26 @@ then you of course have loops. Loops in C, are constructs that allow you to exec
 block of code repeatedly until the respective conditions are no longer true.
 this eliminates the need to write the same code multiple times.
 
-the "start" and "end" of the statement also marks the memory allocation boundary, or
+you might often see `continue` used within a loop. its an optional keyword - for when the
+condition in a loop is not met, the continue statement is skipped so the loop continues to
+execute the remaining statements in the loop body. However, when the condition is met the
+statement is executed, causing the loop to skip the remaining statements in the loop body
+and move on to the next iteration. So, in essence, continue allows you to control the
+flow of execution within a loop based on certain conditions.
+
+the `break` keyword is used to exit a switch/or loop prematurely. When a break is encountered,
+the loop immediately terminates, and control is passed to whatever comes after it. So if `break`
+is responsible for breaking at the point that its encountered, `return` (which is optional) exits
+transfers control from a given block of code or function -to another - or optionally returns a
+value to the caller. see <a class="reserve" href="func.html">func.html</a>for more.
+
+the start and end of the statement also marks the memory allocation boundary, or
 rather a new sequence of memory. You might then call the start or redirection of a
-proceeding sequence "control flow transfer" or "control flow manipulation" -which again
-refers to the mechanism by which the program's execution flow is redirected based on the
-condition or loop. Its something you have to be conscious of in situations where specific
-sequences of memory matter (or more importantly) situations where the exact format-layout
-of the code matters. The same is the case where you have ordered vs non-ordered arrays.
-In C, these are ordered by default. 
+proceeding sequence "control flow transfer" or "control flow manipulation" -which refers
+to the mechanism by which the program's execution flow is redirected based on the condition
+or loop. Its something you have to be conscious of in situations where specific sequences of
+memory matter (or more importantly) situations where the exact format-layout of the code matters.
+the same is the case where you have ordered vs non-ordered arrays. In C, these are ordered by default. 
 
 lets dig a little deeper. Control flow statements primarily work by altering the program
 counter (the CPU register that keeps track of the next instruction as explained)

@@ -18,6 +18,14 @@ they can point to objects of any data type
 "void" btw just means "no return type"
 where as int functions must include a return type
 
+for any other type, it's a common convention to use 0 to indicate success and
+non-zero values (typically 1 or -1) to indicate errors or some other kind of failure.
+this convention makes it easy to check the return value of a function call to
+determine whether it executed successfully or encountered an issue.
+
+it's also useful to define more specific error codes sometimes, thereby providing
+more detailed information about the nature of the error that occurred.
+
 <div id="variadic-anch">variadic function</div>
 since we use `printf` to see the results of everything
 we should understand what kind of function it is
