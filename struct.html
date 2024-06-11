@@ -126,12 +126,30 @@ accessing and printing device information
   printf("Device A - ID: %d, Description: %s\n", A.ex, device1.description);
   printf("Device B - ID: %d, Description: %s\n", B.ex, device2.description);</span>
 
+returning to the beginning of what we learned
+<span class="alt-text">
+  struct Juncture {
+      int x;
+      int y;
+  };</span>
+
+
+if you want you can do...
+<span class="alt-text">
+  struct Juncture points[] = {
+      {10, 20},
+      {30, 40},
+      {50, 60}
+  };</span>
+
+and you can then declare/access the array elements like normal.
+
 lets suppose i have a struct that i want to declare.
 <span class="alt-text">
   typedef struct SymbolTable Symb</span>
 
 because it is a pointer, i need to refer to instances of `*Symb` as if it is a pointer.
-However if it wasnt a pointer then you would define those instances of it directly
+however if it wasnt a pointer then you would define those instances of it directly
 <span class="alt-text">
   struct NewStruct {
       Symb newMember;
@@ -140,7 +158,7 @@ However if it wasnt a pointer then you would define those instances of it direct
 having a member of type `Symb` now would essentially be like
 having a pointer to a `struct SymbolTable`
 
-Next, if you learned about function pointers...
+continuing on... if you learned about function pointers...
 <span class="alt-text">
   typedef struct {
     const char *group_name;

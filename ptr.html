@@ -53,9 +53,35 @@ affect other functions. As such you can reuse parameter names across different
 functions without conflict. This local scope is very useful for modular and
 clear code design.
 
-one more example assigning a pointer to a type-casted value
+typecast example
+<span class="alt-text">
+  int A_Value = 1;
+  int B_Value = 2;
+  int *SRC_REG = (float *)A_Value / B_Value;</span>
+
+at first sight only `A_Value` will be typecasted. However, in C, when performing operations
+between different types, the compiler implicitly promotes the integer `B_Value` to float to
+match the type of `A_Value`. Therefore, the division is performed as float divided by float.
+
+one more example assigning a pointer to a type-casted value. directly assigning a
+memory address like this isnt always the safest, but again, now you know.
 <span class="alt-text">
   int *SRC_REG = (int *)0x1000;</span>
+
+you'll have to learn for yourself how to preserve the safety in the context of your own program
+
+<span class="alt-text">
+  volatile int *SRC_REG = (volatile int *)0x1000</span>
+
+volatile represents a kind of transparent gate that always checks the actual state of the
+data each time it is accessed. We want something to go IN.. but that thing going in is
+going to be assigned <b>once</b>.. When it goes OUT to external places it has the
+possibility of being changed, hence changing it when those external factors go IN.
+
+we want to preserve the fact that the program itself cannot change it, but that
+the external factors can. This is crucial when dealing with data that might be modified
+by external influences (like hardware registers or other threads) outside the
+direct control of the program.
 
 explicit type casting w/ dereferencing would look like...
 <span class="alt-text">
