@@ -1,65 +1,50 @@
-// Create a style element
-const style = document.createElement('style');
-style.type = 'text/css'; // MIME type
-
+/* style.type = 'text/css'; // MIME type */
 /* @syntax: asterisk (*) is for wildcard selectors */
 /* @remove: reset initial values w/ initial or reset/normalize */
 /* @remove: .no-wrap { @white-space: nowrap;  } */
 /* @remove: .no-wrap*{ @white-space: inherit; } */
 /* @fix: user-select and text-decoration if broken */
+@font-face {
+    font-family: 'Fixedsys Excelsior 3.01';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Fixedsys Excelsior 3.01'), url('Fixedsys Excelsior 3.01.woff') format('woff');
+    /* Add additional font formats (e.g., WOFF2) */
+}
 
-const Rules = `
-    @font-face {
-        font-family: 'Fixedsys Excelsior 3.01';
-        font-style: normal;
-        font-weight: 400;
-        src: local('Fixedsys Excelsior 3.01'), url('Fixedsys Excelsior 3.01.woff') format('woff');
-        /* Add additional font formats (e.g., WOFF2) for better browser compatibility */
-    }
+body {
+    background-color: #222222;
+    white-space: pre-wrap;
+    color: white;
+    font-family: 'Fixedsys Excelsior 3.01';
+    font-style: normal;
+    font-size: 22px;
+}
 
-    body {
-        background-color: #222222;
-        white-space: pre-wrap;
-        color: white;
-        font-family: 'Fixedsys Excelsior 3.01';
-        font-style: normal;
-        font-size: 22px;
-    }
+a {
+    text-decoration: none;
+    color: white;
+}
 
-    a {
-        text-decoration: none;
-        color: white;
-    }
+.hl-hover:hover {
+    background-color: yellow;
+    color: black;
+    cursor: pointer;
+}
 
-    .hl-hover:hover {
-        background-color: yellow;
-        color: black;
-        cursor: pointer;
-    }
+.alt-text {
+    color: #FAFFAF;
+}
 
-    .alt-text {
-        color: #FAFFAF;
-    }
+.reserve {
+    color: blue;
+}
 
-    .reserve {
-        color: blue;
-    }
-
-    footer {
-        background-color: #222222;
-        color: white;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-`;
-
-// Append rules to style element
-style.appendChild(document.createTextNode(Rules));
-
-// Append the style element to the head
-document.head.appendChild(style);
-
-// Event listeners or dynamic class toggling here
-
+footer {
+    background-color: #222222;
+    color: white;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
