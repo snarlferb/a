@@ -19,7 +19,7 @@
 &emsp;&emsp; : Instructions:
 &emsp;&emsp; : [```]=optionals
 &emsp;&emsp; : Helpful Shortcuts:
-&emsp;&emsp; : <b>Shift+zz</b>=save file
+&emsp;&emsp; : <b>Shift+ZZ</b>=save file
 &emsp;&emsp; : Switch <b>Esc</b> w/ <b>Caps_lock</b> key, just a suggestion
 
 &emsp;&emsp; See ArtixLinux.org for more information, e.g.
@@ -37,10 +37,16 @@
 &emsp;&emsp;  --sdc1 /open
 &emsp;&emsp;  --sdc2 /encrypted
 
+&emsp;&emsp; This is an example, however on my machine (which has an ssd,
+&emsp;&emsp; a harddrive and a backup ssd) i like associating it in this way
+&emsp;&emsp; and order: boot/ w/ sda1, ex2/ w/ sda2, ex3/ w/ sda3, and then
+&emsp;&emsp; theres three locations w/ sda4   (root (/),   ex/  &amp;&amp;  home/)
+&emsp;&emsp; mnt/dx1 + mnt/dx2 w/ sdb1 + sdb2   and    backup/ w/ sdc1
+
 &emsp;&emsp; burn iso w/ `dd` selection/command
-&emsp;&emsp; file system: fat32 (is the most compatible file system)
+&emsp;&emsp; file system: fat32 is the most compatible file system but
 &emsp;&emsp; we'll be exploring the use of other file systems as well
-&emsp;&emsp; note: make sure everythings plugged in during this time
+&emsp;&emsp; note, make sure everythings plugged in during this time
 
 &emsp;&emsp; **BIOS**
 &emsp;&emsp; Once computers on,
@@ -57,11 +63,11 @@
 &emsp;&emsp; table, than you should be in "Compatible Support Module" or "Legacy Mode", but if you-
 &emsp;&emsp; re going w/ a GPT partition table you should be in "UEFI" boot mode.
 
-&emsp;&emsp; // NOTE: Make sure you have internet/wifi
-&emsp;&emsp; // Your keyboards last configuration will persist
-&emsp;&emsp; // Save bluetooth, sound, etc devices until afterwards
-&emsp;&emsp; // If you need to re-discover and chroot into
-&emsp;&emsp; // an existing filesystem,  <a class="reserve" href="troubleshoot">this</a> <a class="reserve" href="troubleshoot">page</a>
+&emsp;&emsp; || NOTE: Make sure you have internet/wifi
+&emsp;&emsp; || Your keyboards last config WILL persist
+&emsp;&emsp; || Save bluetooth, sound, etc devices until afterwards
+&emsp;&emsp; || Advanced: If you need to re-discover and chroot into
+&emsp;&emsp; || an existing filesystem,  <a class="reserve" href="troubleshoot">this</a> <a class="reserve" href="troubleshoot">page</a>
 
 &emsp;&emsp; root:root,pass:artix
 &#8595;
