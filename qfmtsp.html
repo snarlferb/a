@@ -8,14 +8,18 @@
 <link rel="stylesheet" href="style.css">
 </head><body>
 <div id="ctrl-anch">operators</div>
-logical operators: <span class="alt-text">&amp;&amp;, ||, !</span>
-arithmetic operators: <span class="alt-text">+, -, *, /, %</span>
-unary operators for arithmetic: <span class="alt-text">++, - -</span>
-something to note, about unary increment/decrement operators is that they affect a variable within its
-lifetime!... even if its being assigned as a product of another variable,
-relational operator: <span class="alt-text">==, !=, &gt;, &lt;, &gt;=, &lt;=</span>
-bitwise operators: <span class="alt-text">&amp;, |, ^, ~, &lt;&lt;, &gt;&gt;</span>
-assignment operators: <span class="alt-text">=, +=, -=, *=, /=, %=, &lt;&lt;=, &gt;&gt;=, &amp;=, ^=, |=</span>
+<span class="alt-text">                &amp;&amp;    ||    !</span>    logical \
+<span class="alt-text">    +     -     *     /     %</span>    arithmetic \
+<span class="alt-text">                    ++    - -</span>    unary aerith \
+
+when you use the unary increment (++) or decrement (- -) operators on a variable  \
+they directly modify the variable's value within its lifetime.                      \
+
+This means that the change to the variable's value persists regardless of whether the  \
+variable is being assigned to another variable or used as an rvalue (the right-hand side of an assignment or in an expression)
+<span class="alt-text">                                        ==    !=    &gt;     &lt;    &gt;=     &lt;=</span>    relational    \
+<span class="alt-text">                                           &amp;    |    ^    ~    &lt;&lt;     &gt;&gt;</span>    bitwise         \
+<span class="alt-text">   =   +=     -=     *=    /=     %=     &lt;&lt;=    &gt;&gt;=     &amp;=     ^=     |=</span>    assignment        \
 
 control flow
 
@@ -77,11 +81,11 @@ to prevent integer overflows, memory leaks, and null pointer dereferences. Heres
     if (value == MAX_VAL) {
       printf("Overflow would occur!\n");
     } else {
-      value++;
+      value++;</span>
       /* very dumb example just for illustration purposes...
        * post increment means it stays that value til after assignment,
        * thats not important to know for this demonstration but now you know
-       */
+       */<span class="alt-text">
       printf("Incremented value: %u\n", value);
     }
     return 0;
@@ -132,4 +136,7 @@ attempt to modify the provided variable, i.e. its a constant (in one way or anot
 todo: look up the following terms if you want resolve any confusion that may be caused by like-terms, e.g.
 modifiers (modify other identifiers), quantifiers (in mathematics they specify quantities of a set)
 identifiers (the names of the entities in the programming language), delimeters (specify boundaries)
+
+next, see <a class="reserve" href="ptr.html">pointers</a>
+
 </body></html>

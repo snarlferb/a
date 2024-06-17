@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style.css">
 </head><body>
 
-<div id="ptr-anch">pointer</div>
+<div id="ptr-anch"></div>
 <span class="alt-text">
   int *B;
   int *A = B;
@@ -70,7 +70,6 @@ memory address like this isnt always the safest, but again, now you know.
   int *SRC_REG = (int *)0x1000;</span>
 
 you'll have to learn for yourself how to preserve the safety in the context of your own program
-
 <span class="alt-text">
   volatile int *SRC_REG = (volatile int *)0x1000</span>
 
@@ -100,5 +99,8 @@ double pointers say something additional about a value that they're pointing to.
 in that its a way to get the "value of the value" that is, to hold the address
 of ANOTHER pointer `**ptr`
 
-dereferencing a double pointer allows access to the value of the variable, that the single pointer `*ptr` points to.
+dereferencing a double pointer allows access to the value of the variable
+that the single pointer `*ptr` points to.
+
+next, see <a class="reserve" href="func.html">functions</a>
 </body></html>

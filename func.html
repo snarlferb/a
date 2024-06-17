@@ -8,7 +8,19 @@
 <link rel="stylesheet" href="style.css">
 </head><body>
 
-<div id="data-anch">data type</div>
+<div id="data-anch">statements are the instructions executed by the program</div>
+<span class="alt-text">
+  int x;</span>                      // Declaration of an integer variable x<span class="alt-text">
+  int y = 10;</span>                 // Declaration and initialization of y<span class="alt-text">
+  x = x + 5;</span>                  // Expression, statement<span class="alt-text">
+  char S = 'D';</span>               // Declaration and initialization of a character<span class="alt-text">
+  char str[] = "some string";</span> // Initialization of a string<span class="alt-text">
+  char *str = "some string";</span>  // Pointer to a string literal
+
+to learn more, see <a class="reserve" href="arr.html">arrays</a>
+
+data types
+
 char type is considered a small integer type
 its typically used to represent characters
 however those characters have to be stored as integer values
@@ -26,6 +38,17 @@ determine whether it executed successfully or encountered an issue.
 
 it's also useful to define more specific error codes sometimes, thereby providing
 more detailed information about the nature of the error that occurred.
+
+here's a very simple example to illustrate the structure of a function inside a program
+<span class="alt-text">
+  void K() {
+    int A = 5 + 4;
+    printf("A in K is: %d\n", A);
+  } // This is a comment, Hi.
+
+  int main() {
+    K();
+  }</span>
 
 <div id="variadic-anch">variadic function</div>
 since we use `printf` to see the results of everything
@@ -61,7 +84,7 @@ and you want to call it
 <span class="alt-text">
   void func(int x);</span>
 
-it would have to find this function defined within the program
+it would have to find this function defined within the program somewhere...
 <span class="alt-text">
   void func(int x) {
   }</span>
@@ -90,13 +113,12 @@ we explicitly declared new variables in `main` to show how main works
 and to demonstrate how a function could be assigned the same arguments
 as another function, in this case `internfunc` was assigned to `func(a,b)`
 and we renamed/reassigned those parameters as well
-
-
-regarding <div id="function-pointer-anch">function pointers</div>   they can seem
-a little odd at first, especially when combined with unnamed parameters or return types,
-however these unnamed functions or function parameters are legal in C (which isnt well known)
-Nevertheless function pointers are a powerful feature of the language, allowing for
-dynamic dispatch, callbacks, and other advanced programming techniques...
+<div id="function-pointer-anch"></div>
+regarding function pointers... they can seem a little odd at first,
+especially when combined with unnamed parameters or return types,
+however these unnamed functions or function parameters are legal in C,
+nevertheless function pointers are a powerful feature of the language,
+allowing for dynamic dispatch, callbacks, etc.
 
 first create the function
 <span class="alt-text">
@@ -182,8 +204,5 @@ when an ELF executable or shared object (dynamic library) is loaded, the dynamic
 if this section is found, the dynamic linker calls the functions referenced in it,
 and goes upon initializing resources and setting up the environment.
 
-continue w/ functions here...
-
-<a class="reserve" href="memcpy.html">memcpy</a> example see page7
-<a class="reserve" href="malloc.html">malloc</a> example see page8
+learn more about <a class="reserve" href="struct.html">structures</a> or continue w/ functions like <a class="reserve" href="memcpy.html">memcpy</a> or <a class="reserve" href="malloc.html">malloc</a>
 </body></html>
