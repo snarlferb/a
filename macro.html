@@ -12,10 +12,10 @@
 
 one utility of macro's is their simplification in rvalues... an rvalue represents
 parts of an expression (typically on the right side) that are attributed to some value.
-An lvalue is attributed to a given memory location... However they are more of a
+an lvalue is attributed to a given memory location... However they are more of a
 conventionary term more so than their semantic connotation - that says something
 about the "left" or "right" sidedness. Heres an example regarding rvalues...
-... prior to simplifying..
+this is prior to its subsequent simplification:
 <span class="alt-text">
   int max_val = type_max(typeof(var));
   int min_val = type_min(typeof(var));</span>
@@ -28,7 +28,13 @@ when we change it to become a macro itll look like this to assign it.
   int max_val = TYPE_MAX(var);
   int min_val = TYPE_MIN(var);</span>
 
-the next macro shifts 2, to the left (n)bits, and subtracts 1
+which you can see is simpler now to call. heres a macro to access some element of
+a tuple-like structure (array)
+<span class="alt-text">
+  #define MACRO(x) ((x)[2])
+    int tuple[] = {10, 20, 30, 40};</span>
+
+the next macro shifts 2 to the left (n)bits, and subtracts 1.
 
 <span class="alt-text">
   #define b(n) (2 &lt;&lt; (n))
@@ -50,9 +56,7 @@ resulting in 15, which is a binary number with three bits set to 1 (111 in binar
 and shift it over three places to the left, we have 100000, and 1 is in the 16th spot
 making it 16
 
-give these examples time to marinate, the Taj Mahal wasnt built
-in a day and neither was our memory and ability to grasp things
-
+give these examples time to marinate, the Taj Mahal wasnt built in 45 seconds.
 <span class="alt-text">
   #define MY_MACRO(ptr)  ((*ptr) * 2)</span>
 
@@ -78,7 +82,8 @@ technically speaking, the backslash is an ID token that goes until it hits white
 in which case it might have the effect of continuating a line (or removing the line break
 whichever way u prefer to see it) which may fall into the running logic of the rest of the code
 
-this'll make sense as your brain unlocks the harder-to-grok details
+this'll make sense as your brain unlocks the harder-to-grok details.
+when you compile and run the following program, it will output: "sequence"
 
 <span class="alt-text">
   #define QUOTE(seq) "\""#seq"\""
@@ -88,12 +93,14 @@ this'll make sense as your brain unlocks the harder-to-grok details
   return 0;
   }</span>
 
-preserves the " " air-quotes around sequence
+by preserving the " " air-quotes around sequence.
 
-note: the preprocessor also has specific ways in which it expands a variable
-such being, during the # hash operator. now if you read everything on the page about
-functions and function pointers, you would have learned that you can use them to
-make a `type` of some variable... You can do the same with macro's here:
+note, the preprocessor also has specific ways in which it expands a variable
+such being, during the # hash operator.
+
+if you read everything on the page about functions and function pointers,
+you would have learned that you can use them to make a `type` of some variable...
+You can do the same with macro's here:
 <span class="alt-text">
   #define GIVE(return_type) return_type
   #define A_Func(this) \
