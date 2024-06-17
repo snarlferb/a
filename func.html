@@ -153,7 +153,7 @@ this is VERY useful for creating parameters (example from C11 threads)
   typedef int (*thrd_start_t)(void*);
   int thrd_create(thrd_t *thr, thrd_start_t func, void *arg);</span>
 
-Since we made `thrd_start_t` a type, you can use it as a `type ofsomething`
+since we made `thrd_start_t` a type, you can use it as a `type ofsomething`
 bearing in mind, im demonstrating whats possible with functions.
 once you understand function pointers and matching signatures,
 rest assured everything else will be a cakewalk.
@@ -167,9 +167,23 @@ here's a function thats of `struct` type...
     struct unboundedint result;
   }</span>
 
-to continue exercising your mind on functions, go to these pages...
+in this context, a "constructor" refers to a function that initializes a particular data
+structure or object.
+
+when you use the __attribute__((constructor)) and __attribute__((destructor)) attributes
+(which are GCC-specific) GCC places references to these functions in special sections of
+the object file, specifically `.ctors` for constructors and `.dtors` for destructors in
+the ELF (Executable and Linkable Format).
+
+constructors are automatically executed before the main() function is called.
+when an ELF executable or shared object (dynamic library) is loaded, the dynamic linker
+(ld.so on Linux) looks for the .ctors section.
+
+if this section is found, the dynamic linker calls the functions referenced in it,
+and goes upon initializing resources and setting up the environment.
+
+continue w/ functions here...
 
 <a class="reserve" href="memcpy.html">memcpy</a> example see page7
 <a class="reserve" href="malloc.html">malloc</a> example see page8
-
 </body></html>
