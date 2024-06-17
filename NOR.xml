@@ -47,7 +47,6 @@
         <input>B</input>
         <output>A XOR B</output>
     </gate>
-</logicGates>
 
     <!-- Reference to an external HTML file for further demonstration -->
     <demonstration>
@@ -55,3 +54,4 @@
         <htmlFile>NOR.html</htmlFile>
     </demonstration>
 </logicGates>
+
