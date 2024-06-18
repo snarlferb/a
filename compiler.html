@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style.css">
 </head><body>
 
-Conclusion
+Introduction
 If you're interesting in the compiler specifics, we should have
 a high level overview of it... keep mind there may also be optimi-
 zation steps interspersed throughout the process, as well as specific
@@ -65,32 +65,44 @@ where each node is associated with a non-terminal symbol in the grammar, and eac
 corresponds to a terminal symbol in the input. Trees (such as a leftmost derivation)
 describe these structures where each right-hand production rule is replaced with the
 leftmost non-terminal symbol in the current sentential form, therefore starting from
-the left-most symbol and iterating through the rest of the grammar rules, we make a
+the left-most symbol and iterating through the rest of the grammar rules  we make a
 representation of the language that can be further analyzed or parsed. Parentheses and
 other grouping symbols in the input are reflected in the structure of the parse tree,
 along w/ their associated nodes (nodes that represent the grouping of expressions)
+
+Shift-reduce parsing comes into play during this phase. It is a bottom-up parsing
+technique used to construct the parse tree. The shift operation reads the next input
+symbol and pushes it onto a stack. The reduce operation looks at the top of the stack
+to find a sequence matching the right-hand side of a production rule and replaces it
+with the corresponding non-terminal from the left-hand side of the rule.
+This continues until the entire input is consumed and the stack contain
+the start symbol of the grammar, indicating successful parsing.
 
 A parse tree also has parse leaves, and these parse leaves are considered the terminal
 symbols at the bottom level of the parse tree. The bottom level is the "Last" remaining
 things evaluated in a tree such as a digit (e.g. 3), or a TOKEN that was once an identifier
 Once the parser reaches a parse leaf, it has successfully recognized a complete unit of the
-input language, and no further parsing is required for that subtree. In recursive descent
-parsing, each non terminal symbol in the grammar is associated with a parsing function.
-These parsing functions are responsible for recognizing and processing a prior language
-construct represented by the non-terminals, for example if there's a non-terminal symbol
-`Expr` representing an expression in the grammar, there would be a parsing function named
-`parseExpr` to handle expressions. The parsing process typically starts with a designated
-non-terminal symbol representing the entire statement. Each parsing function contributes to
-the construction of the parse tree, recursively building the tree from the root (start symbol)
-down to the leaves (terminal symbols) (The starting symbol serves as the entry point for
-parsing the input sentences) When the parser encounters a non-terminal symbol during parsing,
-it calls the associated parsing function to handle that symbol. These parsing functions are
-considered recursive, as they refer to a nested structure, for e.g... a parsing function for
-`Expr` may recursively call itself to handle sub-expressions. Each parsing function has a base
-case that handles terminal symbols in the input. When a parsing function encounters a terminal
-symbol, it matches the token against the expected input and consumes the token if it indeed matches.
-If the token does NOT match the expected input, the parsing function may report an error, where it'll
-backtrack and try alternative parsing paths to recover from errors.
+input language, and no further parsing is required for that subtree.
+
+In recursive descent parsing, each non terminal symbol in the grammar is associated with a
+parsing function. These parsing functions are responsible for recognizing and processing
+a prior language construct represented by the non-terminals, for example if there's a
+non-terminal symbol `Expr` representing an expression in the grammar, there would be a
+parsing function named `parseExpr` to handle expressions. The parsing process typically
+starts with a designated non-terminal symbol representing the entire statement.
+
+Each parsing function contributes to the construction of the parse tree, building the
+tree from the root (start symbol) down to the leaves (terminal symbols). The starting symbol
+serves as the entry point for parsing the input sentences.
+
+When the parser encounters a non-terminal symbol during parsing, it calls the associated
+parsing function to handle that symbol. These parsing functions are considered recursive,
+as they refer to a nested structure, for e.g... a parsing function for `Expr` may recursively
+call itself to handle sub-expressions. Each parsing function has a base case that handles
+terminal symbols in the input. When a parsing function encounters a terminal symbol, it
+matches the token against the expected input and consumes the token if it indeed matches.
+If the token does NOT match the expected input, the parsing function may report an error,
+where it'll backtrack and try alternative parsing paths to recover from errors.
 
 Semantic Analysis
 Checks the meaning and consistency of the program beyond its syntactic structure.
@@ -127,30 +139,40 @@ based on the decisions made during instruction selection, register alloc-
 ation, and other considerations.
 
 Assembly<a href="asm.html#asm-anch" id="compiler-anch">go to page10</a>
-The compiler generates assembly code from the AST.
-This assembly code consists of human-readable mnemonics and operands that
-correspond to the machine instructions of the target architecture.
+The compiler generates assembly code from the AST. This assembly code consists of
+human-readable mnemonics and operands that correspond to the machine
+instructions of the target architecture.
 
 Assembler
-Translates assembly language code into machine code. It takes the
-human-readable assembly code and converts it into the binary code
-that the computer's CPU can execute directly.
-The assembler performs tasks such as resolving symbolic addresses (like labels)
-to actual memory addresses, generating machine code instructions,
-and producing an object file containing the translation of binary
-instructions and additional information.
+Translates assembly language code into machine code. It takes the human-readable assembly
+code and converts it into the binary code that the computer's CPU can execute directly.
+The assembler performs tasks such as resolving symbolic addresses (like labels) to actual
+memory addresses, generating machine code instructions, and producing an object file
+containing the translation of binary instructions and additional information.
 
 Linking
 If your program consists of multiple source files or modules, the linker combines the
 object files and resolves references between them. It ensures that functions and variables
 used in one module are correctly linked to their definitions in other modules.
-The output of linking is typically an executable file that can be run independently.
 The linker may also incorporate external libraries into the executable.
+The output of the linking process is an executable file that can be
+run independently.
+
+For static linking, the library code is copied directly into the executable file
+at compile time, resulting in a larger executable that includes all necessary code.
+This ensures that the executable can run without needing external library files at runtime.
+
+For dynamic linking, the executable contains references to shared libraries, where libraries
+are not copied into, but are instead "linked" at runtime. This keeps the executable smaller
+and allows multiple programs to share the same library code in memory.
 
 Loading
-Is responsible for taking the executable file produced by the linker and
-loading it into memory for execution. It sets up the program's entry point,
-initializes variables, and performs any necessary runtime tasks.
+Is responsible for taking the executable file produced by the linker and loading it into
+memory for execution. It sets up the program's entry point, initializes variables, and
+performs any necessary runtime tasks. This process includes allocating memory for the
+program, setting up the stack and heap, resolving any dynamic library dependencies
+(if dynamic linking is used), and transferring control to the program's entry
+point to begin execution.
 
 Conclusion
 If a function is declared before its called in code, the compiler knows the function's
@@ -158,7 +180,7 @@ signature and generates code that includes the necessary information for the lin
 Thus the compiler can catch symbols/references during one of its stages of compilation.
 I like to imagine this as nodes within a long chain, which are representations of
 the longest chain of nodes in the program... This is sometimes the graphics library
-and the framework header... I will explain more about "systems of programming" on
-another page (see `output`)
+and the framework header... I will explain more about the kinds of systems used
+in programming and how to build a framework or library (see `output`)
 
 </body></html>
