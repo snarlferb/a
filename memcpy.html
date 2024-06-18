@@ -65,14 +65,14 @@ for simplicity, let's just copy a subset of the source buffer.
     int scalingFactor = 1;
 
     if (scalingFactor == 1) {</span>
-        // Directly copy the content from sourceBuffer to destinationBuffer<span class="alt-text">
+        <em>// Directly copy the content from sourceBuffer to destinationBuffer</em><span class="alt-text">
         memcpy(destinationBuffer, sourceBuffer, sizeof(int) * destWidth);
     } else {
-        // Resize the video (in this example, copy a subset of the source buffer)
+       </span><em>// Resize the video (in this example, copy a subset of the source buffer)</em><span class="alt-text">
         resizeVideo(sourceBuffer, sourceWidth, destinationBuffer, destWidth);
     }</span>
 
-    // Print the content of destinationBuffer<span class="alt-text">
+    <em>// Print the content of destinationBuffer</em><span class="alt-text">
     for (int i = 0; i &lt; BUFFER_SIZE; i++) {
         printf("%d, ", destinationBuffer[i]);
     }

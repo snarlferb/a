@@ -10,12 +10,39 @@
 
 <div id="macro-anch">macro</div>
 
-one utility of macro's is their simplification in rvalues... an rvalue represents
+something i like to use macros for is defining a macro within the header path of
+the same name its defined w/, wherein the named macro can be used w/ `#include` plus as a macro e.g.
+<span class="alt-text">
+  #define HI_H "/path/to/it.h"</span>
+
+and then you can use it like `#include HI_H`, where by the preprocessor replaces it with the
+actual header file path during the preprocessing stage.  Next here's an example of ifdef..
+
+<span class="alt-text">
+  #ifdef PLATFORM
+  #include <platform.h>
+  #define MESSAGE "Hello from whatever platform!"
+
+  #else</span>  <em>// Assume some other platform</em><span class="alt-text">
+  #include <stdio.h>
+  #define MESSAGE "Hello from non-native planetform!"
+
+  #endif
+
+  int main() {
+    printf("%s\n", MESSAGE);
+    return 0;
+  }</span>
+
+`ifdef` checks if a macro named "PLATFORM" is defined. if so, the line `#include <platform.h>`
+gets included because the condition is true. <em>And presumably, you can deduce the rest from there.</em>
+
+another utility of macro's is their simplification in rvalues... an rvalue represents
 parts of an expression (typically on the right side) that are attributed to some value.
 an lvalue is attributed to a given memory location... However they are more of a
-conventionary term more so than their semantic connotation - that says something
-about the "left" or "right" sidedness. Heres an example regarding rvalues...
-this is prior to its subsequent simplification:
+conventionary term more so than their semantic connotation entails - implying a
+"left" or "right" sidedness. Heres an example regarding rvalues. This is prior
+to its subsequent simplification:
 <span class="alt-text">
   int max_val = type_max(typeof(var));
   int min_val = type_min(typeof(var));</span>
