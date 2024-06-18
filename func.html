@@ -104,14 +104,14 @@ and then proceed to the rest of the program
   int main() {
     int a2 = 2;
     int b2 = 3;
-    int internfunc = func(a2, b2);
-    printf("internfunc is %d\n", internfunc);
+    int intern = func(a2, b2);
+    printf("intern is %d\n", intern);
     return 0;
   }</span>
 
 we explicitly declared new variables in `main` to show how main works
 and to demonstrate how a function could be assigned the same arguments
-as another function, in this case `internfunc` was assigned to `func(a,b)`
+as another function, in this case `intern` was assigned to `func(a,b)`
 and we renamed/reassigned those parameters as well
 <div id="function-pointer-anch"></div>
 regarding function pointers... they can seem a little odd at first,
@@ -167,6 +167,23 @@ continuing on, heres a function that matches its signature
 you can call it now since it shares the same signature
 <span class="alt-text">
   ThisFunction(&amp;SomeNewFunction);</span>
+
+i'll leave it up to you to experiment with it... for now, here's an
+even simpler illustration of a function pointer...
+<span class="alt-text">
+  void printNum(int num) {
+    printf("Number: %d\n", num);
+  }
+
+  int function(void (*ptr)(int)) {
+    (*ptr)(2);
+    return 0;
+  }
+
+  int main() {
+    function(printNum);
+    return 0;
+  }</span>
 
 you can use `typedef` in function pointers (not for regular functions)
 this is VERY useful for creating parameters (example from C11 threads)
