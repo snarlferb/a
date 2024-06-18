@@ -155,6 +155,32 @@ and treats the next two arguments as filenames.
   <b>echo</b> "The directory your in is <b>$PWD</b>/filename.jpg"
   <em>The directory your in is /currentdir/filename.jpg</em>
 
+The following is more of a fact about linux and the filesystem, but i
+still think its one, if not the most quintessential and important things
+to know. If you have a user and a root account, you can make a symlink, e.g.
+
+  <b>ln -s /dir/here /my/location/there</b>
+
+This'll auto-create a directory (symlink)  `/my/location/there/here`
+and allows you to reference those file(s) from what's considered the directory
+being pointed to.
+
+Note, i dont do this for those hidden files in (~) or (/home/user), and considering
+inter-activity between users its more common to have user-specific configurations
+that the root then inherits. Thats just my personal recommendation.
+
+...
+┌── ln(1) link, ln -- make links
+│   ┌── Create a symbolic link.
+│   │                         ┌── the optional path to the intended symlink
+│   │                         │   if omitted, symlink is in . named as destination
+│   │                         │   can use . or ~ or other relative paths
+│   │                   ┌─────┴────────┐
+ln -s /path/to/original /path/to/symlink
+      └───────┬───────┘
+              └── the path to the original file
+                  can use . or ~ or other relative paths 
+
 For command substitution <b>$(command)</b> is considered
 the proper method, here's an example of that;
 
