@@ -21,19 +21,52 @@ uninitialized or its being determined by the initializer e.g.
 <span class="alt-text">
   int arr[] = {3, 4, 5};</span>
 
-we can also create individual characters and access the third
-element (or whichever you want) like so...
-<span class="alt-text">
-  char arr[3] = {'a', 'b', 'c'};
-  char element = arr[2];</span>
+the size of our array is just the amount of said elements,
+the 0th element being the first number or character.
 
-we can do the same but w/ a string..
+speaking of which, we can also create individual characters and
+access the third element (or whichever you want) like so...
 <span class="alt-text">
-  char str[] = "abc";
+  char arr[3] = {'a', 'b', 'c'};</span>
+
+In C, an "un-parenthesized" single character not quoted is
+treated as an integer representing the character's ASCII code.
+
+However, the behavior changes when you use an un-parenthesized
+character inside an array initializer without quotes like the following...
+<span class="alt-text">
+  char arr[3] = {a};</span>
+
+in this specific case, it's not interpreted as the ASCII code.
+also, when you have multiple characters together the compiler
+interprets them as individual characters...
+
+the following declares a single character and assigns it, but
+its not considered an array (not directly storing the number 5)
+instead, it stores the character whose ASCII code is 5.
+<span class="alt-text">
+  char exp = 5;</span>
+
+another way to store a character's ASCII code is...
+<span class="alt-text">
+  char exp = '\a';</span>
+
+as you can see theres quite the amount of variations when it
+comes to arrays, and we've yet to demonstrate a string...
+<span class="alt-text">
+  char str[] = "abc";</span>
+
+character arrays, specifically strings are null-terminated,
+which means that an additional null character (\0) is
+implicitly added at the end of the initialized elements,
+even if you don't explicitly include it in the initializer list.
+
+so now you may be starting get the vibe of how arrays work.
+<span class="alt-text">
   char element = str[2];</span>
 
-so the size of our array is just the amount of said elements,
-the 0th element being the first number or character.
+the statement  `char element[2] = str[2]`   however isnt a valid
+way to copy a single character from a string to a character array. 
 
 when you declare an array like
 <span class="alt-text">
@@ -98,7 +131,7 @@ the added bonus of initializing each member to zero.
 
 they are of course not specific to arrays.
 you might not encounter them often... but you
-can use these  in multiple ways such as:
+can use these in multiple ways...
 
 when calling a function you can have a compound
 literal as a parameter. returning a value itself
@@ -106,14 +139,13 @@ can be a compound literal. or you can have a compound
 literal that recursively initializes arrays or struct members. 
 
 all these kinds of arrays are fixed, and their size will
-be determined at compile time...
+be determined at compile time... 
 <span class="alt-text">
   int arr[var] = {a, b, c};</span>
 
 thats not to say you cant allocate a new array w/
 a larger size and copy the existing elements from
 the old array to the new one (then, continue adding elements)
-
 <span class="alt-text">
   int MaxSize = 5;
   int *FixedArray = (int*)malloc(MaxSize * sizeof(int));</span>
@@ -147,7 +179,7 @@ and you'll come across it more as you progress
 
 see <a class="reserve" href="malloc.html">malloc</a> on page8
 
-we go over designated initializers in  struct.html  but i thought
+we do touch upon designated initializers in  struct.html  but i thought
 i would mention it here first, to establish when you'd want to use
 them, the main reason being when you want to initialize specific
 members of an array or structure.
@@ -155,4 +187,5 @@ members of an array or structure.
   int arr[5] = {[0] = 1, [1] = 4};</span>
 
 see <a class="reserve" href="struct.html">struct</a> on page4
+
 </body></html>
