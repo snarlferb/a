@@ -80,6 +80,12 @@ what we've learned so far..
 
 we can conclude that theres a difference between
 indexing, accessing and initializing. so lets continue.
+and in the expression arr[3], 3 is sometimes called the
+"subscript", while "arr" is the array's name.
+
+so the term "subscript" is used to describe the index or
+indices that are used to access a specific element of an array.
+anyway, lets continue.
 <span class="alt-text">
   int *arr = (int[]){1, 2, 3, 4, 5};</span>
 
@@ -140,5 +146,13 @@ and you'll come across it more as you progress
   void *malloc(size_t size)</span>
 
 see <a class="reserve" href="malloc.html">malloc</a> on page8
-see <a class="reserve" href="struct.html">structures</a> on page4
+
+we go over designated initializers in  struct.html  but i thought
+i would mention it here first, to establish when you'd want to use
+them, the main reason being when you want to initialize specific
+members of an array or structure.
+<span class="alt-text">
+  int arr[5] = {[0] = 1, [1] = 4};</span>
+
+see <a class="reserve" href="struct.html">struct</a> on page4
 </body></html>
