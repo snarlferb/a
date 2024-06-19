@@ -125,16 +125,37 @@ by preserving the " " air-quotes around sequence.
 note, the preprocessor also has specific ways in which it expands a variable
 such being, during the # hash operator.
 
-if you read everything on the page about functions and function pointers,
-you would have learned that you can use them to make a `type` of some variable...
-You can do the same with macro's here:
+if you read everything on the page about functions, you would have learned that you can use
+them to make a `type` of some variable... You can do the same with macro's here:
+<span class="alt-text">
+  #define DEFINE_SERVICE( name )            \
+    typedef struct Service_ ## name ## Rec_ \
+      Service_ ## name ## Rec ;             \
+    typedef struct Service_ ## name ## Rec_ \
+      const * Service_ ## name ;            \
+    struct Service_ ## name ## Rec_</span>
+
+`name` is a placeholder that will be replaced with the actual service name when the macro is used.
+the line, ` Service_ ## name ## Rec ;`  defines a structure named "Service_", followed by the
+provided name argument, and ending with "Rec_".
+
+the proceeding part defines a pointer type for the service structure. It uses the same structure
+name with "Rec_" appended, followed by const *. This creates a pointer that can point to a
+constant Service_ structure (read-only).
+
+once you've defined the service structure and pointer type using the macro, you can declare variables of those types:
+<span class="alt-text">
+DEFINE_SERVICE(AppendThis)
+Service_AppendThis Hello;</span>
+
+heres another macro you can try...
 <span class="alt-text">
   #define GIVE(return_type) return_type
   #define A_Func(this) \
       Generic(umbrella) \
       That_A_Func(this)</span>
 
-now when you declare it as a function prototype, it'll look like...
+now when you declare it as a function declaration, it'll look like...
 <span class="alt-text">
   Generic(umbrella) That_A_Func(AnothType *this);</span>
 
@@ -166,4 +187,5 @@ structs use offsets to access members) note: on my machine `size_t`  is a 64 bit
 `&amp;((*s)-&gt;m)` gets the address of the member within the structure.
 `(size_t) &amp;((*s)-&gt;m)` casts this address to `size_t`
 and then, from __main__ our macro, *offset(struct..* takes 2 arguments `struct s, x`
+
 </body></html>
