@@ -20,11 +20,11 @@ actual header file path during the preprocessing stage.  Next here's an example 
 
 <span class="alt-text">
   #ifdef PLATFORM
-  #include <platform.h>
+  #include &lt;platform.h&gt;
   #define MESSAGE "Hello from whatever platform!"
 
-  #else</span>  <em>// Assume some other platform</em><span class="alt-text">
-  #include <stdio.h>
+  #else</span>
+  #include &lt;stdio.h&gt;<em>// Assume some other platform</em><span class="alt-text">
   #define MESSAGE "Hello from non-native planetform!"
 
   #endif
@@ -145,8 +145,8 @@ constant Service_ structure (read-only).
 
 once you've defined the service structure and pointer type using the macro, you can declare variables of those types:
 <span class="alt-text">
-DEFINE_SERVICE(AppendThis)
-Service_AppendThis Hello;</span>
+  DEFINE_SERVICE(AppendThis)
+  Service_AppendThis Hello;</span>
 
 heres another macro you can try...
 <span class="alt-text">
