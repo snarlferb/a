@@ -95,49 +95,39 @@ is available for use as a "type of function"..
 `typedef` in a struct definition not only creates a type alias
 but also makes the struct name visible in a broader scope, and
 designated intializers provide a way of explicitly
-intitializing struct members
+intitializing struct members... this is considered as,
+"default order initialization"
 <span class="alt-text">
-  typedef struct DeviceInfo {
-    int deviceID;
-    char description[50];
-  } DeviceInfo;
+struct test {int a; char b;} data = {10, 'c'};</span>
 
-  typedef struct {
-    int ex;
-  } ExtID;</span>
-
-ExtID can now be used as the type of a function
-or as the type in a parameter as well
-for now, like i said, lets try to keep things
-as simple as possible... we have two devices
-of type `DeviceInfo`, that have an id and description
+and this one is "explicit order initialization"...
 <span class="alt-text">
-  DeviceInfo device1 = {1, "Device 1"};
-  DeviceInfo device2 = {2, "Device 2"};</span>
+struct test data = {.b = 'c', .a = 10};</span>
 
-structID to access member id for demonstration
-through the access member, we can assign the
-to their respect devices
+*note, that these are not specific to structs*
+now we should see what it looks like in context:
 <span class="alt-text">
-  ExtID A = {.ex = device1.deviceID};
-  ExtID B = {.ex = device2.deviceID};</span>
+  struct Ext {
+    int x;
+    char *y;
+  };
 
-accessing and printing device information
-<span class="alt-text">
-  printf("Device A - ID: %d, Description: %s\n", A.ex, device1.description);
-  printf("Device B - ID: %d, Description: %s\n", B.ex, device2.description);</span>
+  int main() {
+    struct Ext t = {.x = 3, .y = "word"};
+    printf("%d, %s\n", t.x, t.y);
+    return 0;
+  }</span>
 
 returning to the beginning of what we learned
 <span class="alt-text">
-  struct Juncture {
+  struct whatever {
       int x;
       int y;
   };</span>
 
-
 if you want you can do...
 <span class="alt-text">
-  struct Juncture points[] = {
+  struct whatever points[] = {
       {10, 20},
       {30, 40},
       {50, 60}
