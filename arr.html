@@ -32,7 +32,7 @@ access the third element (or whichever you want) like so...
 In C, an "un-parenthesized" single character not quoted is
 treated as an integer representing the character's ASCII code.
 
-However, the behavior changes when you use an un-parenthesized
+however, the behavior changes when you use an un-parenthesized
 character inside an array initializer without quotes like the following...
 <span class="alt-text">
   char arr[3] = {a};</span>
@@ -43,11 +43,13 @@ interprets them as individual characters...
 
 the following declares a single character and assigns it, but
 its not considered an array (not directly storing the number 5)
-instead, it stores the character whose ASCII code is 5.
+instead, it stores the aforementioned "un-parenthesized" character
+whose ASCII code is 5 (the literal decimal ASCII code)
 <span class="alt-text">
   char exp = 5;</span>
 
-another way to store a character's ASCII code is...
+another way to store a character's ASCII code (the ASCII character
+associated with (\a)) not literally the character 'a'...
 <span class="alt-text">
   char exp = '\a';</span>
 
@@ -187,5 +189,4 @@ members of an array or structure.
   int arr[5] = {[0] = 1, [1] = 4};</span>
 
 see <a class="reserve" href="struct.html">struct</a> on page4
-
 </body></html>
