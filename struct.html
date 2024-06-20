@@ -165,25 +165,27 @@ then here is something cool you can do...
     {"group1", action3}
   };</span>
 
-in other words, function pointers let you omit the `(int *)`
-or type that precedes the given variable and have a clean-looking
-string pair like this (or whatever other way you want)
+in other words, function pointers let you omit the `(int *)` or type that
+precedes the given variable and have a clean-looking string pair like this
+(or whatever other way you want)
 
-there's also unions which use less memory, however
-only one member of its allocated memory is used as it
-assigns one common storage space for all its members
+there's also unions which use less memory, however only one member of its
+allocated memory is used as it assigns one common storage space for all its members
 
-and an enum is for when you want to create, whats called
-"enumerated constants"
+and an enum is for when you want to create, whats called "enumerated constants"
 
-i should also postface by saying that only a struct or a function can contain an
-enum directly inside of it. structs are interesting, as they can also contain a union.
-the same isnt the case for functions as they cannot have a struct or union within them.
-unions as well cannot contain other unions, structs or enums, and the same is the case
-with enums, they can not contain another enum, struct or union.
+i should also postface by saying that only a struct or a function can have an enum
+as a member, as mixing them directly within a union could lead to type mismatches and
+unexpected behavior. Similarly, an enum cant contain an enum, struct or union.
 
-c++ introduces a slight relaxation on this restriction which allows you to have
+In C, there's no true nested definitions allowed in a function, unquestionably.
+unions cannot contain other unions, structs or enums, *atleast its not recommended*.
+for portable and predictable behavior, depending on what compiler youre using,
+you should use separate definitions, or named structs/unions...
+
+on my system using gcc, you <em>can</em> have nested structs/unions within a struct or union,
+so its up to you on how strict you want to be, and whether or not it matters to you.
+C++ introduces a slight relaxation on this restriction which allowing for
 anonymous unions (unions without a name) nested within other unions.
-
 next, see <a class="reserve" href="macro.html">macros</a>
 </body></html>

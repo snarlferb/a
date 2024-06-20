@@ -30,6 +30,10 @@ provides an alternative branch or block of code to be executed if the condition 
 true/false or equal to. In that sense, switch statements are a way for multi-way
 branching sequences to be evaluated based on the value of some expression.
 
+when you have a function within the condition of an if statement, it leads to the function
+being executed at that point in the program flow (only if the function's return value
+evaluates to true according to C's truthiness rules)
+
 then you of course have loops. Loops in C, are constructs that allow you to execute a
 block of code repeatedly until the respective conditions are no longer true.
 this eliminates the need to write the same code multiple times.
