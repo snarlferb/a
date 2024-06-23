@@ -15,11 +15,12 @@ zation steps interspersed throughout the process, as well as specific
 implementations/intermediate representations specific to C/GCC...
 
 Preprocessor
-This involves processing the source code before actual compilation begins.
-for macro expansion, it'll replace macros w/ their corresponding code
-per `#define` statement. Then it processes `#include` directives to
-include the content of headers into the source code. Conditions
-are handled such as; `#ifdef`, `#ifndef`, `#else`, `#elif` and `#endif`
+This involves processing the source code before actual compilation begins;
+Expands macros (textual substitutions), includes header files and handles
+conditional compilation directives. For macro expansion, it'll replace macros
+w/ their corresponding code per `#define` statement. Then it processes
+`#include` directives to include the content of headers into the source code.
+Conditions are handled such as; `#ifdef`, `#ifndef`, `#else`, `#elif` and `#endif`
 directives to include (or exclude) portions of code based on preprocessor-
 defined conditions. Comments are removed as well during this time.
 And lastly, it generates line information for the compiler to use
@@ -139,9 +140,29 @@ based on the decisions made during instruction selection, register alloc-
 ation, and other considerations.
 
 Assembly<a href="asm.html#asm-anch" id="compiler-anch">go to page10</a>
-The compiler generates assembly code from the AST. This assembly code consists of
-human-readable mnemonics and operands that correspond to the machine
-instructions of the target architecture.
+The compiler translates high-level code (through intermediate representations) into assembly
+language, which the assembler then processes, or to put it plainly, it generates assembly
+code from the AST. The assembly code itself consists of human-readable mnemonics and
+operands that correspond to the machine instructions of the target architecture.
+
+Symbol resolution is required to maintain a symbol table that tracks labels (symbolic
+names) defined in the assembly code. It assigns memory addresses to labels, either explicitly
+or during later stages. Instruction encoding is for translating assembly instructions into
+machine code opcodes (operation codes) and encoded operands. It'll map each assembly
+instruction to its corresponding machine code instruction, potentially involving
+multiple machine code instructions for complex operations. It inserts opcodes and
+encoded operands based on instruction type, operand types, and addressing modes
+specified in the assembly code.
+
+Relocation Processing is optional, in scenarios where absolute memory addresses
+cannot be determined completely during assembly (e.g., linking with external libraries),
+relocation entries might be generated. These entries mark locations within the object
+file that require adjustment during the linking stage when final memory addresses become available.
+
+The final output of the assembly stage is an object file. This file contains the machine code
+instructions translated from the assembly code, along with additional information such as:
+Symbol tables (if not stripped), Relocation entries (if applicable) Header information
+describing the object file format.
 
 Assembler
 Translates assembly language code into machine code. It takes the human-readable assembly
@@ -167,20 +188,29 @@ are not copied into, but are instead "linked" at runtime. This keeps the executa
 and allows multiple programs to share the same library code in memory.
 
 Loading
-Is responsible for taking the executable file produced by the linker and loading it into
-memory for execution. It sets up the program's entry point, initializes variables, and
-performs any necessary runtime tasks. This process includes allocating memory for the
-program, setting up the stack and heap, resolving any dynamic library dependencies
-(if dynamic linking is used), and transferring control to the program's entry
-point to begin execution.
+The loader has an important responsibility, so i though i would give a comprehensive look
+at what a real loader is doing, and what its duties would ential.
 
-Conclusion
-If a function is declared before its called in code, the compiler knows the function's
-signature and generates code that includes the necessary information for the linker.
-Thus the compiler can catch symbols/references during one of its stages of compilation.
-I like to imagine this as nodes within a long chain, which are representations of
-the longest chain of nodes in the program... This is sometimes the graphics library
-and the framework header... I will explain more about the kinds of systems used
-in programming and how to build a framework or library (see `output`)
+First you have to "validate and identify"; That is when the loader first validates the
+file to ensure it's a valid ELF file. This involves checking the ELF header's magic number,
+architecture compatibility, and other essential information.
 
+Based on the program header table, the loader allocates memory space for the various segments
+of the ELF file. (Segments again define how the executable should be laid out in memory,
+e.g. code, data, read-only sections)
+
+The loader reads each section from the file based on the section header table. Some sections,
+like .text (code) and .rodata (read-only data), are loaded into memory according to their
+permissions. Other sections, like .bss (uninitialized data), may be allocated memory but
+left uninitialized. Then the loader processes relocation information (typically stored
+in sections like .rel.text or .rela.text) to adjust symbol references within the
+loaded code. This ensures functions and variables are addressed correctly based
+on their actual memory locations.
+
+The loader sets up the program's execution environment, including the stack pointer
+and program arguments. It then transfers control to the program's entry point
+(usually the _start function) to begin execution. Additional considerations
+might include the ELF file references symbols from shared libraries,
+wherein the loader will locate and load these libraries dynamically
+at runtime (Security checks may be performed at this point as well)
 </body></html>
