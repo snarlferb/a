@@ -187,7 +187,7 @@ For dynamic linking, the executable contains references to shared libraries, whe
 are not copied into, but are instead "linked" at runtime. This keeps the executable smaller
 and allows multiple programs to share the same library code in memory.
 
-Loading
+Loader
 The loader has an important responsibility, so i though i would give a comprehensive look
 at what a real loader is doing, and what its duties would ential.
 
@@ -212,5 +212,8 @@ and program arguments. It then transfers control to the program's entry point
 (usually the _start function) to begin execution. Additional considerations
 might include the ELF file references symbols from shared libraries,
 wherein the loader will locate and load these libraries dynamically
-at runtime (Security checks may be performed at this point as well)
+at runtime.
+
+It'll also set appropriate memory permissions (read, write, execute) for different
+program segments. (Security checks may be performed at this point as well)
 </body></html>
