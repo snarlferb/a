@@ -1,0 +1,56 @@
+<!-- page11 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>attributes</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<h3>attributes</h3>
+<em>note, this is a temporary idea atm...</em>
+
+here's some outliers in C. I dont want to go too far into everything,
+but there's surely a few additional things i might allude to.
+<span class="alt-text">
+  __attribute__ ((aligned (16))) char stack0[4096 * NCPU];</span>
+
+this array is intended to allocate a separate stack for each CPU core in a
+multi-core system, each stack being 4096 bytes in size (4096 bytes is a
+common size for a stack on many systems).
+
+generally speaking, its considered attribute that specifies alignment,
+and declares an array of characters. It combines alignment specification
+(aligned (16)) with array declaration  char stack0[4096 * NCPU]; 
+to allocate a contiguous block of memory (stack0) that is both aligned
+on a 16-byte boundary and sized to accommodate multiple stacks for a
+specified number of CPU cores (NCPU).
+
+`4096 * NCPU`  calculates the total size of the array. If NCPU is, for example,
+  4, then stack0 would be  4096 * 4 = 16384 bytes (16 KB)
+
+it ensures that the memory allocated for stack0 starts at an address that is
+divisible by 16. This is relevant for scenarios where hardware/ software
+requires data to be aligned to certain boundaries for efficient memory access,
+or to optimize the performance for multi-core systems.
+
+an example might be w/ SIMD instructions in processors which often
+require data to be aligned on boundaries such as 16 bytes to perform efficiently.
+
+here's another example of an attribute...
+<span class="alt-text">
+  void my_function() __attribute__((noreturn));</span>
+
+this `(noreturn)` indicates that my_function does not return to its caller.
+<span class="alt-text">
+  typedef int my_int_type __attribute__((aligned(4)));</span>
+
+this example aligns instances of my_int_type on a 4-byte boundary, and
+they can be used to all sorts of things like this.
+
+you can apply multiple attributes to a single declaration...
+<span class="alt-text">
+  __attribute__((aligned(16), packed)) struct my_struct { ... };</span>
+
+here, aligned(16) aligns the struct on a 16-byte boundary, and packed ensures
+that the struct's members are tightly packed without any padding.
