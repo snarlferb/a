@@ -9,8 +9,9 @@
 </head><body>
 
 <div id="struct-anch">struct</div>
-structures are a contiguous block of memory and
-the fields (members) are accessed using offsets
+In C, structures are user-defined data types that group related variables.
+in technical terms they would be described as contiguous block of memory,
+wherein the fields (members) are accessed using offsets.
 <span class="alt-text">
   |   x   |   y   |</span>
 
@@ -44,14 +45,23 @@ being accessed from a pointer already)...
 `something-&gt;x` would have indirect access, seeing
 as its two levels away from `example`
 
-but lets not cram everything in at once
-lets go through this slowly
-
 you can declare a struct like this
 <span class="alt-text">
   struct example newA;</span>
 
-you can also construct them as an anonymous structs w/ a tag
+here's how you might declare and access members of structures,
+this time w/ an array using the dot (.) operator.
+<span class="alt-text">
+  struct example BarrF[3];
+  BarrF[0].x = 101;</span>
+
+`BarrF` is the name of the array. It's a variable that holds a collection of
+three `example` structures (from the struct we created in the beginning).
+
+so `BarrF` will hold objects of type `example`. hopefully thats not too
+confusing to understand. anything you dont understand you can revisit again.
+
+you can also construct a structure as an anonymous struct with a tag:
 <span class="alt-text">
   struct {
     int x;
@@ -137,13 +147,13 @@ and you can then declare/access the array elements like normal.
 
 lets suppose i have a struct that i want to declare.
 <span class="alt-text">
-  typedef struct SymbolTable Symb</span>
+  typedef struct SymbolTable *Symb</span>
 
 because it is a pointer, i need to refer to instances of `*Symb` as if it is a pointer.
 however if it wasnt a pointer then you would define those instances of it directly
 <span class="alt-text">
   struct NewStruct {
-      Symb newMember;
+      *Symb newMember;
   }</span>
 
 having a member of type `Symb` now would essentially be like
