@@ -10,16 +10,33 @@
 
 malloc
 
-`malloc` and `free` are the go-to functions for most memory allocation needs in C programs:
+malloc is a function that provides a way to allocate memory dynamically at runtime.
+it takes the size of the memory block you want to allocate in bytes as input (size_t size).
+it returns a void* pointer, which is a generic pointer type. You typically need to cast it to
+a specific pointer type (e.g., int*) to access the allocated memory. The allocated memory
+resides on the heap, a region of memory separate from the stack. The heap can grow and
+shrink as needed during program execution.
+
+as such, `malloc` and `free` are the go-to functions for most memory allocation needs in C programs:
 "managing a pool of data", is a perfect example. Many data structures are dynamic in size, i.e.
-The number of nodes in a linked list can grow or shrink as elements are added or removed,
+the number of nodes in a linked list can grow or shrink as elements are added or removed,
 trees can expand or contract as data is inserted or deleted; And thus arrays can be dynamically
 resized to accommodate a changing number of elements.
 
-Here is the most simple example that illustrates this; metrics that track total memory on a device
-which comes in three parts: RAM-based memory consumed, local-memory storage, CPU% percentage of a given process.
-Thats why its like, "why is this app only 5Kb when clearly its doing a whole lot more. It stores 5 Kilobytes,
-but then its dynamically changing size and interacting with the system. THATS malloc!...
+here is how i like to think off malloc and memory allocation in general; think of metrics that track
+total memory on a device which comes in three parts: RAM-based memory consumed, local-memory storage,
+CPU% percentage of a given process. You then might ask the question, "why is this application only
+5KB... when clearly its doing a whole lot more." It stores 5 Kilobytes, but then its dynamically
+changing size and interacting with the system.
+
+one thing we need to acknowledge is how memory is being allocated at runtime. The program doesn't
+know the exact size it needs beforehand, and malloc provides a way to request memory from the
+heap based on the program's needs during execution.
+
+the stack is a fixed-size memory region used for function calls, local variables, and arguments.
+its size is determined at compile time. The heap is a more flexible memory pool that can
+grow and shrink dynamically at runtime. malloc allocates memory from the heap, and thus
+makes use of it to satisfy this notion of runtime allocation.
 
 `malloc` btw is just a void pointer:
 <span class="alt-text">
