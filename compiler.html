@@ -161,7 +161,7 @@ file that require adjustment during the linking stage when final memory addresse
 
 The final output of the assembly stage is an object file. This file contains the machine code
 instructions translated from the assembly code, along with additional information such as:
-Symbol tables (if not stripped), Relocation entries (if applicable) Header information
+ymbol tables (if not stripped), Relocation entries (if applicable) Header information
 describing the object file format.
 
 Assembler
@@ -189,7 +189,8 @@ and allows multiple programs to share the same library code in memory.
 
 Loader
 The loader has an important responsibility, so i though i would give a comprehensive look
-at what a real loader is doing, and what its duties would ential.
+at what a real loader is doing, and what its duties would ential. It is a separate step
+handled by the operating system's loader, and doesnt come into play unless you run /exe
 
 First you have to "validate and identify"; That is when the loader first validates the
 file to ensure it's a valid ELF file. This involves checking the ELF header's magic number,
