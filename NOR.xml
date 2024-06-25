@@ -50,8 +50,8 @@
 
     <!-- Reference to an external HTML file for further demonstration -->
     <demonstration>
-        <description>Next, let's demonstrate computing an expression A'*B'+B*C and simulating NOR behavior.</description>
-        <htmlFile>NOR.html</htmlFile>
+        <description>temporary description</description>
+        <htmlFile>/l/NOR.html</htmlFile>
     </demonstration>
 </logicGates>
 
