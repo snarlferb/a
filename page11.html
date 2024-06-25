@@ -54,3 +54,20 @@ you can apply multiple attributes to a single declaration...
 
 here, aligned(16) aligns the struct on a 16-byte boundary, and packed ensures
 that the struct's members are tightly packed without any padding.
+
+these are of course specific to gcc, nevertheless it gives you some fairly
+useful utilities like this. it also provides hooks for function entry and exit,
+<span class="alt-text">
+  void __attribute__((no_instrument_function)) __cyg_profile_func_enter(void *this_func, void *call_site) {
+    printf("Entering function %p from %p\n", this_func, call_site);
+  }
+
+  void __attribute__((no_instrument_function)) __cyg_profile_func_exit(void *this_func, void *call_site) {
+    printf("Exiting function %p to %p\n", this_func, call_site);
+  }</span>
+
+when you compile your program with the -finstrument-functions flag, it'll
+automatically insert calls to __cyg_profile_func_enter and
+__cyg_profile_func_exit  at the entry and exit points of
+every function in your program.
+
