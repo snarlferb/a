@@ -11,7 +11,8 @@
 <div id="macro-anch">macro</div>
 
 something i like to use macros for is defining a macro within the header path of
-the same name its defined w/, wherein the named macro can be used w/ `#include` plus as a macro e.g.
+the same name its defined w/, wherein the named macro can be used w/ `#include`
+(not exluding its macro use case) e.g.,
 <span class="alt-text">
   #define HI_H "/path/to/it.h"</span>
 
@@ -61,8 +62,36 @@ a tuple-like structure (array)
   #define MACRO(x) ((x)[2])
     int tuple[] = {10, 20, 30, 40};</span>
 
-the next macro shifts 2 to the left (n)bits, and subtracts 1.
+MACRO(x) defines a macro named MACRO that takes a parameter x.
+inside the macro, (x)[2]  accesses the third element of the array x.
 
+tuple[] is an integer array with four elements, ` {10, 20, 30, 40} `
+now, if you use the macro MACRO with the array tuple: ` int third_element = MACRO(tuple);`
+expands to the following:
+<span class="alt-text">
+  int third_element = ((tuple)[2]);</span>
+
+which effectively accesses the third element of the array tuple. In this case,
+tuple[2] refers to 30 (because arrays are zero-indexed)
+
+  tuple[0] is 10
+  tuple[1] is 20
+  tuple[2] is 30
+  tuple[3] is 40
+
+so, MACRO(tuple) will evaluate to tuple[2], giving you 30.
+and the same is the case if `x` were a string, then MACRO(x) would access the third character of the string.
+and that gives you a re-elucidates what you've learned so far about arrays and such.
+
+the macro `#define C(x) ((x)-'@') ` , i.e. (x-64)  is another example that can be used in various contexts
+to denote &lt;Key&gt;Ctrl, characters (e.g. 65 - 64 = 1, and Ctrl-A is the ASCII control character SOH
+(Start of Heading) with an ASCII code of "1") making it easy to recognize and handle "Ctrl-X" mappings,
+<span class="alt-text">
+  if (key == C('S')) {
+    save_file();
+  }</span>
+
+the next macro shifts 2 to the left (n)bits, and subtracts 1.
 <span class="alt-text">
   #define b(n) (2 &lt;&lt; (n))
   #define a(n) ((b(n))-1)</span>
@@ -94,8 +123,7 @@ and you use it as follows:
   int result = MY_MACRO(ptr);</span>
 
 during preprocessing, `MY_MACRO(ptr)` will be replaced with `((*ptr) * 2)`
-the `(*ptr)` is just a textual replacement that occurs before actual compilation
-
+the `(*ptr)` is just a textual replacement that occurs before actual compilation.
 
 these are variations of the backslash (\) character
 in which it cancels-out the proceeding character (we talk about the behavior of backslash characters in other sections)
@@ -111,7 +139,6 @@ whichever way u prefer to see it) which may fall into the running logic of the r
 
 this'll make sense as your brain unlocks the harder-to-grok details.
 when you compile and run the following program, it will output: "sequence"
-
 <span class="alt-text">
   #define QUOTE(seq) "\""#seq"\""
 
@@ -187,5 +214,4 @@ structs use offsets to access members) note: on my machine `size_t`  is a 64 bit
 `&amp;((*s)-&gt;m)` gets the address of the member within the structure.
 `(size_t) &amp;((*s)-&gt;m)` casts this address to `size_t`
 and then, from __main__ our macro, *offset(struct..* takes 2 arguments `struct s, x`
-
 </body></html>
