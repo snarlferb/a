@@ -53,6 +53,7 @@ associated with (\a) and not literally the character 'a'...
 <span class="alt-text">
   char exp = '\a';</span>
 
+`\a` in ascii represents the alert (bell) character.
 and the following is referring to the character constant 'a'
 <span class="alt-text">
   char exp = 'a';</span>
@@ -85,7 +86,6 @@ character arrays, specifically strings, are null-terminated,
 which means that an additional null character (\0) is implicitly/
 added at the end of the initialized elements, even if you don't
 explicitly include it to the initializer list.
-
 <span class="alt-text">
   char element = str[2];</span>
 
@@ -210,4 +210,5 @@ members of an array or structure.
   int arr[5] = {[0] = 1, [1] = 4};</span>
 
 see <a class="reserve" href="struct.html">struct</a> on page4
+
 </body></html>
