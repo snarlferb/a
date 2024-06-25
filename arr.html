@@ -48,26 +48,48 @@ whose ASCII code is 5 (the literal decimal ASCII code)
 <span class="alt-text">
   char exp = 5;</span>
 
-another way to store a character's ASCII code (the ASCII character
-associated with (\a)) not literally the character 'a'...
+another way to store a character's ASCII code, the ASCII character
+associated with (\a) and not literally the character 'a'...
 <span class="alt-text">
   char exp = '\a';</span>
 
-as you can see theres quite the amount of variations when it
-comes to arrays, and we've yet to demonstrate a string...
+and the following is referring to the character constant 'a'
+<span class="alt-text">
+char exp = 'a';
+
+single quotes (') are used for character constants. They represent a
+single character, even if you put multiple characters within them.
+double quotes (") are used for string literals. They represent a
+sequence of characters, including spaces and special characters.
+
+in C, character variables are treated as a type of integer, often
+signed integers (meaning they can hold both positive and negative values).
+when you assign, ` e.g. char exp = 0xFF ` ... (Compilers and modern
+systems tend to treat char as signed by default)
+
+the actual value stored depends on whether char is signed or unsigned.
+
+if char is signed, the upper bit (most significant bit) of 0xFF is
+interpreted as a sign bit (1 for negative). This can result in a
+negative value depending on the system's implementation.
+if char is unsigned, all 8 bits of 0xFF are used to
+represent the value, resulting in 255 (decimal).
+
+confusing right?!... so you can see there's quite the amount of
+variation when it comes to characters and arrays. and we still
+havent shown what string literals look like yet...
 <span class="alt-text">
   char str[] = "abc";</span>
 
-character arrays, specifically strings are null-terminated,
-which means that an additional null character (\0) is
-implicitly added at the end of the initialized elements,
-even if you don't explicitly include it in the initializer list.
+character arrays, specifically strings, are null-terminated,
+which means that an additional null character (\0) is implicitly/
+added at the end of the initialized elements, even if you don't
+explicitly include it to the initializer list.
 
-so now you may be starting get the vibe of how arrays work.
 <span class="alt-text">
   char element = str[2];</span>
 
-the statement  `char element[2] = str[2]`   however isnt a valid
+the statement  `char element[2] = str[2]`   wouldnt be a valid
 way to copy a single character from a string to a character array. 
 
 when you declare an array like
