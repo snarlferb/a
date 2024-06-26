@@ -176,11 +176,13 @@ or in a function it would look like...
     .c = 3
   };</span>
 
-for the sake of demonstration a made them nested...
+for the sake of demonstration a made it nested, `.n = {.a = 1, .b = 2}`
+
 <em>*note: designated initializers are specific to structs and arrays, and
 you cannot directly apply designated initializers to a simple array like</em>  `char outer[5]`
-so when used as designated initializers you have the added bonus
-of initializing each member to zero (the remaining elements are set to zero)
+
+when used as designated initializers you have the added bonus of
+initializing each member to zero (the remaining elements are set to zero)
 
 this rule is rooted in the language's rules for object initialization and applies
 to arrays of any storage duration. In static or global arrays all elements are
