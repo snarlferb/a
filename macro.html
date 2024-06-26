@@ -194,7 +194,7 @@ available for use within the definition of `A_Func`. So you can kinda see how th
 the next example demonstrates an offset (youll remember we explained how
 structs use offsets to access members) note: on my machine `size_t`  is a 64 bit unsigned int
 <span class="alt-text">
-  #define offset(s,m) ((size_t) &amp; (((s*)0)-&gt;m))
+  #define offsetof(s,m) ((size_t) &amp; (((s*)0)-&gt;m))
 
   struct s {
     char *a;
@@ -214,4 +214,26 @@ structs use offsets to access members) note: on my machine `size_t`  is a 64 bit
 `&amp;((*s)-&gt;m)` gets the address of the member within the structure.
 `(size_t) &amp;((*s)-&gt;m)` casts this address to `size_t`
 and then, from __main__ our macro, *offset(struct..* takes 2 arguments `struct s, x`
+
+if for some reason you just cant stomach the macro, here's an alternative method
+to offsetof,  to set a field's value indirectly.
+<span class="alt-text">
+struct example {
+    int a;
+    double b;
+    int c;
+};
+
+int main() {
+    struct example ex = {0, 0.0, 0};
+
+    </span>// First calculate offset<span class="alt-text">
+    size_t offset_c = offsetof(struct example, c);
+
+    int new_value = 42;
+    *(int *)((char *)&amp;ex + offset_c) = new_value;
+
+    return 0;
+}</span>
+
 </body></html>

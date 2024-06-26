@@ -135,12 +135,17 @@ it specifies that the variable or function has external linkage (visible across 
 <div id="type-qualifier-anch">type qualifier</div>
 `const` is used to specify that a variable's value cannot be modified after initialization
 consider it also a form of documentation and a contract with the caller that a function shouldnt
-attempt to modify the provided variable, i.e. its a constant (in one way or another)
+attempt to modify the provided variable.
 
-todo: look up the following terms if you want resolve any confusion that may be caused by like-terms, e.g.
+The value of a const-qualified object however is not a constant expression in the full sense of the term,
+and cannot be used for array dimensions, case labels, and the like. (C is unlike C++ in this regard.)
+When you need a true compile-time constant, use a preprocessor #define (or enum)!
+
+i personally always get confused by these terms like, const-qualified, logically quantified, etc...
+
+look up the following terms if you want resolve any confusion that may be caused by like-terms, e.g.
 modifiers (modify other identifiers), quantifiers (in mathematics they specify quantities of a set)
 identifiers (the names of the entities in the programming language), delimeters (specify boundaries)
 
 next, see <a class="reserve" href="ptr.html">pointers</a>
-
 </body></html>

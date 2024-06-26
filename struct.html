@@ -99,7 +99,7 @@ quick note, typedef also means that the type (in this case `demonstrate`)
 is available for use as a "type of function"..
 <span class="alt-text">
   demonstrate CreateFunction(){
-    // initialize/add arguments or any operation.
+
   }</span>
 
 `typedef` in a struct definition not only creates a type alias
@@ -144,6 +144,14 @@ if you want you can do...
   };</span>
 
 and you can then declare/access the array elements like normal.
+but i wanna show something less normal...
+<span class="alt-text">
+  void plop(struct whatever p);</span>
+
+when you call it... (youve already seen a compound literal before)
+<span class="alt-text">
+  plop((struct whatever){1, 2});</span>
+
 now lets suppose i have a struct that i want to declare.
 <span class="alt-text">
   typedef struct SymbolTable *Symb</span>
@@ -183,18 +191,35 @@ allocated memory is used as it assigns one common storage space for all its memb
 
 and an enum is for when you want to create, whats called "enumerated constants"
 
-i should also postface by saying that only a struct or a function can have an enum
-as a member, as mixing them directly within a union could lead to type mismatches and
-unexpected behavior. Similarly, an enum cant contain an enum, struct or union.
-
 In C, there's no true nested definitions allowed in a function, unquestionably.
-unions cannot contain other unions, structs or enums, *atleast its not recommended*.
-for portable and predictable behavior, depending on what compiler youre using,
-you should use separate definitions, or named structs/unions...
+but regarding nested structs within unions...
+<span class="alt-text">
+<http://www.lysator.liu.se/c/tc1.html>
+  struct s {double i;} f(void);
+  union {
+    struct {
+      int f1;
+      struct s f2;
+        } u1;
+    struct {
+      struct s f3; 
+      int f4;
+      } u2;
+  } g;
+    
+  struct s f(void) {
+    return g.u1.f2;
+  }
+    /* ... */
 
-on my system using gcc, you <em>can</em> have nested structs/unions within a struct or union,
-so its up to you on how strict you want to be, and whether or not it matters to you.
-C++ introduces a slight relaxation on this restriction which allowing for
-anonymous unions (unions without a name) nested within other unions.
+  g.u2.f3 = f();</span>
+
+the behavior is defined. 
+
+regarding anonymous unions, c does support them, with some considerations...
+anonymous unions must be declared within a containing struct or union, and
+members of the anonymous union are accessed directly as if they were
+members of the containing struct or union.
+
 next, see <a class="reserve" href="macro.html">macros</a>
 </body></html>

@@ -16,13 +16,19 @@
   int *D = C;</span>
 
 experiment w/ this in the context of type-casting back nd forth
-and using different Types..
+and using different types. also when youve declared a variable and then
+set a pointer (e.g., `int *ptr`) to make it point somewhere (ptr = ...)
+you just use the name of the pointer (or use &amp; to reference): 
 <span class="alt-text">
   int A = 4;
   int *ptr;
   ptr = &amp;A;</span>
 
-use the %p specifier and &amp;A to print out an address
+in printf functions, use the %p specifier and &amp;A to print out an address
+(assuming its of type `int`, you would cast it in the following way)
+<span class="alt-text">
+  printf("%p\n", (void *)&amp;A);</span>
+
 or declare `*ptr` again to dereference the original pointer
 <span class="alt-text">
   int value = *ptr;</span>
@@ -32,14 +38,16 @@ this is called "forward declaration" and is the nature of a static-type system
 
 lets talk about parameters. they allow a function to encapsulate its behavior.
 
-you can use pointers when passing the address of a variable
-to a function. this function can then modify the original value
-through the pointer (note: you can also pass value, address,
-array and struct w/ parameters)
+you can use pointers when passing the address of a variable to a function.
+this function can then modify the original value through the pointer
+(note: you can also pass value, address, array and struct w/ parameters)
 <span class="alt-text">
   void accessExample(int *ptr) {
     *ptr = 1;
   }</span>
+
+`*ptr = 1;` dereferences the pointer called `ptr`, meaning it accesses the
+integer variable located at the memory address stored in ptr. 
 
 we can access the address of said variable
 from another function like so
@@ -87,20 +95,20 @@ explicit type casting w/ dereferencing would look like...
 <span class="alt-text">
   DST_REG = *(int *)(SRC_REG + offset);</span>
 
-so in short, pointers allow direct access to a memory address
-providing a way to manipulate and interact with data at a low level
-its essential for tasks like memory allocation (`malloc`) and
-working with complex data structures.
-passing a pointer to a function is often more efficient than passing
-large data structures by value
-this is because only the memory address is passed, not the whole data
+so in short, pointers allow direct access to a memory address providing a way to
+manipulate and interact with data at a low level its essential for tasks like
+memory allocation (`malloc`) and working with complex data structures.
+
+passing a pointer to a function is often more efficient than passing large data structures
+by value because only the memory address is passed, not the whole data.
 
 double pointers say something additional about a value that they're pointing to.
 in that its a way to get the "value of the value" that is, to hold the address
-of ANOTHER pointer `**ptr`
+of ANOTHER pointer  `**ptr`
 
 dereferencing a double pointer allows access to the value of the variable
-that the single pointer `*ptr` points to.
+that the single pointer *ptr points to.
 
 next, see <a class="reserve" href="func.html">functions</a>
+
 </body></html>
