@@ -129,9 +129,9 @@ these are variations of the backslash (\) character
 in which it cancels-out the proceeding character (we talk about the behavior of backslash characters in other sections)
 but in any other case an escape sequence is determined by the proceeding character e.g. "\n" newline
 <span class="alt-text">
-  char s1[] = "Ca\\ncel";
-  char s2[] = "Ca\134ncel";
-  char s3[] = "Ca\x5Cncel";</span>
+  char s1[] = "Ca\\ncel";</span> // ASCII<span class="alt-text">
+  char s2[] = "Ca\134ncel";</span> // octal<span class="alt-text">
+  char s3[] = "Ca\x5Cncel";</span> // hex
 
 technically speaking, the backslash is an ID token that goes until it hits whitespace
 in which case it might have the effect of continuating a line (or removing the line break

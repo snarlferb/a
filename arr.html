@@ -1,4 +1,4 @@
-<!-- page3 -->
+<!-- page4 -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -44,7 +44,7 @@ interprets them as individual characters...
 the following declares a single character and assigns it, but
 its not considered an array (not directly storing the number 5)
 instead, it stores the aforementioned "un-parenthesized" character
-whose ASCII code is 5 (the literal decimal ASCII code)
+whose ASCII code is 5 (the decimal ASCII code)
 <span class="alt-text">
   char exp = 5;</span>
 
@@ -54,12 +54,18 @@ associated with (\a) and not literally the character 'a'...
   char exp = '\a';</span>
 
 `\a` in ascii represents the alert (bell) character.
-and the following is referring to the character constant 'a'
+and the following is referring to the character constant (character literal 'a')
 <span class="alt-text">
   char exp = 'a';</span>
 
 single quotes (') are used for character constants. They represent a
 single character, even if you put multiple characters within them.
+
+character literals (like `char exp = 5`)  represents a single,
+unchanging value. For example, the character literal 'a' always
+corresponds to the ASCII value 97, and as such this value is
+constant and will never change.
+
 double quotes (") are used for string literals. They represent a
 sequence of characters, including spaces and special characters.
 
@@ -103,8 +109,6 @@ simply use the array name `arr` to point to the array...
 <span class="alt-text">
   int *ptr = arr;</span>
 
-(we explain pointers on the following page...)
-
 `int arr[3]` is considered an "integer array",  `int[]` with the
 name "arr" of size (3)... As such its created a pointer
 to the integer named "arr" (a contiguous block of memory
@@ -146,20 +150,50 @@ anyway, lets continue.
   int *arr = (int[]){1, 2, 3, 4, 5};</span>
 
 this is a compound literal. they can be of any type (except for void)
-as the purpose is to create an anonymous instance
-`(type name){}` of a specific type and initialize
-its members inline. You might see them used as
-designated initializers, in which case you have
-the added bonus of initializing each member to zero.
+as the purpose is to create an anonymous instance `(type UniqName){}`
+of a specific type and initialize its members inline.
 
-they are of course not specific to arrays.
-you might not encounter them often... but you
-can use these in multiple ways...
+compound literals let you to create an array or structure on the fly
+and use it immediately, which can be particularly useful for
+initializing pointers or passing temporary arrays to functions.
 
-when calling a function you can have a compound
-literal as a parameter. returning a value itself
-can be a compound literal. or you can have a compound
+when calling a function you can have a compound literal as a parameter.
+returning a value itself can be a compound literal. or you can have a compound
 literal that recursively initializes arrays or struct members. 
+
+we touch upon designated initializers in  <a class="reserve" href="struct.html">struct.html</a>
+but i thought i would mention it here first, to establish when you'd
+want to use them, the main reason being when you want to initialize specific
+elements, aggregates of, an array or structure, without explicitly
+initializing every element.
+<span class="alt-text">
+  int arr[5] = {.n = {.a = 1, .b = 2}, .c = 3};</span>
+
+or in a function it would look like...
+<span class="alt-text">
+    int arr[5] = {
+    .n = {.a = 1, .b = 2},
+    .c = 3
+  };</span>
+
+for the sake of demonstration a made them nested...
+<em>*note: designated initializers are specific to structs and arrays, and
+you cannot directly apply designated initializers to a simple array like</em>  `char outer[5]`
+so when used as designated initializers you have the added bonus
+of initializing each member to zero (the remaining elements are set to zero)
+
+this rule is rooted in the language's rules for object initialization and applies
+to arrays of any storage duration. In static or global arrays all elements are
+initialized to zero if not explicitly initialized.
+
+only explicitly initialized elements are set, and uninitialized elements are
+default-initialized (that is they are set to zero)
+
+according to the C99 standard (ISO/IEC 9899:1999), section 6.7.8:
+
+  <em>"if there are fewer initializers in a brace-enclosed list than there are
+  elements or members of an aggregate, the remainder of the aggregate shall be
+  initialized implicitly the same as objects that have static storage duration."</em>
 
 all these kinds of arrays are fixed, and their size will
 be determined at compile time... 
@@ -200,15 +234,6 @@ and you'll come across it more as you progress
 <span class="alt-text">
   void *malloc(size_t size)</span>
 
-see <a class="reserve" href="malloc.html">malloc</a> on page8
-
-we touch upon designated initializers in  struct.html  but i thought
-i would mention it here first, to establish when you'd want to use
-them, the main reason being when you want to initialize specific
-members of an array or structure.
-<span class="alt-text">
-  int arr[5] = {[0] = 1, [1] = 4};</span>
-
-see <a class="reserve" href="struct.html">struct</a> on page4
+see <a class="reserve" href="malloc.html">malloc</a> on page8, or   see <a class="reserve" href="struct.html">struct</a> on page5
 
 </body></html>
