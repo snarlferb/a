@@ -29,9 +29,14 @@ in printf functions, use the %p specifier and &amp;A to print out an address
 <span class="alt-text">
   printf("%p\n", (void *)&amp;A);</span>
 
-or declare `*ptr` again to dereference the original pointer
-<span class="alt-text">
-  int value = *ptr;</span>
+or declare `*ptr` again to dereference the original pointer.
+and while the &amp; or (address of) operator is used to print a variable's address,
+its primary role is to facilitate pointer operations and enable functions to
+modify variables indirectly through their addresses...
+
+there are situations where you cannot directly assign the *ptr to the address of
+a variable. Specifically, this restriction applies to cases where the variable's
+address is not known at compile time, or when dealing with certain types of variables.
 
 you can use objects before they are explicitly assigned or defined
 this is called "forward declaration" and is the nature of a static-type system
