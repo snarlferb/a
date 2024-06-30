@@ -138,7 +138,7 @@ in which case it might have the effect of continuating a line (or removing the l
 whichever way u prefer to see it) which may fall into the running logic of the rest of the code
 
 this'll make sense as your brain unlocks the harder-to-grok details.
-when you compile and run the following program, it will output: "sequence"
+when you compile and run the following program, it will output: "sequence"...
 <span class="alt-text">
   #define QUOTE(seq) "\""#seq"\""
 
@@ -147,10 +147,11 @@ when you compile and run the following program, it will output: "sequence"
   return 0;
   }</span>
 
-by preserving the " " air-quotes around sequence.
+... by preserving the " " air-quotes around sequence.
 
-note, the preprocessor also has specific ways in which it expands a variable
-such being, during the # hash operator.
+note, the preprocessor has specific ways in which it expands a variable such in
+our example `#seq` which acts as the stringification operator, converting the
+macro argument seq into a string literal.
 
 if you read everything on the page about functions, you would have learned that you can use
 them to make a `type` of some variable... You can do the same with macro's here:
@@ -235,5 +236,4 @@ int main() {
 
     return 0;
 }</span>
-
 </body></html>
