@@ -405,9 +405,13 @@ or passed in as an argument;
 
 <b>$*</b> Asterisk is similar to the filename
 meta-character, in that it matches all arguments.
+all positional parameters ($1, $2, $3) are
+concatenated into a single string
+separated by spaces.
 
 <b>$@</b> is similar to <b>$*</b>, except it retains
-the spaces found in the variable.
+the spaces found in the variable. It expands each
+positional parameter as a separate quoted string.
 
 <b>$#</b> is equal to the number of arguments passed
 to the script.
