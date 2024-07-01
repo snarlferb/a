@@ -58,6 +58,7 @@
 &emsp;&emsp; select the "usb" boot option in BIOS
 
 &emsp;&emsp; **Important**
+&emsp;&emsp; The term  "BIOS" is often colloquially used, and can mean either UEFI or PC BIOS...
 &emsp;&emsp; UEFI boot mode is the modern standard for booting operating systems on newer hardware,
 &emsp;&emsp; and offers several advantages over legacy BIOS. It you plan to make an MBR (dos) partition
 &emsp;&emsp; table, than you should be in "Compatible Support Module" or "Legacy Mode", but if you-
@@ -250,6 +251,7 @@ hr.dotted {
 <span class="alt-text">
 &emsp;&emsp; grub-install --target=i386-pc /dev/sda</span>
 &emsp;&emsp;                     alternatively, `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub /dev/sda`
+&emsp;&emsp;                     if for some reason its not writing to a non-FAT filesystem, i have a list of steps <a class="reserve" href="uefi.html">here you can try</a>
 <span class="alt-text">
 &emsp;&emsp; grub-mkconfig -o /boot/grub/grub.cfg</span>
 
