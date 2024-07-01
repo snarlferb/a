@@ -59,10 +59,13 @@
 
 &emsp;&emsp; **Important**
 &emsp;&emsp; The term  "BIOS" is often colloquially used, and can mean either UEFI or PC BIOS...
-&emsp;&emsp; UEFI boot mode is the modern standard for booting operating systems on newer hardware,
-&emsp;&emsp; and offers several advantages over legacy BIOS. It you plan to make an MBR (dos) partition
-&emsp;&emsp; table, than you should be in "Compatible Support Module" or "Legacy Mode", but if you-
-&emsp;&emsp; re going w/ a GPT partition table you should be in "UEFI" boot mode.
+&emsp;&emsp; BIOS or UEFI is sometimes considered a 1st-stage bootloader, while GRUB is the 2nd...
+&emsp;&emsp; (U)EFI System Class 1 and Class 2, has a BIOS compatible mode called "Legacy BIOS" or
+&emsp;&emsp; "CSM" (short for Compatiblity Support Module), which makes the UEFI behave like a PC BIOS.
+&emsp;&emsp; UEFI System Class 3, the standard since around 2020, no longer has a CSM...
+&emsp;&emsp; If you plan to make an MBR (dos) partition table, than you should be in
+&emsp;&emsp; "Compatible Support Module" or "Legacy Mode", but if you're going w/ a
+&emsp;&emsp; GPT partition table you should be in "UEFI" boot mode.
 
 &emsp;&emsp; || NOTE: Make sure you have internet/wifi
 &emsp;&emsp; || Your keyboards last config WILL persist
