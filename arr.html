@@ -12,141 +12,126 @@
 <span class="alt-text">
   int arr[3];</span>
 
-if `int arr[3] = ...`, were to equal something
-then we could gain access and receive a
-normal integer value when specifying its index.
+if `int arr[3] = ...`, were to equal something then we could gain access
+and receive a normal integer value when specifying its index.
 
-otherwise the index of an array is random when
-uninitialized or its being determined by the initializer e.g.
+otherwise the index of an array is random when uninitialized or its being
+determined by the initializer e.g.
 <span class="alt-text">
   int arr[] = {3, 4, 5};</span>
 
-the size of our array is just the amount of said elements,
-the 0th element being the first number or character.
+the size of our array is just the amount of said elements, the 0th element being
+the first number or character.
 
-speaking of which, we can also create individual characters and
-access the third element (or whichever you want) like so...
+speaking of which, we can also create individual characters and access the third
+element (or whichever you want) like so...
 <span class="alt-text">
   char arr[3] = {'a', 'b', 'c'};</span>
 
-In C, an "un-parenthesized" single character not quoted is
-treated as an integer representing the character's ASCII code.
+In C, an "un-parenthesized" single character not quoted is treated as an integer
+representing the character's ASCII code.
 
-however, the behavior changes when you use an un-parenthesized
-character inside an array initializer without quotes like the following...
+however, the behavior changes when you use an un-parenthesized character inside an
+array initializer without quotes like the following...
 <span class="alt-text">
   char arr[3] = {a};</span>
 
-in this specific case, it's not interpreted as the ASCII code.
-also, when you have multiple characters together the compiler
-interprets them as individual characters...
+in this specific case, it's not interpreted as the ASCII code. also, when you have
+multiple characters together the compiler interprets them as individual characters...
 
-the following declares a single character and assigns it, but
-its not considered an array (not directly storing the number 5)
-instead, it stores the aforementioned "un-parenthesized" character
-whose ASCII code is 5 (the decimal ASCII code)
+the following declares a single character and assigns it, but its not considered an
+array (not directly storing the number 5) instead, it stores the aforementioned
+"un-parenthesized" character whose ASCII code is 5 (the decimal ASCII code)
 <span class="alt-text">
   char exp = 5;</span>
 
-another way to store a character's ASCII code, the ASCII character
-associated with (\a) and not literally the character 'a'...
+another way to store a character's ASCII code, the ASCII character associated with
+(\a) and not literally the character 'a'...
 <span class="alt-text">
   char exp = '\a';</span>
 
-`\a` in ascii represents the alert (bell) character.
-and the following is referring to the character constant (character literal 'a')
+`\a` in ascii represents the alert (bell) character. and the following is referring
+to the character constant (character literal 'a')
 <span class="alt-text">
   char exp = 'a';</span>
 
-single quotes (') are used for character constants. They represent a
-single character, even if you put multiple characters within them.
+single quotes (') are used for character constants. They represent a single character,
+even if you put multiple characters within them.
 
-character literals (like `char exp = 5`)  represents a single,
-unchanging value. For example, the character literal 'a' always
-corresponds to the ASCII value 97, and as such this value is
-constant and will never change.
+character literals (like `char exp = 5`)  represents a single, unchanging value.
+For example, the character literal 'a' always corresponds to the ASCII value 97,
+and as such this value is constant and will never change.
 
-double quotes (") are used for string literals. They represent a
-sequence of characters, including spaces and special characters.
+double quotes (") are used for string literals. They represent a sequence of characters,
+including spaces and special characters.
 
-in C, character variables are treated as a type of integer, often
-signed integers (meaning they can hold both positive and negative values).
-when you assign, ` e.g. char exp = 0xFF ` ... (Compilers and modern
-systems tend to treat char as signed by default)
+in C, character variables are treated as a type of integer, often signed integers
+(meaning they can hold both positive and negative values). when you assign, ` e.g. char exp = 0xFF `
+... (Compilers and modern systems tend to treat char as signed by default)
 
 the actual value stored depends on whether char is signed or unsigned.
 
-if char is signed, the upper bit (most significant bit) of 0xFF is
-interpreted as a sign bit (1 for negative). This can result in a
-negative value depending on the system's implementation.
-if char is unsigned, all 8 bits of 0xFF are used to
+if char is signed, the upper bit (most significant bit) of 0xFF is interpreted as a
+sign bit (1 for negative). This can result in a negative value depending on the
+system's implementation.  if char is unsigned, all 8 bits of 0xFF are used to
 represent the value, resulting in 255 (decimal).
 
-confusing right?!... so you can see there's quite the amount of
-variation when it comes to characters and arrays. and we still
-havent shown what string literals look like yet...
+confusing right?!... so you can see there's quite the amount of variation when it
+comes to characters and arrays. and we still havent shown what string literals look like yet...
 <span class="alt-text">
   char str[] = "abc";</span>
 
-character arrays, specifically strings, are null-terminated,
-which means that an additional null character (\0) is implicitly/
-added at the end of the initialized elements, even if you don't
-explicitly include it to the initializer list.
+character arrays, specifically strings, are null-terminated, which means that
+an additional null character (\0) is implicitly/ added at the end of the
+initialized elements, even if you don't explicitly include it to the initializer list.
 <span class="alt-text">
   char element = str[2];</span>
 
-the statement  `char element[2] = str[2]`   wouldnt be a valid
-way to copy a single character from a string to a character array. 
+the statement  `char element[2] = str[2]`   wouldnt be a valid way to copy a
+single character from a string to a character array. 
 
 when you declare an array like
 <span class="alt-text">
   int arr[3];</span>
 
-the name "arr" itself represents the address of the first
-element of the array. In other words its equivalent to a
-pointer to the first element of the array. Therefore, you can
-simply use the array name `arr` to point to the array...
+the name "arr" itself represents the address of the first element of the array.
+In other words its equivalent to a pointer to the first element of the array.
+Therefore, you can simply use the array name `arr` to point to the array...
 <span class="alt-text">
   int *ptr = arr;</span>
 
-`int arr[3]` is considered an "integer array",  `int[]` with the
-name "arr" of size (3)... As such its created a pointer
-to the integer named "arr" (a contiguous block of memory
-w/ (3) integers).... however if we had declared `int *`
-(a pointer variable w/ the address of an integer)
+`int arr[3]` is considered an "integer array",  `int[]` with the name "arr" of
+size (3)... As such its created a pointer to the integer named "arr"
+(a contiguous block of memory with (3) integers)... however if we
+had declared `int *` (a pointer variable w/ the address of an integer)
 this would change what we could do with it.
 
-We could use the integer array to point to an array, or be
-used for dynamically allocating memory w/ a variable-size array
-(which we explain below)
+We could use the integer array to point to an array, or be used for dynamically
+allocating memory w/ a variable-size array (which we explain below)
 
-while we have an array we can also declare a pointer
-to an array of an unspecified size, cause why not,
-we're showing all possible entrees you can serve
+while we have an array we can also declare a pointer to an array of an
+unspecified size, cause why not, we're showing all possible entrees you can serve,
 <span class="alt-text">
   int (*ptr)[];</span>
 
-you can decompose this to cast it, `NULL` being
-in place of the variable you could presumably cast it to
+you can decompose this to cast it, `NULL` being in place of the variable
+you could presumably cast it to
 <span class="alt-text">
   ptr_cast = (int (*)[])NULL;</span>
 
-if that is too confusing, just write it down and
-come back to it later to give it a second try...
+if that is too confusing, just write it down and come back to it later to
+give it a second try...
 
-now going back to our valuable array, to review
-what we've learned so far..
+now going back to our valuable array, to review what we've learned so far..
 <span class="alt-text">
   int arr[3];</span>
 
-we can conclude that theres a difference between
-indexing, accessing and initializing. in the expression
-arr[3], the "3" is sometimes called the "subscript".
+we can conclude that theres a difference between indexing, accessing and
+initializing. in the expression arr[3], the "3" is sometimes called the "subscript".
 
-the term "subscript" is used to describe the index or
-indices that are used to access a specific element of an array.
-something else interesting, C allows for arithmetic expressions within
-the brackets of an array's indexing, like so:
+the term "subscript" is used to describe the index or indices that are used
+to access a specific element of an array. something else interesting, C allows
+for arithmetic expressions within the brackets of an array's indexing, like so:
 <span class="alt-text">
   buffer[bytes_read - 1];</span>
 
@@ -203,22 +188,22 @@ according to the C99 standard (ISO/IEC 9899:1999), section 6.7.8:
   elements or members of an aggregate, the remainder of the aggregate shall be
   initialized implicitly the same as objects that have static storage duration."</em>
 
-all these kinds of arrays are fixed, and their size will
-be determined at compile time... 
+also arrays declared at global or static scope are automatically initialized to zero too
+however that is not the case if they are declared within a function and without `static`.
+
+all these kinds of arrays are fixed, and their size will be determined at compile time... 
 <span class="alt-text">
   int arr[var] = {a, b, c};</span>
 
-thats not to say you cant allocate a new array w/
-a larger size and copy the existing elements from
-the old array to the new one (then, continue adding elements)
+thats not to say you cant allocate a new array w/ a larger size and copy the existing
+elements from the old array to the new one (then, continue adding elements)
 <span class="alt-text">
   int MaxSize = 5;
   int *FixedArray = (int*)malloc(MaxSize * sizeof(int));</span>
 
-`malloc(MaxSize * sizeof(int))` dynamically allocates memory
-for an array of MaxSize integers. `sizeof(int)` is used to
-determine the size of each integer element in bytes, ensuring that
-enough memory is allocated for the entire array...
+`malloc(MaxSize * sizeof(int))` dynamically allocates memory for an array of MaxSize
+integers. `sizeof(int)` is used to determine the size of each integer element in bytes,
+ensuring that enough memory is allocated for the entire array...
 
 while we're here, i can show how to make a variable-sized array
 <span class="alt-text">
@@ -228,14 +213,14 @@ you would iterate over the array in a forloop adding
 <span class="alt-text">
    FixedArray[i] = i + 1;</span>
 
-increasing the size and copy the existing elements to the
-new array, and add the elements to the new array.
+increasing the size and copy the existing elements to the new array, and add the
+elements to the new array.
 
-`(int*)` is referred to as type casting, youll see this alot in C
-as its to assure the type compatibility when assigning another variable
-that may or may not be allowed; The compiler will perform this conversion
-implicitly and issue warnings for implicit conversions that could result in
-data loss... there's a hierarchy of specific casting levels allowed/not allowed
+`(int*)` is referred to as type casting, youll see this alot in C as its to assure the
+type compatibility when assigning another variable that may or may not be allowed;
+The compiler will perform this conversion implicitly and issue warnings for implicit
+conversions that could result in data loss... there's a hierarchy of specific
+casting levels allowed/not allowed
 
 `malloc` is just a function w/ a `size_t`(atleast 16bit) parameter
 and you'll come across it more as you progress
