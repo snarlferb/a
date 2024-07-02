@@ -24,14 +24,16 @@ data types
 In C, an "object" can refer to a variable of any data type,
 including basic types (int, float, char) or even user-defined structures.
 
-char type is considered a small integer type
-its typically used to represent characters
-however those characters have to be stored as integer values
+when a function is defined, its signature (return_type function_name(parameter_list))
+includes the return type, which tells the compiler what kind of data the function
+will return (if any)
+
+char type is considered a small integer type its typically used to represent
+characters, however those characters have to be stored as integer values
 (thus, small integer type)
 
 <div id="void-anch">void pointer</div>
-they can point to objects of any data type
-"void" btw just means "no return type"
+they can point to objects of any data type "void" btw just means "no return type"
 where as int functions must include a return type
 
 for any other type, it's a common convention to use 0 to indicate success and
@@ -54,36 +56,31 @@ here's a very simple example to illustrate the structure of a function inside a 
   }</span>
 
 <div id="variadic-anch">variadic function</div>
-since we use `printf` to see the results of everything
-we should understand what kind of function it is
-its a special function that takes a variable amount of arguments,
+since we use `printf` to see the results of everything we should understand what kind
+of function it is its a special function that takes a variable amount of arguments,
 that is, they are presented with an ellipsis "..." within a given function's parameters
 <span class="alt-text">
   int printf(const char *format, ...)</span>
 
 this is the definition provided by the standard lib header, so linking w/
-`#include &lt;stdio.h&gt;`
-lets you use `printf`. keep in mind, you include C library headers w/ &lt;file.h&gt;
-and user-defined headers w/ "file.h"
+`#include &lt;stdio.h&gt;`  lets you use `printf`. keep in mind, you include C library
+headers w/ &lt;file.h&gt;  and user-defined headers w/ "file.h"
 <span class="alt-text">
   printf("Example text %d, %d, %d\n", var1, var2, var3);</span>
 
-So here we are demonstrating what both a
-function declaration is, and how `printf` works.
+So here we are demonstrating what both a function declaration is, and how `printf` works.
 Because its a variadic function, it could conceivably take an inifinite amount of variables
-... simply put, the first part ("in quotation marks") will accept your
-personalized text as well as format specifiers.
-these format specifiers align with each proceeding variable (found after the comma)
-`printf` in particular is used for printing formatted output to the screen, hence print -f(formatted)
+... simply put, the first part ("in quotation marks") will accept your personalized text as
+well as format specifiers. these format specifiers align with each proceeding variable
+(found after the comma) `printf` in particular is used for printing formatted output
+to the screen, hence print -f(formatted)
 
-lets get back to the specifics of a function.
-functions bring a specific set of instructions depending on how you define them...
-to see how they pertain to their assembly counterpart, see page10
+lets get back to the specifics of a function. functions bring a specific set of
+instructions depending on how you define them... to see how they pertain to
+their assembly counterpart (see the asm.html page for more info)
 
-lets say you create a function prototype
-that is, you want to tell the program that
-theres a function defined somewhere
-and you want to call it
+lets say you create a function prototype that is, you want to tell the program that
+theres a function defined somewhere and you want to call it
 <span class="alt-text">
   void func(int x);</span>
 
@@ -92,12 +89,11 @@ it would have to find this function defined within the program somewhere...
   void func(int x) {
   }</span>
 
-one notable feature related to a function is the ability to
-capture the internal instructions of a function
+one notable feature related to a function is the ability to capture the
+internal instructions of a function
 
-since this is our first example, you should remember that
-all program instructions are called out from `int main` first,
-and then proceed to the rest of the program
+since this is our first example, you should remember that all program instructions
+are called out from `int main` first, and then proceed to the rest of the program
 <span class="alt-text">
   int func(int a,int b) {
     int c = a + b;
@@ -112,16 +108,14 @@ and then proceed to the rest of the program
     return 0;
   }</span>
 
-we explicitly declared new variables in `main` to show how main works
-and to demonstrate how a function could be assigned the same arguments
-as another function, in this case `intern` was assigned to `func(a,b)`
-and we renamed/reassigned those parameters as well
+we explicitly declared new variables in `main` to show how main works and to demonstrate
+how a function could be assigned the same arguments as another function, in this case
+`intern` was assigned to `func(a,b)` and we renamed/reassigned those parameters as well
 <div id="function-pointer-anch"></div>
-regarding function pointers... they can seem a little odd at first,
-especially when combined with unnamed parameters or return types,
-however these unnamed functions or function parameters are legal in C,
-nevertheless function pointers are a powerful feature of the language,
-allowing for dynamic dispatch, callbacks, etc.
+regarding function pointers... they can seem a little odd at first, especially when
+combined with unnamed parameters or return types, however these unnamed functions or
+function parameters are legal in C, nevertheless function pointers are a powerful
+feature of the language, allowing for dynamic dispatch, callbacks, etc.
 
 first create the function
 <span class="alt-text">
@@ -138,13 +132,12 @@ to point to the function's address
 <span class="alt-text">
   pointerToFunction = &amp;Function;</span>
 
-now its equal to some original function we had
-in this example you dont even need to include braces,
-but you should note that you dont include void anyway
-when you call a void function from within another function
+now its equal to some original function we had in this example you dont even need to
+include braces, but you should note that you dont include void anyway when you call
+a void function from within another function
 
-however function origins that do not have parameters should
-be filled out with void i.e. `func(void) {}`
+however function origins that do not have parameters should be filled out with void
+i.e. `func(void) {}`
 
 last but not least, you can call the function through the function pointer,
 and assign a value to its parameter
@@ -155,9 +148,8 @@ here's the next example
 <span class="alt-text">
   void ThisFunction(void (*NewParam)(int));</span>
 
-you might also call this the function pointer's signature
-it would have to find this function defined within the
-program
+you might also call this the function pointer's signature it would have to find this
+function defined within the program
 <span class="alt-text">
   void ThisFunction(void (*NewParam)(int)) {
   }</span>
@@ -171,8 +163,8 @@ you can call it now since it shares the same signature
 <span class="alt-text">
   ThisFunction(&amp;SomeNewFunction);</span>
 
-i'll leave it up to you to experiment with it... for now, here's an
-even simpler illustration of a function pointer...
+i'll leave it up to you to experiment with it... for now, here's an even simpler
+illustration of a function pointer...
 <span class="alt-text">
   void printNum(int num) {
     printf("Number: %d\n", num);
@@ -188,17 +180,16 @@ even simpler illustration of a function pointer...
     return 0;
   }</span>
 
-you can use `typedef` in function pointers (not for regular functions)
-this is VERY useful for creating parameters (example from C11 threads)
+you can use `typedef` in function pointers (not for regular functions) this is VERY useful
+for creating parameters (example from C11 threads)
 <span class="alt-text">
   typedef struct thrd_t_struct thrd_t;
   typedef int (*thrd_start_t)(void*);
   int thrd_create(thrd_t *thr, thrd_start_t func, void *arg);</span>
 
-since we made `thrd_start_t` a type, you can use it as a `type ofsomething`
-bearing in mind, im demonstrating whats possible with functions.
-once you understand function pointers and matching signatures,
-rest assured everything else will be a cakewalk.
+since we made `thrd_start_t` a type, you can use it as a `type ofsomething` bearing in mind,
+im demonstrating whats possible with functions. once you understand function pointers and
+matching signatures, rest assured everything else will be a cakewalk.
 
 here's a function thats of `struct` type...
 <span class="alt-text">
@@ -227,4 +218,5 @@ and goes upon initializing resources and setting up the environment.
 learn more about <a class="reserve" href="struct.html">structures</a> or continue w/ functions like <a class="reserve" href="memcpy.html">memcpy</a> or <a class="reserve" href="malloc.html">malloc</a>
 
 else go to next  <a class="reserve" href="arr.html">page...</a>
+
 </body></html>
