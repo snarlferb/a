@@ -141,11 +141,17 @@ what we've learned so far..
 
 we can conclude that theres a difference between
 indexing, accessing and initializing. in the expression
-arr[3], 3 is sometimes called the "subscript".
+arr[3], the "3" is sometimes called the "subscript".
 
 the term "subscript" is used to describe the index or
 indices that are used to access a specific element of an array.
-anyway, lets continue.
+something else interesting, C allows for arithmetic expressions within
+the brackets of an array's indexing, like so:
+<span class="alt-text">
+  buffer[bytes_read - 1];</span>
+
+im not gonna go into how it might appear in an entire program, i just
+thought id touch upon that; Continuing on...
 <span class="alt-text">
   int *arr = (int[]){1, 2, 3, 4, 5};</span>
 
