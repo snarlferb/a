@@ -114,13 +114,17 @@ unspecified size, cause why not, we're showing all possible entrees you can serv
 <span class="alt-text">
   int (*ptr)[];</span>
 
-you can decompose this to cast it, `NULL` being in place of the variable
-you could presumably cast it to
+you can decompose this to cast it, `NULL` being in the place of the variable
+you would cast it to (come back to this if it dont make sense yet)
 <span class="alt-text">
   ptr_cast = (int (*)[])NULL;</span>
 
-if that is too confusing, just write it down and come back to it later to
-give it a second try...
+or you can allocate memory for n arrays of e.g. 3 integers each:
+<span class="alt-text">
+  int (*ptr)[3] = malloc(n * sizeof(*ptr));</span>
+
+if that is too confusing, just write it down and come back to it later.
+also, we go over malloc later. And we have a page dedicated to explaining it.
 
 now going back to our valuable array, to review what we've learned so far..
 <span class="alt-text">
@@ -228,5 +232,4 @@ and you'll come across it more as you progress
   void *malloc(size_t size)</span>
 
 see <a class="reserve" href="malloc.html">malloc</a> on page8, or   see <a class="reserve" href="struct.html">struct</a> on page5
-
 </body></html>
