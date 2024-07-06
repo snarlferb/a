@@ -24,8 +24,8 @@ actual header file path during the preprocessing stage.  Next here's an example 
   #include &lt;platform.h&gt;
   #define MESSAGE "Hello from whatever platform!"
 
-  #else</span>
-  #include &lt;stdio.h&gt;<em>// Assume some other platform</em><span class="alt-text">
+  #else
+  #include &lt;stdio.h&gt;</span><em>// Assume some other platform</em><span class="alt-text">
   #define MESSAGE "Hello from non-native planetform!"
 
   #endif
@@ -74,10 +74,10 @@ expands to the following:
 which effectively accesses the third element of the array tuple. In this case,
 tuple[2] refers to 30 (because arrays are zero-indexed)
 
-  tuple[0] is 10
-  tuple[1] is 20
-  tuple[2] is 30
-  tuple[3] is 40
+    tuple[0] is 10
+    tuple[1] is 20
+    tuple[2] is 30
+    tuple[3] is 40
 
 so, MACRO(tuple) will evaluate to tuple[2], giving you 30.
 and the same is the case if `x` were a string, then MACRO(x) would access the third character of the string.
@@ -103,10 +103,10 @@ resulting in 15, which is a binary number with three bits set to 1 (111 in binar
   printf("b is %d\n", b(3));
   printf("a is %d\n", a(3));</span>
 
-8 in binary = 1000
-4 in binary = 0100
-2 in binary = 0010
-1 in binary = 0001
+    8 in binary = 1000
+    4 in binary = 0100
+    2 in binary = 0010
+    1 in binary = 0001
 
 3 in binary is a combination of 1 and 2, yadayada... Instead if we start with 2
 and shift it over three places to the left, we have 100000, and 1 is in the 16th spot
@@ -129,9 +129,9 @@ these are variations of the backslash (\) character
 in which it cancels-out the proceeding character (we talk about the behavior of backslash characters in other sections)
 but in any other case an escape sequence is determined by the proceeding character e.g. "\n" newline
 <span class="alt-text">
-  char s1[] = "Ca\\ncel";</span> // ASCII<span class="alt-text">
-  char s2[] = "Ca\134ncel";</span> // octal<span class="alt-text">
-  char s3[] = "Ca\x5Cncel";</span> // hex
+  char s1[] = "Ca\\ncel";</span> <em>// ASCII</em><span class="alt-text">
+  char s2[] = "Ca\134ncel";</span> <em>// octal</em><span class="alt-text">
+  char s3[] = "Ca\x5Cncel";</span> <em>// hex</em>
 
 technically speaking, the backslash is an ID token that goes until it hits whitespace
 in which case it might have the effect of continuating a line (or removing the line break
@@ -192,6 +192,25 @@ and without it the macro Generic(umbrella) would not be expanded correctly in th
 since the #define follows the first one, the definition of `GIVE` is still active, and it will be
 available for use within the definition of `A_Func`. So you can kinda see how the preprocessor works.
 
+`do-while(0)` within a macro is a common C programming idiom. It allows the macro to be used as a
+single statement in all contexts, particularly in if-else statements, without causing issues, e.g.,
+<span class="alt-text">
+  #define GOOD_MACRO(x) \
+    do \
+      { \
+        if (x) \
+          foo(); \
+        bar(); \
+      } \
+    while (0)</span>
+
+  <em>// Call the macro somewhere</em><span class="alt-text">
+  GOOD_MACRO(y);</span>
+
+the backslashes are purely cosmetic for readability and you can alternatively have it defined like...
+<span class="alt-text">
+  #define GOOD_MACRO(x) do { if(x) foo(); bar(); } while(0)</span>
+
 the next example demonstrates an offset (youll remember we explained how
 structs use offsets to access members) note: on my machine `size_t`  is a 64 bit unsigned int
 <span class="alt-text">
@@ -219,21 +238,26 @@ and then, from __main__ our macro, *offset(struct..* takes 2 arguments `struct s
 if for some reason you just cant stomach the macro, here's an alternative method
 to offsetof,  to set a field's value indirectly.
 <span class="alt-text">
-struct example {
+  struct example {
     int a;
     double b;
     int c;
-};
+  };
 
-int main() {
+  int main() {
     struct example ex = {0, 0.0, 0};
 
-    </span>// First calculate offset<span class="alt-text">
+    </span><em>// First calculate offset</em><span class="alt-text">
     size_t offset_c = offsetof(struct example, c);
 
     int new_value = 42;
     *(int *)((char *)&amp;ex + offset_c) = new_value;
 
     return 0;
-}</span>
+  }</span>
+
+
+  Congratulations...
+You've reached the end.
+
 </body></html>
