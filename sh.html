@@ -283,8 +283,8 @@ Keep in mind <b>-iname "example"</b> will not look for joined names such as <b>"
   <b>find / -type f -iname "*thisword*"</b>
 
 Basically we wrote look from the <b>/</b> directory of type <b>f</b>ilename for case-insensitive name "*thisword*",
-where the <b>*</b> is to avoid globbing. <em>In regular expressions a <b>.</b> dot is the pattern which matches any single
-character~combined with the asterisk operator in <b>.*</b> and it will match any number of any characters.</em>
+where the <b>*</b> is to enable globbing, before and after the substring. <em>In regular expressions a <b>.</b> dot is the pattern
+which matches any single character~combined with the asterisk operator in <b>.*</b> and it will match any number of any characters.</em>
 
 <b>find</b> does a recursive search on any file or path in quotes, provided that the expression is successfully matched.
 There is other case-insensitive options such as <b>-ilname  -iregex  -iwholename</b>.. One more example with <b>find</b>...
