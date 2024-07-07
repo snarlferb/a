@@ -1,4 +1,4 @@
-<!-- page3 -->
+<!-- page2 -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,7 +11,9 @@
 <div id="data-anch">statements are the instructions executed by the program</div>
 <span class="alt-text">
   int x;</span>                      <em>// Declaration of an integer variable x</em><span class="alt-text">
-  int y = 10;</span>                 <em>// Declaration and initialization of y</em><span class="alt-text">
+  int y = 10;</span>                 <em>// Declaration and initialization of y
+                                         // or we might say its explicitly declared, and assigned to the value "10"
+                                         // but lets not get caught up in trying to define things in more ways than one</em><span class="alt-text">
   x = x + 5;</span>                  <em>// Expression, statement</em><span class="alt-text">
   char S = 'D';</span>               <em>// Declaration and initialization of a character</em><span class="alt-text">
   char str[] = "some string";</span> <em>// Initialization of a string</em><span class="alt-text">
@@ -19,7 +21,7 @@
 
 to learn more, see <a class="reserve" href="arr.html">arrays</a>
 
-data types
+--- data types ---
 
 In C, an "object" can refer to a variable of any data type,
 including basic types (int, float, char) or even user-defined structures.
@@ -32,11 +34,7 @@ char type is considered a small integer type its typically used to represent
 characters, however those characters have to be stored as integer values
 (thus, small integer type)
 
-<div id="void-anch">void pointer</div>
-they can point to objects of any data type "void" btw just means "no return type"
-where as int functions must include a return type
-
-for any other type, it's a common convention to use 0 to indicate success and
+in regards to return types, it's a common convention to use 0 to indicate success and
 non-zero values (typically 1 or -1) to indicate errors or some other kind of failure.
 this convention makes it easy to check the return value of a function call to
 determine whether it executed successfully or encountered an issue.
@@ -44,7 +42,127 @@ determine whether it executed successfully or encountered an issue.
 it's also useful to define more specific error codes sometimes, thereby providing
 more detailed information about the nature of the error that occurred.
 
-here's a very simple example to illustrate the structure of a function inside a program
+<div id="void-anch">void pointer</div>
+pointers in C are very important. they can point to objects of any data type -
+where "void" simply means "no return type" - where as `int` functions must include
+a return type.
+
+you are going to be using them anytime you know a variable will be used to allocate
+memory at runtime (such as `void *`, who's size is unknown before hand), as well as
+anytime you want to access data indirectly, (which is more efficient than copying
+around or rather, passing around by value) You can therefore reach the original
+data of a function or variable as long as you've properly pointed to it.
+of course the compiler can help catch these kinds of errors.
+
+here's the simplest way to understand a pointer.
+
+<div id="ptr-anch"></div>
+<span class="alt-text">
+  int *B;
+  int *A = B;
+  int *C = A;
+  int *D = C;</span>
+
+experiment w/ this in the context of type-casting back nd forth
+and using different types. also when youve declared a variable and then
+set a pointer (e.g., `int *ptr`) to make it point somewhere (ptr = ...)
+you just use the name of the pointer (or use &amp; to reference): 
+<span class="alt-text">
+  int A = 4;
+  int *ptr;
+  ptr = &amp;A;</span>
+
+in printf functions, use the %p specifier and (&amp;A) for example, to print out
+an address (assuming its of type `int`, you would cast it in the following way)
+<span class="alt-text">
+  printf("%p\n", (void *)&amp;A);</span>
+
+or declare `*ptr` again to dereference the original pointer.
+and while the &amp; or (address of) operator is used to print a variable's address,
+its primary role is to facilitate pointer operations and enable functions to
+modify variables indirectly through their addresses...
+
+there are situations where you cannot directly assign the *ptr to the address of
+a variable. Specifically, this restriction applies to cases where the variable's
+address is not known at compile time, or when dealing with certain types of variables.
+
+you can use objects before they are explicitly assigned or defined
+this is called "forward declaration" and is the nature of a static-type system
+
+lets talk about parameters. they allow a function to encapsulate its behavior.
+
+you can use pointers when passing the address of a variable to a function.
+this function can then modify the original value through the pointer
+(note: you can also pass value, address, array and struct w/ parameters)
+<span class="alt-text">
+  void accessExample(int *ptr) {
+    *ptr = 1;
+  }</span>
+
+`*ptr = 1;` dereferences the pointer called `ptr`, meaning it accesses the
+integer variable located at the memory address stored in ptr. 
+
+we can access the address of said variable
+from another function like so
+<span class="alt-text">
+  void anotherFunction(int *ptr) {
+    printf("access in another function %d\n", *ptr);
+  }</span>
+
+function parameters in C are local to the function in which they are defined.
+this means they exist only within the scope of that function and do not
+affect other functions. As such you can reuse parameter names across different
+functions without conflict. This local scope is very useful for modular and
+clear code design.
+
+here's an example of typecasting,
+<span class="alt-text">
+  int A_Value = 1;
+  int B_Value = 2;
+  int *SRC_REG = (float *)A_Value / B_Value;</span>
+
+at first sight only `A_Value` will be typecasted. However, in C, when performing operations
+between different types, the compiler implicitly promotes the integer `B_Value` to float to
+match the type of `A_Value`. Therefore, the division is performed as float divided by float.
+
+one more example assigning a pointer to a type-casted value. directly assigning a
+memory address like this isnt always the safest, but again, now you know.
+<span class="alt-text">
+  int *SRC_REG = (int *)0x1000;</span>
+
+you'll have to learn for yourself how to preserve the safety in the context of your own program
+<span class="alt-text">
+  volatile int *SRC_REG = (volatile int *)0x1000</span>
+
+volatile represents a kind of transparent gate that always checks the actual state of the
+data each time it is accessed. We want something to go IN.. but that thing going in is
+going to be assigned <b>once</b>.. When it goes OUT to external places it has the
+possibility of being changed, hence changing it when those external factors go IN.
+
+we want to preserve the fact that the program itself cannot change it, but that
+the external factors can. This is crucial when dealing with data that might be modified
+by external influences (like hardware registers or other threads) outside the
+direct control of the program.
+
+explicit type casting w/ dereferencing would look like...
+<span class="alt-text">
+  DST_REG = *(int *)(SRC_REG + offset);</span>
+
+so in short, pointers allow direct access to a memory address providing a way to
+manipulate and interact with data at a low level its essential for tasks like
+memory allocation (`malloc`) and working with complex data structures.
+
+passing a pointer to a function is often more efficient than passing large data structures
+by value because only the memory address is passed, not the whole data.
+
+double pointers say something additional about a value that they're pointing to.
+its a way to get the "value of the value" that is, to hold the address of
+ANOTHER pointer  `**ptr`
+
+dereferencing a double pointer allows access to the value of the variable
+that the single pointer (*ptr) points to.
+
+lets take a step back and look at the structure of a function inside a program
 <span class="alt-text">
   void K() {
     int A = 5 + 4;
@@ -54,6 +172,24 @@ here's a very simple example to illustrate the structure of a function inside a 
   int main() {
     K();
   }</span>
+
+we put a type and a name ("K" in this case), followed by a compound statement or a
+block of code. every function also has a main. thats the starting point, and so it
+needs to know how to begin the cascade so to speak, so calling the function is how
+you would do it in this particular case.
+
+main is essentially its own function in some sense and can be treated as such.
+you might sometimes see parameters such as `argc` (argument count) or `argv`
+used as parameters in main.  `int argc`  is an integer that represents the
+number of command-line arguments passed to the program. The value of argc
+includes the name of the program itself as the first argument,
+so it is always at least 1.
+
+`char *argv[]`, or sometimes `char **argv` are interchangeable. It represents an
+argument vector, which is an array of strings (character pointers) representing
+the actual command-line arguments. it'll make sense later if you start making
+use of command-line input, whereby the input values do not depend upon the
+program’s internals/modular framework.
 
 <div id="variadic-anch">variadic function</div>
 since we use `printf` to see the results of everything we should understand what kind
