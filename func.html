@@ -30,17 +30,19 @@ when a function is defined, its signature (return_type function_name(parameter_l
 includes the return type, which tells the compiler what kind of data the function
 will return (if any)
 
-char type is considered a small integer type its typically used to represent
+char type is considered a small integer type and is typically used to represent
 characters, however those characters have to be stored as integer values
-(thus, small integer type)
+(thus, small integer type). The range of numbers that an integer type can
+represent in C depends on the specific integer type and whether it is
+signed or unsigned (e.g., signed char is −128 to 127)
 
-in regards to return types, it's a common convention to use 0 to indicate success and
-non-zero values (typically 1 or -1) to indicate errors or some other kind of failure.
-this convention makes it easy to check the return value of a function call to
-determine whether it executed successfully or encountered an issue.
+the "size" of a data type refers to its memory allocation in bytes, and is directly
+proportional to the range and precision of the values it can store. <em>Wide</em> data types
+have larger sizes and greater capacity for storing extensive character sets or higher
+precision numbers, while regular data types are more limited in what they can express.
 
-it's also useful to define more specific error codes sometimes, thereby providing
-more detailed information about the nature of the error that occurred.
+a floating point type represents decimal number values of some precision-<em>that is,
+the number of digits a floating-point number can accurately represent.</em>
 
 <div id="void-anch">void pointer</div>
 pointers in C are very important. they can point to objects of any data type -
@@ -51,10 +53,10 @@ you are going to be using them anytime you know a variable will be used to alloc
 memory at runtime (such as `void *`, who's size is unknown before hand), as well as
 anytime you want to access data indirectly, (which is more efficient than copying
 around or rather, passing around by value) You can therefore reach the original
-data of a function or variable as long as you've properly pointed to it.
-of course the compiler can help catch these kinds of errors.
+data of a function or variable as long as you've properly pointed to it-
+if not the compiler can help catch these errors for you.
 
-here's the simplest way to understand a pointer.
+here's the easiest approach to pointers:
 
 <div id="ptr-anch"></div>
 <span class="alt-text">
@@ -115,7 +117,7 @@ affect other functions. As such you can reuse parameter names across different
 functions without conflict. This local scope is very useful for modular and
 clear code design.
 
-here's an example of typecasting,
+here's an example of type-casting,
 <span class="alt-text">
   int A_Value = 1;
   int B_Value = 2;
@@ -244,9 +246,24 @@ are called out from `int main` first, and then proceed to the rest of the progra
     return 0;
   }</span>
 
-we explicitly declared new variables in `main` to show how main works and to demonstrate
-how a function could be assigned the same arguments as another function, in this case
-`intern` was assigned to `func(a,b)` and we renamed/reassigned those parameters as well
+we explicitly declared new variables in `main` and demonstrated how a function could
+be assigned the same arguments as another function, in this case `intern` was
+assigned to `func(a,b)` and we renamed/reassigned those parameters as well...
+
+you should recall that any function w/ a type (return type) other than void should
+have a return statement. here we are returning a variable.
+
+functions can use return statements not only to pass back computed values but also
+to indicate success or failure of their operation. 
+
+it's a common convention to use `return 0;` to indicate success and non-zero values
+(typically 1 or -1) to indicate errors or some other kind of failure.
+this convention makes it easy to check the return value of a function call to
+determine whether it executed successfully or encountered an issue.
+
+it's also useful to define more specific error codes sometimes, thereby providing
+more detailed information about the nature of the error that occurred.
+
 <div id="function-pointer-anch"></div>
 regarding function pointers... they can seem a little odd at first, especially when
 combined with unnamed parameters or return types, however these unnamed functions or
