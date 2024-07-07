@@ -46,8 +46,8 @@ the number of digits a floating-point number can accurately represent.</em>
 
 <div id="void-anch">void pointer</div>
 pointers in C are very important. they can point to objects of any data type -
-where "void" simply means "no return type" - where as `int` functions must include
-a return type.
+where "void" simply means "no return type".. <em>it is still possible to include a
+return statement within a void function</em>. `int` functions MUST have a return type.
 
 you are going to be using them anytime you know a variable will be used to allocate
 memory at runtime (such as `void *`, who's size is unknown before hand), as well as
@@ -251,10 +251,14 @@ be assigned the same arguments as another function, in this case `intern` was
 assigned to `func(a,b)` and we renamed/reassigned those parameters as well...
 
 you should recall that any function w/ a type (return type) other than void should
-have a return statement. here we are returning a variable.
+have a return statement. here we are returning a variable. when the type of the value
+returned by a return statement does not match the declared return type of the function,
+the compiler typically issues a warning or error; ergo, assigning variables in such
+a way to make sure that its return type is the same as the function it is within
+will help ensure you are using the compatible data type at the end.
 
-functions can use return statements not only to pass back computed values but also
-to indicate success or failure of their operation. 
+in conclusion, functions can use return statements not only to pass back computed
+values but also to indicate success or failure of their operation. 
 
 it's a common convention to use `return 0;` to indicate success and non-zero values
 (typically 1 or -1) to indicate errors or some other kind of failure.
