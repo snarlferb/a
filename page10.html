@@ -7,13 +7,44 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <link rel="stylesheet" href="style.css">
 </head><body>
-<h3>attributes</h3>
-<em>note, this is temporary atm as i dont intend to have things that are
-specific to GCC or to something thats not already available to you in C...</em>
+<h3>___ attributes ___</h3>
+first lets look at the standard attributes within C
+
+[[deprecated]]
+[[__deprecated__]]
+[[deprecated("reason")]] ... which indicates that the use of the name or entity declared with this attribute is allowed, but discouraged for i.e. <em>reason</em>
+[[__deprecated__("reason")]]
+[[fallthrough]] ... indicates that the fall through from the previous case label is intentional and should not be diagnosed by a compiler that warns on fall-through
+[[__fallthrough__]]
+[[nodiscard]]
+[[__nodiscard__]]
+[[nodiscard("reason")]] ... encourages the compiler to issue a warning if the return value is discarded
+[[__nodiscard__("reason")]] 	
+[[maybe_unused]] ... suppresses compiler warnings on unused entities, if any
+[[__maybe_unused__]]
+[[noreturn]]
+[[__noreturn__]]
+[[unsequenced]] ... indicates that a function is stateless, effectless, idempotent and independent
+[[__unsequenced__]]
+[[reproducible]] ... indicates that a function is effectless and idempotent
+[[__reproducible__]]
+
+every standard attribute whose name is of form   attr  can be also spelled as  __attr__  and its meaning is not changed.
+this means that, for example,  __attribute__((attr))  can be simplified to __attr__  ... And likewise  __attribute__((packed))
+can being written as  __packed__ ... or to better illustrate this, take the e.g.,
+<span class="alt-text">
+  void do_something(int x) __attribute__((noreturn));</span>
+
+which is declaring a function that uses this attribute. It could instead be written as...
+<span class="alt-text">
+  void do_something(int x) __noreturn__;</span>
+
+it is not always the case that you can simplify them, as you'll see in the GCC-specific examples.
+note, that you can declare these functions before their definition (separating declaration from implementation)
 
 but here's a few additional things or outliers i can allude to...
 <span class="alt-text">
-  __attribute__ ((aligned (16))) char stack0[4096 * NCPU];</span>
+  __attribute__ ((aligned (16)) char stack0[4096 * NCPU];</span>
 
 this array is intended to allocate a separate stack for each CPU core in a
 multi-core system, each stack being 4096 bytes in size (4096 bytes is a
@@ -43,7 +74,7 @@ here's another example of an attribute...
 
 this `(noreturn)` indicates that my_function does not return to its caller.
 <span class="alt-text">
-  typedef int my_int_type __attribute__((aligned(4)));</span>
+  typedef int my_int_type __attribute__((aligned(4));</span>
 
 this example aligns instances of my_int_type on a 4-byte boundary, and
 they can be used to all sorts of things like this.
@@ -71,3 +102,4 @@ automatically insert calls to __cyg_profile_func_enter and
 __cyg_profile_func_exit  at the entry and exit points of
 every function in your program.
 
+you can learn more about gcc attributes here, https://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html
