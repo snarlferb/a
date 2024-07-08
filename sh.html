@@ -216,6 +216,9 @@ the second quote will tell the program to look for that second quote onto the ne
 beginning of an escape value has begun...  \n  within double quotes or $'...' indicates a newline character.
 (we'll talk about some of the available options/flags later too)
 
+The semicolon (;) serves as a command separator. It allows you to write multiple commands on a line, as the shell will
+encounter a semicolon and interpret it as the end of the current command-preparing to execute the next command that follows.
+
 You might also see % symbol used inside a control sequences as a format specifier, which denotes some operation,
 that might include variables and arithmetic operations, making sequences dynamic. It makes those strings it
 appears in parameterized (parameters or variables can be changed).
