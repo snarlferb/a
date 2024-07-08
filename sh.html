@@ -206,14 +206,19 @@ same program as the parent process. In this case <b>exec</b> is used. It will ex
 command-to-follow replaces the current shell -&gt; which means no subshell is created during this, and the
 'current process' is replaced with this new command.
 
+The (\) escape character acts as a form of a delimeter, but in such a way where the proceeding character (newline or
+whitespace) is consumed—at the same time, it can be used for control sequences, or even command continuation (in the
+same way that starting a cmdline command with a single quoted string, and going to the next line without completing
+the second quote will tell the program to look for that second quote onto the next line (until its found)
+
 <b>\e</b> is an example of an escape sequence. This means it interprets the backslash as escaping or doing something
 (such as a control character) w/ the proceeding character, however introducing the bracket <b>\e[</b> means that the
-beginning of an escape value has begun... \n within double quotes or $'...' indicates a newline character.
-(we'll talk about some of the available options/flags later)
+beginning of an escape value has begun...  \n  within double quotes or $'...' indicates a newline character.
+(we'll talk about some of the available options/flags later too)
 
-You might also see % symbol used inside a control sequences as a format specifier, which denotes
-some operation, that might include variables and arithmetic operations, making sequences dynamic.
-It makes those strings it appears in parameterized (parameters or variables can be changed or customized).
+You might also see % symbol used inside a control sequences as a format specifier, which denotes some operation,
+that might include variables and arithmetic operations, making sequences dynamic. It makes those strings it
+appears in parameterized (parameters or variables can be changed).
 
   <b>%p1, %p2, etc</b>. Refer to the first, second, etc., parameters passed to the capability string.
   <b>%d</b>: Print the parameter as a decimal number.
@@ -239,6 +244,10 @@ such as \n for newline and \t for tab.
 Some shells provide options to explicitly enable/disable interpretation of escape sequences as part of their functionality.
 
 In the context of pattern matching you have: character classes, anchors, escape sequences and assertions (which we'll go over)
+
+Assertions are <em>zero-width</em> conditions, meaning that they do not consume characters in the input, but rather
+assert specific conditions around a match; The most common being (?=...) which checks if the pattern inside the
+lookahead assertion can match at the current position in the string (as opposed to looking before the position)
 
 Lets give a brief summary of regular expressions (regexp), and how things like python, grep and vim-search have two different
 modes of character interpretation: literal  or  interpreted patterns (e.g., ANSI C) and those are characteristic of such things
