@@ -220,16 +220,40 @@ you would iterate over the array in a forloop adding
 increasing the size and copy the existing elements to the new array, and add the
 elements to the new array.
 
-`(int*)` is referred to as type casting, youll see this alot in C as its to assure the
-type compatibility when assigning another variable that may or may not be allowed;
-The compiler will perform this conversion implicitly and issue warnings for implicit
-conversions that could result in data loss... there's a hierarchy of specific
-casting levels allowed/not allowed
+`(int*)` before malloc is assuring that the variable ahead of it is that type as well
+(casting int* to malloc), youll see this alot in C, specifically for type compatibility
+reasons. The compiler will perform this conversion implicitly and issue warnings for implicit
+conversions that could result in data loss... there's a hierarchy of specific casting levels.
 
-`malloc` is just a function w/ a `size_t`(atleast 16bit) parameter
-and you'll come across it more as you progress
+and `malloc` is just a function w/ a `size_t`(atleast 16bit) parameter.
 <span class="alt-text">
   void *malloc(size_t size)</span>
 
+but just to push things off into a more regular area of mind, i want to show an example
+of a program, as i think the inclusive nature of it is what makes it more distinct.
+<span class="alt-text">
+  int getIndex(int param) {
+    return param % 5;
+  }
+
+  int main() {
+    int array[] = {1, 2, 3, 4, 5};
+    int parameter = 7;</span>  <em>// Example parameter for a subsequent argument...</em>
+
+    <em>// Assigning an array element using a function's return value as index</em><span class="alt-text">
+    int result = array[getIndex(parameter)];
+
+    printf("Value at index %d in array: %d\n", getIndex(parameter), result);
+
+    return 0;
+  }</span>
+
+7mod5 equals 2 and, following along w/ the rest of the logic, why does it say the array variable's value is "3"?
+hint: it was one of the very first things we said about arrays and their unique properties, and should be obvious
+you're not counting over twice, but looking at the arrays actual <u>index#2</u>, and the element of that position.
+
+
 see <a class="reserve" href="malloc.html">malloc</a> on page8, or   see <a class="reserve" href="struct.html">struct</a> on page5
+
+
 </body></html>

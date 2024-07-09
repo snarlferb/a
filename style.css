@@ -1,10 +1,13 @@
 /* style.type = 'text/css'; // MIME type */
 /* @syntax: asterisk (*) is for wildcard selectors */
-/* @remove: reset initial values w/ initial or reset/normalize */
 /* @remove: .no-wrap { white-space: nowrap;  } */
 /* @remove: .no-wrap*{ white-space: inherit; } */
 /* @fix: user-select and text-decoration if broken */
-
+/* reset initial values=not working, in every day css fashion*/
+/* reset all elements */
+* {
+    all: initial;
+}
 @font-face {
     font-family: 'Fixedsys Excelsior 3.01';
     font-style: normal;
@@ -16,7 +19,7 @@
 body {
     background-color: #222222;
     white-space: pre-wrap;
-    color: white;
+    color: #FAFFAF;
     font-family: 'Fixedsys Excelsior 3.01';
     font-style: normal;
     font-size: 22px;
@@ -24,7 +27,7 @@ body {
 
 a {
     text-decoration: none;
-    color: white;
+    color: #FAFFAF;
 }
 
 .hl-hover:hover {
@@ -34,7 +37,7 @@ a {
 }
 
 .alt-text {
-    color: #FAFFAF;
+    color: white;
 }
 
 .reserve {
@@ -43,7 +46,7 @@ a {
 
 footer {
     background-color: #222222;
-    color: white;
+    color: #FAFFAF;
     padding: 10px;
     position: fixed;
     bottom: 0;
