@@ -12,7 +12,7 @@
 <span class="alt-text">
   int arr[3];</span>
 
-if `int arr[3] = ...`, were to equal something then we could gain access
+If `int arr[3] = ...`, were to equal something then we could gain access
 and receive a normal integer value when specifying its index.
 
 otherwise the index of an array is random when uninitialized or its being
@@ -20,10 +20,10 @@ determined by the initializer e.g.
 <span class="alt-text">
   int arr[] = {3, 4, 5};</span>
 
-the size of our array is just the amount of said elements, the 0th element being
+The size of our array is just the amount of said elements, the 0th element being
 the first number or character.
 
-speaking of which, we can also create individual characters and access the third
+Speaking of which, we can also create individual characters and access the third
 element (or whichever you want) like so...
 <span class="alt-text">
   char arr[3] = {'a', 'b', 'c'};</span>
@@ -39,13 +39,13 @@ array initializer without quotes like the following...
 in this specific case, it's not interpreted as the ASCII code. also, when you have
 multiple characters together the compiler interprets them as individual characters...
 
-the following declares a single character and assigns it, but its not considered an
+The following declares a single character and assigns it, but its not considered an
 array (not directly storing the number 5) instead, it stores the aforementioned
 "un-parenthesized" character whose ASCII code is 5 (the decimal ASCII code)
 <span class="alt-text">
   char exp = 5;</span>
 
-another way to store a character's ASCII code, the ASCII character associated with
+Another way to store a character's ASCII code, the ASCII character associated with
 (\a) and not literally the character 'a'...
 <span class="alt-text">
   char exp = '\a';</span>
@@ -65,18 +65,18 @@ and as such this value is constant and will never change.
 double quotes (") are used for string literals. They represent a sequence of characters,
 including spaces and special characters.
 
-in C, character variables are treated as a type of integer, often signed integers
+In C, character variables are treated as a type of integer, often signed integers
 (meaning they can hold both positive and negative values). when you assign, ` e.g. char exp = 0xFF `
 ... (Compilers and modern systems tend to treat char as signed by default)
 
-the actual value stored depends on whether char is signed or unsigned.
+The actual value stored depends on whether char is signed or unsigned.
 
-if char is signed, the upper bit (most significant bit) of 0xFF is interpreted as a
+If char is signed, the upper bit (most significant bit) of 0xFF is interpreted as a
 sign bit (1 for negative). This can result in a negative value depending on the
 system's implementation.  if char is unsigned, all 8 bits of 0xFF are used to
 represent the value, resulting in 255 (decimal).
 
-confusing right?!... so you can see there's quite the amount of variation when it
+Confusing right?!... so you can see there's quite the amount of variation when it
 comes to characters and arrays. and we still havent shown what string literals look like yet...
 <span class="alt-text">
   char str[] = "abc";</span>
@@ -87,14 +87,14 @@ initialized elements, even if you don't explicitly include it to the initializer
 <span class="alt-text">
   char element = str[2];</span>
 
-the statement  `char element[2] = str[2]`   wouldnt be a valid way to copy a
+The statement  `char element[2] = str[2]`   wouldnt be a valid way to copy a
 single character from a string to a character array. 
 
 when you declare an array like
 <span class="alt-text">
   int arr[3];</span>
 
-the name "arr" itself represents the address of the first element of the array.
+The name "arr" itself represents the address of the first element of the array.
 In other words its equivalent to a pointer to the first element of the array.
 Therefore, you can simply use the array name `arr` to point to the array...
 <span class="alt-text">
@@ -133,7 +133,7 @@ now going back to our valuable array, to review what we've learned so far..
 we can conclude that theres a difference between indexing, accessing and
 initializing. in the expression arr[3], the "3" is sometimes called the "subscript".
 
-the term "subscript" is used to describe the index or indices that are used
+The term "subscript" is used to describe the index or indices that are used
 to access a specific element of an array. something else interesting, C allows
 for arithmetic expressions within the brackets of an array's indexing, like so:
 <span class="alt-text">
@@ -144,7 +144,7 @@ thought id touch upon that; Continuing on...
 <span class="alt-text">
   int *arr = (int[]){1, 2, 3, 4, 5};</span>
 
-this is a compound literal. they can be of any type (except for void)
+This is a compound literal. they can be of any type (except for void)
 as the purpose is to create an anonymous instance `(type UniqName){}`
 of a specific type and initialize its members inline.
 
@@ -152,7 +152,7 @@ compound literals let you to create an array or structure on the fly
 and use it immediately, which can be particularly useful for
 initializing pointers or passing temporary arrays to functions.
 
-when calling a function you can have a compound literal as a parameter.
+When calling a function you can have a compound literal as a parameter.
 returning a value itself can be a compound literal. or you can have a compound
 literal that recursively initializes arrays or struct members. 
 
@@ -195,7 +195,18 @@ according to the C99 standard (ISO/IEC 9899:1999), section 6.7.8:
 also arrays declared at global or static scope are automatically initialized to zero too
 however that is not the case if they are declared within a function and without `static`.
 
-all these kinds of arrays are fixed, and their size will be determined at compile time... 
+both compound literals and designated initializers were introduced in C99, so you wont
+see them in ANSI C. i can see how it might be confusing to have all of these different
+versions of C, but here's all you need to know; the core syntax and semantics of C
+have remained remarkably stable since C89, so i think you cant go wrong using any
+version -from ANSI C and upwards.
+
+ANSI C is of course colloquially used to refer to C89 as ANSI played a big role in creating
+the first C standard, but it in turn became an international effort under ISO. Therefore
+some consider the term "ANSI C" to be incorrect used, although its caught on w/ enough ppl
+
+returning where we left off w/ arrays and all the different ways we could write em, all of
+them up until now are considered <em>fixed</em>, wherein their size is determined at compile time... 
 <span class="alt-text">
   int arr[var] = {a, b, c};</span>
 
@@ -251,7 +262,6 @@ of a program, as i think the inclusive nature of it is what makes it more distin
 7mod5 equals 2 and, following along w/ the rest of the logic, why does it say the array variable's value is "3"?
 hint: it was one of the very first things we said about arrays and their unique properties, and should be obvious
 you're not counting over twice, but looking at the arrays actual <u>index#2</u>, and the element of that position.
-
 
 see <a class="reserve" href="malloc.html">malloc</a> on page8, or   see <a class="reserve" href="struct.html">struct</a> on page5
 

@@ -9,11 +9,11 @@
 </head><body>
 
 <div id="data-anch">statements are the instructions executed by the program</div>
-lets go through simple examples; a declaration of an integer variable x...
+Lets go through simple examples; a declaration of an integer variable x...
 <span class="alt-text">
   int x;</span>
 
-the following is a declaration/initialization of "y" (or we might say its
+The following is a declaration/initialization of "y" (or we might say its
 explicitly declared, and assigned to the value "10") Initializing something
 refers to assigning an initial value to a variable when it is declared.
 <span class="alt-text">
@@ -35,7 +35,7 @@ Anyway, lets not get stuck in the semantic meanings and trying to define things 
 In C, an "object" can refer to a variable of any data type,
 including basic types (int, float, char) or even user-defined structures.
 
-when a function is defined, its signature (return_type function_name(parameter_list))
+When a function is defined, its signature (return_type function_name(parameter_list))
 includes the return type, which tells the compiler what kind of data the function
 will return (if any)
 
@@ -45,7 +45,7 @@ characters, however those characters have to be stored as integer values
 represent in C depends on the specific integer type and whether it is
 signed or unsigned (e.g., signed char is −128 to 127)
 
-the "size" of a data type refers to its memory allocation in bytes, and is directly
+The "size" of a data type refers to its memory allocation in bytes, and is directly
 proportional to the range and precision of the values it can store. <em>Wide</em> data types
 have larger sizes and greater capacity for storing extensive character (characters that are
 outside the ASCII range) while regular data types are more limited in what they can express.
@@ -58,14 +58,14 @@ pointers in C are very important. they can point to objects of any data type -
 where "void" simply means "no return type".. <em>it is still possible to include a
 return statement within a void function</em>. `int` functions MUST have a return type.
 
-you are going to be using them anytime you know a variable will be used to allocate
+You are going to be using them anytime you know a variable will be used to allocate
 memory at runtime (such as `void *`, who's size is unknown before hand), as well as
 anytime you want to access data indirectly, (which is more efficient than copying
 around or rather, passing around by value) You can therefore reach the original
 data of a function or variable as long as you've properly pointed to it-
 if not the compiler can help catch these errors for you.
 
-here's the easiest approach to pointers:
+Here's the easiest approach to pointers:
 
 <div id="ptr-anch"></div>
 <span class="alt-text">
@@ -74,7 +74,7 @@ here's the easiest approach to pointers:
   int *C = A;
   int *D = C;</span>
 
-experiment w/ this in the context of type-casting back nd forth
+Experiment w/ this in the context of type-casting back nd forth
 and using different types. also when youve declared a variable and then
 set a pointer (e.g., `int *ptr`) to make it point somewhere (ptr = ...)
 you just use the name of the pointer (or use &amp; to reference): 
@@ -93,16 +93,28 @@ and while the &amp; or (address of) operator is used to print a variable's addre
 its primary role is to facilitate pointer operations and enable functions to
 modify variables indirectly through their addresses...
 
-there are situations where you cannot directly assign the *ptr to the address of
+There are situations where you cannot directly assign the *ptr to the address of
 a variable. Specifically, this restriction applies to cases where the variable's
 address is not known at compile time, or when dealing with certain types of variables.
 
-you can use objects before they are explicitly assigned or defined
-this is called "forward declaration" and is the nature of a static-type system
+You can use objects before they are explicitly assigned or defined (this ties in w/
+two features in C, neither of which are exclusively synonymous w/ objects automatically
+springing to life, but may mistakingly be used to describe it. One is called
+<em>forward declaration</em>, and the other (introduced in C11) is called
+<em>relaxed declaration ordering</em>.
 
-lets talk about parameters. they allow a function to encapsulate its behavior.
+A forward declaration is used to declare the existence and type of a function or
+variable before its full definition. It informs the compiler about the identifier
+so it can understand its usage even if the definition comes later (often in separate files).
 
-you can use pointers when passing the address of a variable to a function.
+Relaxed declaration ordering on the other hand allows the use of a variable within a block
+before its formal declaration, so long as the declaration appears later within the same block.
+The compiler performs a special name lookup to ensure the identifier will be declared properly.
+
+Implicit declaration (automatically creating a variable when used without prior declaration)
+is generally discouraged because it can lead to unexpected behavior and compilation errors.
+
+You can use pointers when passing the address of a variable to a function.
 this function can then modify the original value through the pointer
 (note: you can also pass value, address, array and struct w/ parameters)
 <span class="alt-text">
@@ -113,7 +125,7 @@ this function can then modify the original value through the pointer
 `*ptr = 1;` dereferences the pointer called `ptr`, meaning it accesses the
 integer variable located at the memory address stored in ptr. 
 
-we can access the address of said variable
+We can access the address of said variable
 from another function like so
 <span class="alt-text">
   void anotherFunction(int *ptr) {
@@ -141,7 +153,7 @@ memory address like this isnt always the safest, but again, now you know.
 <span class="alt-text">
   int *SRC_REG = (int *)0x1000;</span>
 
-you'll have to learn for yourself how to preserve the safety in the context of your own program
+You'll have to learn for yourself how to preserve the safety in the context of your own program
 <span class="alt-text">
   volatile int *SRC_REG = (volatile int *)0x1000</span>
 
@@ -150,7 +162,7 @@ data each time it is accessed. We want something to go IN.. but that thing going
 going to be assigned <b>once</b>.. When it goes OUT to external places it has the
 possibility of being changed, hence changing it when those external factors go IN.
 
-we want to preserve the fact that the program itself cannot change it, but that
+We want to preserve the fact that the program itself cannot change it, but that
 the external factors can. This is crucial when dealing with data that might be modified
 by external influences (like hardware registers or other threads) outside the
 direct control of the program.
@@ -184,7 +196,7 @@ lets take a step back and look at the structure of a function inside a program
     K();
   }</span>
 
-we put a type and a name ("K" in this case), followed by a compound statement or a
+We put a type and a name ("K" in this case), followed by a compound statement or a
 block of code. every function also has a main. thats the starting point, and so it
 needs to know how to begin the cascade so to speak, so calling the function is how
 you would do it in this particular case.
@@ -209,24 +221,28 @@ that is, they are presented with an ellipsis "..." within a given function's par
 <span class="alt-text">
   int printf(const char *format, ...)</span>
 
-this is the definition provided by the standard lib header, so linking w/
+This is the definition provided by the standard lib header, so linking w/
 `#include &lt;stdio.h&gt;`  lets you use `printf`. keep in mind, you include C library
 headers w/ &lt;file.h&gt;  and user-defined headers w/ "file.h"
 <span class="alt-text">
   printf("Example text %d, %d, %d\n", var1, var2, var3);</span>
 
 So here we are demonstrating what both a function declaration is, and how `printf` works.
-Because its a variadic function, it could conceivably take an inifinite amount of variables
-... simply put, the first part ("in quotation marks") will accept your personalized text as
-well as format specifiers. these format specifiers align with each proceeding variable
-(found after the comma) `printf` in particular is used for printing formatted output
-to the screen, hence print -f(formatted)
+Question: What are function parameters even for?... They allow a function to encapsulate
+its behavior, in the sense that they are inherited by the function body, and accessed
+accordingly.
 
-lets get back to the specifics of a function. functions bring a specific set of
-instructions depending on how you define them... to see how they pertain to
-their assembly counterpart (see the asm.html page for more info)
+This is true of variadic functions as well, and, because its variadic, it could,
+conceivably, take an infinite amount of variables. More specifically, the first part
+(the part "in quotation marks") will accept your personalized text as well as format
+specifiers. these format specifiers align with each proceeding variable (found after
+the comma) `printf` in particular is used for printing formatted output to the screen,
+hence print -f(formatted)
 
-lets say you create a function prototype that is, you want to tell the program that
+Now lets back up for a second and verify what a function is for. a function brings a
+specific set of instructions, depending on how you define them.
+
+Lets say you create a function prototype that is, you want to tell the program that
 theres a function defined somewhere and you want to call it
 <span class="alt-text">
   void func(int x);</span>
@@ -255,11 +271,11 @@ are called out from `int main` first, and then proceed to the rest of the progra
     return 0;
   }</span>
 
-we explicitly declared new variables in `main` and demonstrated how a function could
+We explicitly declared new variables in `main` and demonstrated how a function could
 be assigned the same arguments as another function, in this case `intern` was
 assigned to `func(a,b)` and we renamed/reassigned those parameters as well...
 
-you should recall that any function w/ a type (return type) other than void should
+You should recall that any function w/ a type (return type) other than void should
 have a return statement. here we are returning a variable. when the type of the value
 returned by a return statement does not match the declared return type of the function,
 the compiler typically issues a warning or error; ergo, assigning variables in such

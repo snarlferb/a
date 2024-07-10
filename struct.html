@@ -33,11 +33,11 @@ using a struct within a function might look like
     struct example *something = &amp;newname;
   }</span>
 
-you can then declare a variable (newname) in this case
+You can then declare a variable (newname) in this case
 that points to x or y in the original struct, and same for
 (something), which it now equals the address of member.
 
-when you see this `Object.Member, its referred to as a Member that is
+When you see this `Object.Member, its referred to as a Member that is
 being accessed through the pointer to Object... you use the dot when there's
 direct access, and the (-&gt;) arrow operator when its indirect (i.e. when it's
 being accessed from a pointer already)...
@@ -49,7 +49,7 @@ you can declare a struct like this
 <span class="alt-text">
   struct example newA;</span>
 
-here's how you might declare and access members of structures,
+Here's how you might declare and access members of structures,
 this time w/ an array using the dot (.) operator.
 <span class="alt-text">
   struct example BarrF[3];
@@ -68,7 +68,7 @@ you can also construct a structure as an anonymous struct with a tag:
     int y;
   } example;</span>
 
-using typedef to create an alias for the struct
+Using typedef to create an alias for the struct
 <span class="alt-text">
   typedef struct example example;</span>
 

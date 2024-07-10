@@ -10,7 +10,7 @@
 
 <div id="macro-anch">--- macro ---</div>
 
-something i like to use macros for is defining a macro within the header path of
+Something i like to use macros for is defining a macro within the header path of
 the same name its defined w/, wherein the named macro can be used w/ `#include`
 (not exluding its macro use case) e.g.,
 <span class="alt-text">
@@ -83,7 +83,7 @@ so, MACRO(tuple) will evaluate to tuple[2], giving you 30.
 and the same is the case if `x` were a string, then MACRO(x) would access the third character of the string.
 and that gives you a re-elucidates what you've learned so far about arrays and such.
 
-the macro `#define C(x) ((x)-'@') ` , i.e. (x-64)  is another example that can be used in various contexts
+The macro `#define C(x) ((x)-'@') ` , i.e. (x-64)  is another example that can be used in various contexts
 to denote &lt;Key&gt;Ctrl, characters (e.g. 65 - 64 = 1, and Ctrl-A is the ASCII control character SOH
 (Start of Heading) with an ASCII code of "1") making it easy to recognize and handle "Ctrl-X" mappings,
 <span class="alt-text">
@@ -207,11 +207,11 @@ single statement in all contexts, particularly in if-else statements, without ca
   <em>// Call the macro somewhere</em><span class="alt-text">
   GOOD_MACRO(y);</span>
 
-the backslashes are purely cosmetic for readability and you can alternatively have it defined like...
+The backslashes are purely cosmetic for readability and you can alternatively have it defined like...
 <span class="alt-text">
   #define GOOD_MACRO(x) do { if(x) foo(); bar(); } while(0)</span>
 
-the next example demonstrates an offset (youll remember we explained how
+The next example demonstrates an offset (youll remember we explained how
 structs use offsets to access members) note: on my machine `size_t`  is a 64 bit unsigned int
 <span class="alt-text">
   #define offsetof(s,m) ((size_t) &amp; (((s*)0)-&gt;m))

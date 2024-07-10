@@ -12,7 +12,7 @@
 <span class="alt-text">    +     -     *     /     %</span>    arithmetic \
 <span class="alt-text">                    ++    - -</span>    unary aerith \
 
-when you use the unary increment (++) or decrement (- -) operators on a variable  \
+When you use the unary increment (++) or decrement (- -) operators on a variable  \
 they directly modify the variable's value within its lifetime.                      \
 
 This means that the change to the variable's value persists regardless of whether the  \
@@ -27,35 +27,35 @@ i made the following part first, so you can clearly delineate between the parts
 that are less wordy, and the parts you can skip on the off chance you arent up
 for absorbing a narrative or a dense paragraph. feel free to skip to the next pg
 
-perhaps an appropriate place to start in regard to programming is to talk about the
+Perhaps an appropriate place to start in regard to programming is to talk about the
 nature of control flow statements. The `if` statement allows you to execute a block of code
 if a specified condition is true/false or equal to, and likewise an `else` statement
 provides an alternative branch or block of code to be executed if the condition is
 true/false or equal to. In that sense, switch statements are a way for multi-way
 branching sequences to be evaluated based on the value of some expression.
 
-when you have a function within the condition of an if statement, it leads to the function
+When you have a function within the condition of an if statement, it leads to the function
 being executed at that point in the program flow (only if the function's return value
 evaluates to true according to C's truthiness rules)
 
-then you of course have loops. Loops in C, are constructs that allow you to execute a
+Then you of course have loops. Loops in C, are constructs that allow you to execute a
 block of code repeatedly until the respective conditions are no longer true.
 this eliminates the need to write the same code multiple times.
 
-you might often see `continue` used within a loop. its an optional keyword - for when the
+You might often see `continue` used within a loop. its an optional keyword - for when the
 condition in a loop is not met, the continue statement is skipped so the loop continues to
 execute the remaining statements in the loop body. However, when the condition is met the
 statement is executed, causing the loop to skip the remaining statements in the loop body
 and move on to the next iteration. So, in essence, continue allows you to control the
 flow of execution within a loop based on certain conditions.
 
-the `break` keyword is used to exit a switch/or loop prematurely. When a break is encountered,
+The `break` keyword is used to exit a switch/or loop prematurely. When a break is encountered,
 the loop immediately terminates, and control is passed to whatever comes after it. So if `break`
 is responsible for breaking at the point that its encountered, `return` (which is optional) exits
 transfers control from a given block of code or function -to another - or optionally returns a
 value to the caller. see <a class="reserve" href="func.html">func.html</a>for more.
 
-the start and end of the statement also marks the memory allocation boundary, or
+The start and end of the statement also marks the memory allocation boundary, or
 rather a new sequence of memory. You might then call the start or redirection of a
 proceeding sequence "control flow transfer" or "control flow manipulation" -which refers
 to the mechanism by which the program's execution flow is redirected based on the condition
@@ -63,19 +63,19 @@ or loop. Its something you have to be conscious of in situations where specific 
 memory matter (or more importantly) situations where the exact format-layout of the code matters.
 the same is the case where you have ordered vs non-ordered arrays. In C, these are ordered by default. 
 
-lets dig a little deeper. Control flow statements primarily work by altering the program
+Lets dig a little deeper. Control flow statements primarily work by altering the program
 counter (the CPU register that keeps track of the next instruction as explained)
 they don't directly navigate memory in the sense of manipulating memory addresses.
 For example, when an `if` statement is encountered, the condition is evaluated.
 If the condition is true, the program counter is updated to point to the first
 instruction within the `if` block.
 
-these instructions are then fetched and executed from memory. If the condition is false
+These instructions are then fetched and executed from memory. If the condition is false
 and an `else` block exists, the program counter is updated to point to the first instruction
 within the `else` block; Otherwise, the program continues execution from the next
 instruction after the `if` statement.
 
-understanding control flow is crucial not just for writing functional code but also for
+Understanding control flow is crucial not just for writing functional code but also for
 maintaining secure and error-free applications. `if` statements can help mitigate some of
 the more deviant errors that can arise during program execution. By properly managing
 conditions and branches, you can reduce the risk of errors like overflow errors (a max

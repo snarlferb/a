@@ -23,22 +23,22 @@ the number of nodes in a linked list can grow or shrink as elements are added or
 trees can expand or contract as data is inserted or deleted; And thus arrays can be dynamically
 resized to accommodate a changing number of elements.
 
-here is how i like to think of malloc and memory allocation; think of metrics that track total
+Here is how i like to think of malloc and memory allocation; think of metrics that track total
 memory on a device, which comes in three parts: RAM-based memory consumed, local-memory storage,
 CPU% percentage of a given process. You then might ask the question, "why is this application only
 5KB... when clearly its doing a whole lot more!" It stores 5 Kilobytes, but then its dynamically
 changing size and interacting with the system. this is why we need memory allocation.
 
-one thing we need to acknowledge is how memory is being allocated at runtime. The program doesn't
+One thing we need to acknowledge is how memory is being allocated at runtime. The program doesn't
 know the exact size it needs beforehand, and malloc provides a way to request memory from the
 heap based on the program's needs during execution.
 
-the stack is a fixed-size memory region used for function calls, local variables, and arguments.
+The stack is a fixed-size memory region used for function calls, local variables, and arguments.
 its size is determined at compile time. The heap is a more flexible memory pool that can
 grow and shrink dynamically at runtime; Alas malloc allocates memory from the heap, and
 thus satisfies this notion of runtime allocation.
 
-the main distinguishing factor being the time at which allocation or execution decisions are made.
+The main distinguishing factor being the time at which allocation or execution decisions are made.
 Compile time decisions are made before the program runs and are fixed; runtime decisions are made
 as the program executes and can change dynamically based on the program’s needs and behavior.
 
