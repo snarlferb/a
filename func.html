@@ -360,7 +360,17 @@ since we made `thrd_start_t` a type, you can use it as a `type ofsomething` bear
 im demonstrating whats possible with functions. once you understand function pointers and
 matching signatures, rest assured everything else will be a cakewalk.
 
-here's a function thats of `struct` type...
+here are functions of `struct` type, the first one being a function pointer
+<span class="alt-text">
+  struct fourth (*proc_ptr)(
+    const struct fourth* insert,
+    float mode,
+    const struct ftres* amount,
+    float color,
+    float width
+  );</span>
+
+we're just showing whats possible in the land of hypothetical
 <span class="alt-text">
   struct unboundedint {
   };
@@ -369,13 +379,15 @@ here's a function thats of `struct` type...
     struct unboundedint result;
   }</span>
 
-in this context, a "constructor" refers to a function that initializes a particular data
-structure or object.
+this ones just a regular function that happens to be of type `struct`. In this context,
+a "constructor" refers to a function that initializes a particular data structure or object.
 
 when you use the __attribute__((constructor)) and __attribute__((destructor)) attributes
 (which are GCC-specific) GCC places references to these functions in special sections of
 the object file, specifically `.ctors` for constructors and `.dtors` for destructors in
 the ELF (Executable and Linkable Format).
+
+for more information on attributes, i made this <a class="reserve" href="page10.html">page</a>
 
 constructors are automatically executed before the main() function is called.
 when an ELF executable or shared object (dynamic library) is loaded, the dynamic linker
