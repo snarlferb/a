@@ -192,7 +192,7 @@ the name of the program itself as the first argument, so it is always at least 1
 vector, which is an array of strings (character pointers) representing the actual
 command-line arguments. It'll make sense later if you start making use of command-line
 input, whereby the input values do not depend upon the program’s internals/modular
-framework. Lets learn something about variables (sometimes called objects)
+framework. Lets learn something about variables (objects)
 
 You can use objects before they are explicitly assigned or defined in two very specific
 situations — which ties in w/ two specific features in C, neither of which are exclusively
@@ -237,12 +237,12 @@ Question: What are function parameters even for?... They allow a function to enc
 its behavior, in the sense that they are inherited by the function body, and accessed
 accordingly.
 
-This is true of variadic functions as well, and, because its variadic, it could,
-conceivably, take an infinite amount of variables. More specifically, the first part
-(the part "in quotation marks") will accept your personalized text as well as format
-specifiers. these format specifiers align with each proceeding variable (found after
-the comma) `printf` in particular is used for printing formatted output to the screen,
-hence print -f(formatted)
+This is true of variadic functions as well, and, because its variadic, it may conceivably,
+take an infinite amount of variables. More specifically, the first part (the part "in
+quotation marks") will accept your personalized text as well as format specifiers.
+
+These format specifiers align with each proceeding variable (found after the comma)
+`printf` in particular is used for printing formatted output to the screen, hence print -f(formatted)
 
 Now lets back up for a second and verify what a function is for. A function brings a
 specific set of instructions, depending on how you define them.
@@ -257,11 +257,12 @@ it would have to find this function defined within the program somewhere...
   void func(int x) {
   }</span>
 
-one notable feature related to a function is the ability to capture the
-internal instructions of a function
+One notable feature related to a function is the ability to capture the
+internal instructions of a function.
 
-since this is our first example, you should remember that all program instructions
-are called out from `int main` first, and then proceed to the rest of the program
+Note, all program instructions are called out from `int main` first, and then
+proceed to the rest of the program (so as long as we use `func` after its been
+defined, then we have a legitimate program)
 <span class="alt-text">
   int func(int a,int b) {
     int c = a + b;
@@ -276,9 +277,8 @@ are called out from `int main` first, and then proceed to the rest of the progra
     return 0;
   }</span>
 
-We explicitly declared new variables in `main` and demonstrated how a function could
-be assigned the same arguments as another function, in this case `intern` was
-assigned to `func(a,b)` and we renamed/reassigned those parameters as well...
+This then demonstrates how some function with a given return statement should work
+and how NEW variables (passed in as arguments) should take effect.
 
 You should recall that any function w/ a type (return type) other than void should
 have a return statement. here we are returning a variable. when the type of the value
