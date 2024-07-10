@@ -7,8 +7,11 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <script src="style.js" defer></script>
 </head><body>
-<h3>___ attributes ___</h3>
-first lets look at the standard attributes within C
+<h3>___ Wat dem der attibutes uh fer? ___</h3>
+
+e.g., __attribute__((__noreturn__))
+
+The "attribute" keyword is considered the beginning of the attribute.. Where as e.g., "noreturn" specifies a characteristic of a given entity.
 
 [[deprecated]]
 [[__deprecated__]]
@@ -101,5 +104,12 @@ when you compile your program with the -finstrument-functions flag, it'll
 automatically insert calls to __cyg_profile_func_enter and
 __cyg_profile_func_exit  at the entry and exit points of
 every function in your program.
+
+other common attributes you might see,
+
+__attribute__((__bounded__))
+__attribute__((__format__))
+__attribute__((__unused__))
+__attribute__((__used__))
 
 you can learn more about gcc attributes here, https://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html
