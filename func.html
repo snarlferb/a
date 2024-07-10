@@ -64,10 +64,8 @@ anytime you want to access data indirectly, (which is more efficient than copyin
 around or rather, passing around by value) You can therefore reach the original
 data of a function or variable as long as you've properly pointed to it-
 if not the compiler can help catch these errors for you.
-
-Here's the easiest approach to pointers:
-
 <div id="ptr-anch"></div>
+Here's the easiest approach to pointers:
 <span class="alt-text">
   int *B;
   int *A = B;
@@ -96,23 +94,6 @@ modify variables indirectly through their addresses...
 There are situations where you cannot directly assign the *ptr to the address of
 a variable. Specifically, this restriction applies to cases where the variable's
 address is not known at compile time, or when dealing with certain types of variables.
-
-You can use objects before they are explicitly assigned or defined (this ties in w/
-two features in C, neither of which are exclusively synonymous w/ objects automatically
-springing to life, but may mistakingly be used to describe it. One is called
-<em>forward declaration</em>, and the other (introduced in C11) is called
-<em>relaxed declaration ordering</em>.
-
-A forward declaration is used to declare the existence and type of a function or
-variable before its full definition. It informs the compiler about the identifier
-so it can understand its usage even if the definition comes later (often in separate files).
-
-Relaxed declaration ordering on the other hand allows the use of a variable within a block
-before its formal declaration, so long as the declaration appears later within the same block.
-The compiler performs a special name lookup to ensure the identifier will be declared properly.
-
-Implicit declaration (automatically creating a variable when used without prior declaration)
-is generally discouraged because it can lead to unexpected behavior and compilation errors.
 
 You can use pointers when passing the address of a variable to a function.
 this function can then modify the original value through the pointer
@@ -212,7 +193,34 @@ so it is always at least 1.
 argument vector, which is an array of strings (character pointers) representing
 the actual command-line arguments. it'll make sense later if you start making
 use of command-line input, whereby the input values do not depend upon the
-program’s internals/modular framework.
+program’s internals/modular framework. Lets learn something about variables (objects)
+
+You can use objects before they are explicitly assigned or defined (this ties in w/
+two features in C, neither of which are exclusively synonymous w/ objects automatically
+springing to life, but may mistakingly be used to describe it. One is called
+<em>forward declaration</em>, and the other is called <em>relaxed declaration ordering</em>,
+not introduced until C11)
+
+A forward declaration is used to declare the existence and type of a function or
+variable before its full definition. It informs the compiler about the identifier
+so it can understand its usage even if the definition comes later (often in separate files).
+
+Relaxed declaration ordering on the other hand allows the use of a variable within a block
+before its formal declaration, so long as the declaration appears later within the same block.
+The compiler performs a special name lookup to ensure the identifier will be declared properly.
+<span class="alt-text">
+  void rdoxample() {</span>
+    <em>// Use the variable 'value' before its declaration</em><span class="alt-text">
+    int result = value * 2;</span>
+
+    <em>// Declaration of 'value' (later in the same block)</em><span class="alt-text">
+    int value = 10;
+  }</span>
+
+Implicit declaration (automatically creating a variable when used without prior declaration)
+is generally discouraged because it can lead to unexpected behavior and compilation errors.
+
+
 
 <div id="variadic-anch">variadic function</div>
 since we use `printf` to see the results of everything we should understand what kind
@@ -239,7 +247,7 @@ specifiers. these format specifiers align with each proceeding variable (found a
 the comma) `printf` in particular is used for printing formatted output to the screen,
 hence print -f(formatted)
 
-Now lets back up for a second and verify what a function is for. a function brings a
+Now lets back up for a second and verify what a function is for. A function brings a
 specific set of instructions, depending on how you define them.
 
 Lets say you create a function prototype that is, you want to tell the program that
