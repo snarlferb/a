@@ -182,24 +182,23 @@ block of code. every function also has a main. thats the starting point, and so 
 needs to know how to begin the cascade so to speak, so calling the function is how
 you would do it in this particular case.
 
-main is essentially its own function in some sense and can be treated as such.
-you might sometimes see parameters such as `argc` (argument count) or `argv`
-used as parameters in main.  `int argc`  is an integer that represents the
-number of command-line arguments passed to the program. The value of argc
-includes the name of the program itself as the first argument,
-so it is always at least 1.
+`main`, the entry point of the program, is essentially its own function  and should
+be treated as such. You might sometimes see parameters such as `argc` (argument count)
+or `argv` used as parameters in main.  `int argc`  is an integer that represents the
+number of command-line arguments passed to the program. The value of argc  includes
+the name of the program itself as the first argument, so it is always at least 1.
 
-`char *argv[]`, or sometimes `char **argv` are interchangeable. It represents an
-argument vector, which is an array of strings (character pointers) representing
-the actual command-line arguments. it'll make sense later if you start making
-use of command-line input, whereby the input values do not depend upon the
-program’s internals/modular framework. Lets learn something about variables (objects)
+`char *argv[]`, or sometimes `char **argv` (interchangeable) represent an argument
+vector, which is an array of strings (character pointers) representing the actual
+command-line arguments. It'll make sense later if you start making use of command-line
+input, whereby the input values do not depend upon the program’s internals/modular
+framework. Lets learn something about variables (sometimes called objects)
 
-You can use objects before they are explicitly assigned or defined (this ties in w/
-two features in C, neither of which are exclusively synonymous w/ objects automatically
-springing to life, but may mistakingly be used to describe it. One is called
-<em>forward declaration</em>, and the other is called <em>relaxed declaration ordering</em>,
-not introduced until C11)
+You can use objects before they are explicitly assigned or defined in two very specific
+situations — which ties in w/ two specific features in C, neither of which are exclusively
+synonymous with objects automatically springing to life, but may mistakingly be used to
+describe it. One is called  <em>forward declaration</em>, and the other is  <em>relaxed
+declaration ordering from C11—onward.</em>
 
 A forward declaration is used to declare the existence and type of a function or
 variable before its full definition. It informs the compiler about the identifier
@@ -220,17 +219,15 @@ The compiler performs a special name lookup to ensure the identifier will be dec
 Implicit declaration (automatically creating a variable when used without prior declaration)
 is generally discouraged because it can lead to unexpected behavior and compilation errors.
 
-
-
-<div id="variadic-anch">variadic function</div>
+<div id="variadic-anch">--- variadic function ---</div>
 since we use `printf` to see the results of everything we should understand what kind
-of function it is its a special function that takes a variable amount of arguments,
-that is, they are presented with an ellipsis "..." within a given function's parameters
+of function it is—its a special function that takes a variable amount of arguments,
+that is, they are presented with an ellipsis "..." within a given function parameters
 <span class="alt-text">
   int printf(const char *format, ...)</span>
 
 This is the definition provided by the standard lib header, so linking w/
-`#include &lt;stdio.h&gt;`  lets you use `printf`. keep in mind, you include C library
+`#include &lt;stdio.h&gt;`  lets you use `printf`. Keep in mind, you include C library
 headers w/ &lt;file.h&gt;  and user-defined headers w/ "file.h"
 <span class="alt-text">
   printf("Example text %d, %d, %d\n", var1, var2, var3);</span>
@@ -304,7 +301,7 @@ determine whether it executed successfully or encountered an issue.
 it's also useful to define more specific error codes sometimes, thereby providing
 more detailed information about the nature of the error that occurred.
 
-<div id="function-pointer-anch"></div>
+<div id="function-pointer-anch">--- function pointers ---</div>
 regarding function pointers... they can seem a little odd at first, especially when
 combined with unnamed parameters or return types, however these unnamed functions or
 function parameters are legal in C, nevertheless function pointers are a powerful
