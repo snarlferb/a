@@ -38,8 +38,12 @@ have a special meaning. Quotes are unique in that they behave like a toggle.
 A variable is a character-<a href="strings">string</a> in shell that stores some value.
 That value could be an integer, filename, string or some shell command itself.
 
-A command is just a program interpreted by the system. <em>Note: If your interests are in
-understanding what a shell is and its inner workings, you could look up; parser, executor and shell subsystems.</em>
+A command is just a program interpreted by the system. <em> NOTE: I'll only be going over a
+handleful of commands. Its up to you to explore and find out more about which commands there are.
+Also, if your interests are in understanding what a shell is and its inner workings, you could
+look up; lexer, parser, core, executor (input/output, command execution, etc.), command
+handling (characters, strings and command file), and shell subsystem/input line (history,
+command management, input handling, etc.).</em>
 
   <b>variable=value</b>
 
@@ -163,7 +167,16 @@ For command substitution <b>$(command)</b> is considered the proper method, here
 
 Single quotes would treat everything as plain characters.
 
-<em>.. will explain expr and entr further on</em>
+<em>We show an example w/ expr used again later on</em>. Another one is `eval`, which is simple also.
+It evaluates a given variable and runs the command associated with it, as opposed to echo'ing it out.
+You can remember it like this, eval is eval;then;run command.
+
+The entr command is a utility that runs arbitrary commands when a file(s) has changed. If youve ever
+used a record command or `watch` in gdb then you've probably done something similar like this before,
+except that entr additionally executes (autonomously) when encountering changes in, continuing to
+monitor and do whatever its been instructed to. This behavior persists (in the background) until
+you$ kill -SIGSTOP <entr_pid> or whatever.
+
 <b>set</b> without an argument will list shell variables, shell functions, and environment variables.
 It can set or unset with the <b>+</b> or <b>-</b> option. It can be used with positional parameters for example:
 
