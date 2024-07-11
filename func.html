@@ -204,6 +204,8 @@ A forward declaration is used to declare the existence and type of a function or
 variable before its full definition. It informs the compiler about the identifier
 so it can understand its usage even if the definition comes later (often in separate files).
 
+So short, it lets you have prototypes in headers or at the beginning of source files.
+
 Relaxed declaration ordering on the other hand allows the use of a variable within a block
 before its formal declaration, so long as the declaration appears later within the same block.
 The compiler performs a special name lookup to ensure the identifier will be declared properly.
@@ -218,6 +220,13 @@ The compiler performs a special name lookup to ensure the identifier will be dec
 
 Implicit declaration (automatically creating a variable when used without prior declaration)
 is generally discouraged because it can lead to unexpected behavior and compilation errors.
+
+Variables in C can are thus normally declared before their use, and this is typically referred
+to simply as a declaration rather than a forward declaration.
+Example:  `extern int gT;`  declares gT without defining it.
+
+This is a declaration rather than a forward declaration because it's not about defining it
+later in a separate file but rather about declaring its existence and type.
 
 <div id="variadic-anch">--- variadic function ---</div>
 since we use `printf` to see the results of everything we should understand what kind
@@ -292,6 +301,8 @@ to prevent casting w/ possible data loss scenarios if you can.
 
 in conclusion, functions can use return statements not only to pass back computed
 values but also to indicate success or failure of their operation. 
+You can have arithmetic expressions directly in a given return
+statement, as well as w/ comparison (`return a &gt;= b`)
 
 it's a common convention to use `return 0;` to indicate success and non-zero values
 (typically 1 or -1) to indicate errors or some other kind of failure.
