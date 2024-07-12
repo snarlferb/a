@@ -177,7 +177,11 @@ except that entr additionally executes (autonomously) when encountering changes 
 monitor and do whatever its been instructed to. This behavior persists (in the background) until
 you$ kill -SIGSTOP <entr_pid> or whatever.
 
-<b>set</b> without an argument will list shell variables, shell functions, and environment variables.
+As we had briefly mentioned, <b>env</b> and <b>export</b> without specifying anything after it will display the current
+environment variables that are inherited by any command executed within the same shell session.
+(<b>export</b> displays those marked for export to child processes)
+
+<b>set</b> without an argument will also list environment variables, as well as shell-specific variables and functions.
 It can set or unset with the <b>+</b> or <b>-</b> option. It can be used with positional parameters for example:
 
   <b>set apple banana carrot</b>
@@ -210,7 +214,6 @@ Whitespace is what separates characters. This variable contains a space, a tab, 
   <b>OLDIFS=$IFS</b>
 
 <b>env</b> allows you to run another program in a custom environment without modifying the current one.
-Without specifying an argument it will list the current environment variables.
 
 You can imagine that a program generates a child process. And this process has the same environment as its parent.
 The process ID number is different, and this is typically referred to as 'forking'. Forking provides a way for an
