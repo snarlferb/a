@@ -108,11 +108,11 @@ designated intializers provide a way of explicitly
 intitializing struct members... this is considered as,
 "default order initialization"
 <span class="alt-text">
-struct test {int a; char b;} data = {10, 'c'};</span>
+  struct test {int a; char b;} data = {10, 'c'};</span>
 
 and this one is "explicit order initialization"...
 <span class="alt-text">
-struct test data = {.b = 'c', .a = 10};</span>
+  struct test data = {.b = 'c', .a = 10};</span>
 
 *note, that these are not specific to structs*
 now we should see what it looks like in context:
@@ -128,7 +128,8 @@ now we should see what it looks like in context:
     return 0;
   }</span>
 
-<em>you can do alot with these</em>. returning to the beginning of what we learned
+<em>you can do alot with these</em>. continuing on, lets return to the
+beginning of what we learned...
 <span class="alt-text">
   struct whatever {
       int x;
@@ -144,27 +145,59 @@ if you want you can do...
   };</span>
 
 and you can then declare/access the array elements like normal.
-but i wanna show something less normal...
+but lets look at struct literals, and several different examples
+so that it may sink in...
+<span class="alt-text">
+  struct whatever {
+    int a;
+    int b;
+  };
+
+  void plop(struct whatever p) {
+    }</span>
+
+youve already seen a compound literal before, where the struct literal created
+this way is unnamed and temporary. now that example was just for demonsrtation,
+lets take a look at another example.. humour me on this..
 <span class="alt-text">
   void plop(struct whatever p);</span>
 
-when you call it... (youve already seen a compound literal before)
+next we will call `plop`,  initializing its members to "1" and "2"...
 <span class="alt-text">
   plop((struct whatever){1, 2});</span>
 
-now lets suppose i have a struct that i want to declare.
-<span class="alt-text">
-  typedef struct SymbolTable *Symb</span>
+In `{...}` is where the members would ostensibly be. the temporary struct object
+`whatever` only exists within the scope of the expression!...
 
-because it is a pointer, i need to refer to instances of `*Symb` as if it is a pointer.
+but lets see one more just be sure... take for example,
+<span class="alt-text">
+  struct point {
+    int x;
+    int y;
+  };
+
+  int main() {
+    struct point p = {10, 20};
+  }</span>
+
+this reinforces their temporary nature and prevents confusion with
+named struct variables. While you can't refer to them later by a name,
+you can access their members using the dot operator, e.g., `p.x`, or `p.y`
+
+now that we've seen three examplea of this in a row, surely you got the idea.
+lets go back to basics; lets suppose i have a struct that i want to declare.
+<span class="alt-text">
+  typedef struct STable *S</span>
+
+because it is a pointer, i need to refer to instances of `*S` as if it is a pointer.
 however if it wasnt a pointer then you would define those instances of it directly
 <span class="alt-text">
   struct NewStruct {
-      *Symb newMember;
+      *S newMember;
   }</span>
 
-having a member of type `Symb` now would essentially be like
-having a pointer to a `struct SymbolTable`
+having a member of type `S` now would essentially be like
+having a pointer to a `struct STable`
 
 continuing on... if you learned about function pointers...
 <span class="alt-text">
@@ -174,7 +207,6 @@ continuing on... if you learned about function pointers...
   } AutoGroup;</span>
 
 then here is something cool you can do...
-
 <span class="alt-text">
   AutoGroup auto_groups[] = {
     {"group1", action1},
@@ -194,7 +226,6 @@ and an enum is for when you want to create, whats called "enumerated constants"
 In C, there's no true nested definitions allowed in a function, unquestionably.
 but regarding nested structs within unions...
 <span class="alt-text">
-<http://www.lysator.liu.se/c/tc1.html>
   struct s {double i;} f(void);
   union {
     struct {
@@ -214,12 +245,14 @@ but regarding nested structs within unions...
 
   g.u2.f3 = f();</span>
 
-the behavior is defined. 
+The behavior is defined. see here <a class="reserve" href="http://www.lysator.liu.se/c/tc1.html">http://www.lysator.liu.se/c/tc1.html</a>
 
-regarding anonymous structs (anon unions too), c does support them, with some considerations...
+Regarding anonymous structs (anon unions too), c does support them, with some considerations...
 anonymous unions must be declared within a containing struct or union, and
 members of the anonymous struct or union are accessed directly as if
 they were members of the containing struct or union.
 
+more links on c standards are <a class="reserve" href="std.md">here</a>
 next, see <a class="reserve" href="macro.html">macros</a>
+
 </body></html>
