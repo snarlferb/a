@@ -3,10 +3,64 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>attributes</title>
+<title>manip nd attrib</title>
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <script src="style.js" defer></script>
 </head><body>
+<h3>___ Bit Manip ___</h3>
+In the following we are going to look at bit fields and bitwise operations.
+You cannot declare expressions that perform bit-level manipulations DIRECTLY,
+as such you must define them in a struct for example, then use them.
+Bit fields allow you to specify how many bits that variable should hold,
+effectively adding more bit positions-or rather a field of bits,
+of which can be either 0 or 1
+
+The following declares bit field (1000) i.e. the 4th bit set, in a struct.
+This implies you can group related flags together within a structure.
+Afterward it is set yet again when we do (1 &lt;&lt; 3) which is equivalent to (1 * (2^(3))),
+or you could say we shifted a 1 bit (0001) three positions to the left
+Whereby we OR (1000) and (1000) together, which equals (1000), as thats what
+OR does w/ equivalent bits <em>(as it does e.g., 1010 | 0101 = 1111 w/ indifferent bits)</em>
+
+When you think of OR, think of words like <em>passive and so always active</em>
+<span class="alt-text">
+  struct {
+    unsigned int is_hidden : 4;
+  } FilePermit;
+
+  int main() {
+    FilePermit.is_hidden |= (1 &lt;&lt; 3);
+
+    // Check if the 4th bit is set
+    int isFourthBitSet = (FilePermit.is_hidden &amp; (1 &lt;&lt; 3)) != 0;
+    printf("4th bit set to: %d\n", isFourthBitSet);
+
+    return 0;
+  }</span>
+
+Here's an arbitrary example that does the same thing w/ bitwise shift.
+<span class="alt-text">
+  #define KERMIT (1 &lt;&lt; 0) | (1 &lt;&lt; 1) | (1 &lt;&lt; 2) | (1 &lt;&lt; 3)
+  // Individualized flags, for clarity
+  #define THEFROG (1 &lt;&lt; 0)
+  #define THETOAD (1 &lt;&lt; 1)
+  #define THEPIG (1 &lt;&lt; 2)
+  #define THEGOOSE (1 &lt;&lt; 3)
+
+  struct FilePermit {
+    unsigned char is_hidden;
+  };
+
+  int main() {
+    struct FilePermit permit = {0};
+    permit.is_hidden |= THEGOOSE;
+    int isFourthBitSet = (permit.is_hidden &amp; THEGOOSE) != 0;
+    printf("4th bit set to: %d\n", isFourthBitSet);
+    return 0;
+  }</span>
+
+Experiment with it.
+
 <h3>___ Wat dem der attibutes uh fer? ___</h3>
 
 e.g., __attribute__((__noreturn__))
