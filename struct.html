@@ -162,11 +162,13 @@ lets take a look at another example.. humour me on this..
 <span class="alt-text">
   void plop(struct whatever p);</span>
 
-next we will call `plop`,  initializing its members to "1" and "2"...
+compound literals can be used within function calls, both in the actual function
+call and as part of the function prototype or declaration when explaining their usage.
+Lets demonstrate by calling `plop`, initializing its members to "1" and "2"...
 <span class="alt-text">
   plop((struct whatever){1, 2});</span>
 
-In `{...}` is where the members would ostensibly be. the temporary struct object
+In `{...}` is where the members would presumably be. the temporary struct object
 `whatever` only exists within the scope of the expression!...
 
 but lets see one more just be sure... take for example,
@@ -184,7 +186,7 @@ this reinforces their temporary nature and prevents confusion with
 named struct variables. While you can't refer to them later by a name,
 you can access their members using the dot operator, e.g., `p.x`, or `p.y`
 
-now that we've seen three examplea of this in a row, surely you got the idea.
+now that we've seen three examples of this in a row, surely you got the idea.
 lets go back to basics; lets suppose i have a struct that i want to declare.
 <span class="alt-text">
   typedef struct STable *S</span>
