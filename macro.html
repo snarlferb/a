@@ -171,7 +171,8 @@ the proceeding part defines a pointer type for the service structure. It uses th
 name with "Rec_" appended, followed by const *. This creates a pointer that can point to a
 constant Service_ structure (read-only).
 
-once you've defined the service structure and pointer type using the macro, you can declare variables of those types:
+these all come together via the `##` operator that does concatenation, and once you've defined the
+service structure and pointer type using the macro, you can declare variables of those types:
 <span class="alt-text">
   DEFINE_SERVICE(AppendThis)
   Service_AppendThis Hello;</span>
