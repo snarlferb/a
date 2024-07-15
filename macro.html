@@ -38,6 +38,8 @@ actual header file path during the preprocessing stage.  Next here's an example 
 `ifdef` checks if a macro named "PLATFORM" is defined. if so, the line `#include <platform.h>`
 gets included because the condition is true. <em>And presumably, you can deduce the rest from there.</em>
 
+be careful not to get `ifdef` mixed up with `ifndef`, which checks if a given macro is NOT defined.
+
 another utility of macro's is their simplification in rvalues... an rvalue represents
 parts of an expression (typically on the right side) that are attributed to some value.
 an lvalue is attributed to a given memory location... However they are more of a
