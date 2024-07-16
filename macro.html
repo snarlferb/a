@@ -41,17 +41,32 @@ gets included because the condition is true. <em>And presumably, you can deduce 
 be careful not to get `ifdef` mixed up with `ifndef`, which checks if a given macro is NOT defined.
 its exactly the same as `#if !defined`, but a bit a less obvious; I see them both used frequently.
 
-another utility of macro's is their simplification in rvalues... an rvalue represents
+One thing that would make macros alot easier to understand is the order of operations; We sometimes
+mention (PEMDAS) where "P" means <em>parentheses</em>. C has specific rules for operator precedence
+(which operators are evaluated first) and associativity (the order in which operators of the same
+precedence level are evaluated). I often find that the confusion arises in situations due to the
+way it looks with the added parentheses. Macros depend on having this terse separation between
+tokens (parenthesizing) so you will often see it exaggerated in more complex scenarios.
+
+Next time you see something that fits this description try stripping away the parentheses -
+and then look at it again, and it should appear normal.
+
+But isnt it the case that most things we do in a language is all around these distinctions;
+That exist between characters. Macros are just another perspective on how to interpret them.
+
+Lets talk about the utility of macros. A macro can simplify an expression for when
+we go to call it... First we have to explain what an "rvalue" is. Rvalues represent
 parts of an expression (typically on the right side) that are attributed to some value.
-an lvalue is attributed to a given memory location... However they are more of a
-conventionary term more so than their semantic connotation entails - implying a
-"left" or "right" sidedness. Heres an example regarding rvalues. This is prior
-to its subsequent simplification:
+An lvalue is attributed to a given memory location.
+
+These terms are however conventionary, more so than their semantic connotation mat entail
+<em>(implying a "left" or "right" sidedness)</em> Heres an example regarding rvalues.
+This is prior to simplification:
 <span class="alt-text">
   int max_val = type_max(typeof(var));
   int min_val = type_min(typeof(var));</span>
 
-when we change it to become a macro itll look like this to assign it.
+Then when we change it to become a macro, and assign it after.
 <span class="alt-text">
   #define TYPE_MAX(val) type_max(val)
   #define TYPE_MIN(val) type_min(val)
@@ -59,8 +74,10 @@ when we change it to become a macro itll look like this to assign it.
   int max_val = TYPE_MAX(var);
   int min_val = TYPE_MIN(var);</span>
 
-which you can see is simpler now to call. heres a macro to access some element of
-a tuple-like structure (array)
+which you can see is simpler now to call.
+
+This behavior applies to all other forms of C and its decree...
+Heres a macro to access some element of a tuple-like structure (array)
 <span class="alt-text">
   #define MACRO(x) ((x)[2])
     int tuple[] = {10, 20, 30, 40};</span>
