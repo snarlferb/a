@@ -39,6 +39,7 @@ actual header file path during the preprocessing stage.  Next here's an example 
 gets included because the condition is true. <em>And presumably, you can deduce the rest from there.</em>
 
 be careful not to get `ifdef` mixed up with `ifndef`, which checks if a given macro is NOT defined.
+its exactly the same as `#if !defined`, but a bit a less obvious; I see them both used frequently.
 
 another utility of macro's is their simplification in rvalues... an rvalue represents
 parts of an expression (typically on the right side) that are attributed to some value.
