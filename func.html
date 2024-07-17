@@ -266,12 +266,12 @@ it would have to find this function defined within the program somewhere...
   void func(int x) {
   }</span>
 
-One notable feature related to a function is the ability to capture the
-internal instructions of a function.
+It should also be said that a function can be the rvalue assigned to a given variable,
+<em>(and we'll talk more about rvalues later on)</em>. One notable consequence is the
+ability to directly capture the internal instructions of a function.
 
 Note, all program instructions are called out from `int main` first, and then
-proceed to the rest of the program (so as long as we use `func` after its been
-defined, then we have a legitimate program)
+proceed to the rest of the program.
 <span class="alt-text">
   int func(int a,int b) {
     int c = a + b;
