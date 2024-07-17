@@ -39,22 +39,22 @@ actual header file path during the preprocessing stage.  Next here's an example 
 gets included because the condition is true. <em>And presumably, you can deduce the rest from there.</em>
 
 be careful not to get `ifdef` mixed up with `ifndef`, which checks if a given macro is NOT defined.
-its exactly the same as `#if !defined`, but a bit a less obvious; I see them both used frequently.
+its exactly the same as `#if !defined`, but a less obvious; They're both used interchangeably
 
-One thing that would make macros alot easier to understand is the order of operations; We sometimes
-mention (PEMDAS) where "P" means <em>parentheses</em>. C has specific rules for operator precedence
-(which operators are evaluated first) and associativity (the order in which operators of the same
-precedence level are evaluated). I often find that the confusion arises in situations due to the
-way it looks with the added parentheses. Macros depend on having this terse separation between
-tokens (parenthesizing) so you will often see it exaggerated in more complex scenarios.
+Before we go forward, theres something you have to understand. You might be familiar w/ the order
+of operations; We sometimes refer to them as (PEMDAS) where "P" means <em>parentheses</em>.
 
-Next time you see something that fits this description try stripping away the parentheses -
-and then look at it again, and it should appear normal.
+C has specific rules for operator precedence (which operators are evaluated first) and associativity
+(the order in which operators of the same precedence level are evaluated). I often find that the
+confusion arises in situations due to the way it looks w/ extra parentheses, the added protection
+around a given token(s). Macros depend on having this terse separation (parenthesizing) so you will
+often see it exaggerated.
 
-But isnt it the case that most things we do in a language is all around these distinctions;
-That exist between characters. Macros are just another perspective on how to interpret them.
+Next time you see something that fits this description try stripping away the parentheses;
+and then look at it again, and it should appear human readable. Macros, being they are like
+their own language, are just another perspective on how to separate and interpet entities in C.
 
-Lets talk about the utility of macros. A macro can simplify an expression for when
+Lets talk about the utility a macro. Macro's can simplify an expression for when
 we go to call it... First we have to explain what an "rvalue" is. Rvalues represent
 parts of an expression (typically on the right side) that are attributed to some value.
 An lvalue is attributed to a given memory location.
