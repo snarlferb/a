@@ -63,6 +63,21 @@ or loop. Its something you have to be conscious of in situations where specific 
 memory matter (or more importantly) situations where the exact format-layout of the code matters.
 the same is the case where you have ordered vs non-ordered arrays. In C, these are ordered by default. 
 
+A `do...while` loop is similar to a while loop, with one key difference:
+the `do...while` loop guarantees that the code inside the loop will be executed at least once,
+regardless of whether the condition is true initially. This is because the condition is evaluated
+after the code block has been executed.
+
+A goto statement is designed to provide a way to transfer control to a labeled statement within a function.
+Once the program has encountered it, it jumps to the specified label. Execution continues sequentially from
+that point until it reaches the end of the function or encounters a return statement.
+
+The structured use of goto and labels helps avoid collisions or conflicts in control flow because
+each labeled section serves a specific purpose within the function. There are no ambiguities about
+which code path or branch to follow after jumping to a label. It creates an explicit divide,
+so you'll often see functions that design themselves in such a way where they can recall
+the same code multiple times, which may have otherwise been problematic without.
+
 Lets dig a little deeper. Control flow statements primarily work by altering the program
 counter (the CPU register that keeps track of the next instruction as explained)
 they don't directly navigate memory in the sense of manipulating memory addresses.
@@ -152,4 +167,5 @@ modifiers (modify other identifiers), quantifiers (in mathematics they specify q
 identifiers (the names of the entities in the programming language), delimeters (specify boundaries)
 
 go to the <a class="reserve" href="func.html">next page</a>
+
 </body></html>
