@@ -90,7 +90,16 @@ initialized elements, even if you don't explicitly include it to the initializer
 The statement  `char element[2] = str[2]`   wouldnt be a valid way to copy a
 single character from a string to a character array. 
 
-when you declare an array like
+`\0` (Null character or NUL) is a single character literal in C represented by \0.
+It is essentially the ASCII character with the value 0 (zero). In string literals,
+(\0) denotes the null-terminating character, which signifies the end of a string
+
+NULL on the other hand is a macro defined in several standard C libraries
+(typically as (void *)0). It is used primarily to represent a null pointer, that
+does not point to any object or function. It's commonly used in pointer contexts
+to signify that the pointer does not currently refer to any valid memory location.
+
+returning to array declaration,
 <span class="alt-text">
   int arr[3];</span>
 
@@ -264,4 +273,5 @@ hint: it was one of the very first things we said about arrays and their unique 
 you're not counting over twice, but looking at the arrays actual <u>index#2</u>, and the element of that position.
 
 see <a class="reserve" href="malloc.html">malloc</a> on page8, or   see <a class="reserve" href="struct.html">struct</a> on page5
+
 </body></html>
