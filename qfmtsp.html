@@ -72,6 +72,11 @@ A goto statement is designed to provide a way to transfer control to a labeled s
 Once the program has encountered it, it jumps to the specified label. Execution continues sequentially from
 that point until it reaches the end of the function or encounters a return statement.
 
+The key thing to remember is that execution will continue sequentially after the jump, unless explicitly
+redirected or interrupted. This means execution can be redirected by control flow statements in their typical
+way, including a `goto` jumping the program elsewhere in the function. Execution under a label continues to
+occur even if another label falls within the sequence of that execution.
+
 The structured use of goto and labels helps avoid collisions or conflicts in control flow because
 each labeled section serves a specific purpose within the function. There are no ambiguities about
 which code path or branch to follow after jumping to a label. It creates an explicit divide,
