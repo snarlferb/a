@@ -1,0 +1,67 @@
+<!-- fw -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>frameworks</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+  <h3>Application and the Framework</h3>
+  Choosing the right framework for your application is everything, as it means managing your project in a specific
+  way that may or may not have the right balance, workflow and maintainability you desire. It goes without saying
+  that clean, hygienic, intuitive code code is what you're aiming for. We should also consider the foundation,
+  as well as try to imagine what the end result should look like. In order to do this we need to take a speculative
+  look at the internals and rely on our experience and intuition to determine what would best serve our project.
+
+  Of course, unless you have had the experience yourself and probed at each framework, you may have absolutely no
+  idea what im talking about. Rest assured its something you should learn for yourself in order to comprehend unique
+  and novel programming.
+
+  Frameworks consist of header files and implementation files. Header files (often referred to as framework headers)
+  contain declarations for the functionalities provided by the framework.
+
+  <h3>Framework Interdependencies</h3>:
+
+  Regardless of the approach, frameworks (both header and implementation file alike) inherently link to and depend on
+  other header files or libraries. This linkage ensures that all necessary declarations and definitions are available
+  during compilation and linking phases. Even if a file is linked by another file already, frameworks will reference
+  these dependencies to pull in or reference the required header files, ensuring all components are correctly integrated.
+
+  In a perfect world, we could have a single translation unit that could bring in each file in a cascading manner that
+  wasnt dependent on redefining a header over and over in its particular section of the code, but that could go downstream
+  to say whether or not it had already been *picked up*. While this concept aligns with some behaviors of the linker and
+  the builder, it is not fully achievable due to several inherent limitations.
+
+  First, the C/C++ preprocessor lacks the intelligence to track header inclusions across multiple translation units
+  effectively. It relies on include guards (#ifndef, #define, #endif) or #pragma once to prevent multiple inclusions within
+  a single translation unit, but it does not manage inclusions across the entire project scope.
+
+  Second, while linkers do handle symbol resolution and can merge identical symbols, they do not operate at the level of 
+  header file inclusion during compilation. They work with object files generated after the preprocessing and compilation
+  stages, meaning they cannot influence how headers are included.
+
+  Finally, the dependency management and build optimization performed by modern build systems are designed to handle these
+  complexities to some extent. They track dependencies and only recompile files when necessary, but the cascading inclusion
+  approach remains impractical due to the inherent limitations of the C/C++ compilation model.
+
+    (1) Extern Declarations and Precompiled Headers: Frameworks may utilize `extern` declarations to reference functions or
+    variables defined elsewhere. This is often done to leverage precompiled header files, which can improve build times by
+    storing commonly used declarations in a single file.
+
+    (2) Direct Definitions and Efficiency: Some frameworks define everything within their *own* header files, avoiding external
+    dependencies. This approach can streamline the build process and potentially improve efficiency by reducing the need for
+    the compiler to search for references across multiple files.
+
+    (3) The Hybrid Approach adopts a scheme that can balance both performance and clarity. It is best carried out through what
+    are called *Unity builds*; that utilize precompiled headers to store frequently used declarations for faster build times.
+    As such, it is divided into modules, wherein each module has its own header file. This promotes code organization and
+    reusability. It may also selectively utilize `extern` declarations for specific functions or variables defined in the
+    core engine to avoid redundant definitions, and thus streamlining the build process.
+
+  However, unity builds are generally unavailable for systems that dont wish to use CMake, or some other equivalent, as its
+  really a feature that exists only in the realm of *extended* build automation and is less critical for applications that
+  leverage their build systems in more specific ways. In conclusion, its best to choose the right approach for the type of
+  application you're making and how you think it should be made.
+
+</body></html>
