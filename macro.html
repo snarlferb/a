@@ -278,12 +278,18 @@ to offsetof,  to set a field's value indirectly.
   }</span>
 
 In practice, you can simplify your expression by adjusting the cast scope. For instance,
-take the example of a preprocessor condition, whereby we had casted `int_example` type to
-the <em>first</em> level, tangent to each variable... If we move the cast to one of the
-outermost levels, we'll have, in turn, casted to each variable encapsulated within the
-same level of the shared parentheses... does that make sense?...
+take the example of a preprocessor condition, whereby we're doing something that may not
+be valid C (as in general explicit casting is not meaningful in the C preprocessor)
+
+Therefore it probably will not work to try this in a macro, but it helps for demonstrating w/.
+Lets say we've casted `int_example` type to the <em>first</em> level, tangent to each variable...
+If we move the cast to one of the outermost levels, we'll have, in turn, casted to each variable
+encapsulated within the same level of the shared parentheses... does that make sense?...
 <span class="alt-text">
   #if !((int_example((E + 1) / A) &lt;&lt; (F - 2)) &amp; (int_example)G)</span>
+
+In conclusion, we're trying to use our type `int_example` to cast within a preprocessor
+condition (but as we said the preprocessor does not understand or perform type casting)
 
 Here ive chosen to cast at the second parentheses level, which means ive excluded `G`
 from the `int_example` association, and so ive added the cast tangent to it.
