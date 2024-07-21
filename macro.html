@@ -51,15 +51,16 @@ around a given token(s). Macros depend on having this terse separation (parenthe
 often see it exaggerated.
 
 Next time you see something that fits this description try stripping away the parentheses;
-and then look at it again, and it should appear human readable. Macros, being they are like
-their own language, are just another perspective on how to separate and interpet entities in C.
+and then look at it again, and it should be more clear and in a way that requires following
+the normal hierarchy of precedence within the expression. Macros, being that they are like
+their own compile-time language, are just another perspective on how to separate and
+interpet those entities in C.
 
-Lets talk about the utility a macro. Macro's can simplify an expression for when
-we go to call it... First we have to explain what an "rvalue" is. Rvalues represent
-parts of an expression (typically on the right side) that are attributed to some value.
-An lvalue is attributed to a given memory location.
+Lets talk about the utility of a macro. Macro's can simplify an expression.
+First we have to explain what an "rvalue" is. Rvalues represent parts of an expression (typically
+on the right side) that are attributed to some value. An lvalue is attributed to a given memory location.
 
-These terms are however conventionary, more so than their semantic connotation mat entail
+These terms are however conventionary, more so than their semantic connotation may entail
 <em>(implying a "left" or "right" sidedness)</em> Heres an example regarding rvalues.
 This is prior to simplification:
 <span class="alt-text">
