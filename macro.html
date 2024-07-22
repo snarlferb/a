@@ -280,9 +280,10 @@ to offsetof,  to set a field's value indirectly.
 
 In practice, you can simplify your expression by adjusting the cast scope. For instance,
 take the example of a preprocessor condition, whereby we're doing something that may not
-be valid C (as in general explicit casting is not meaningful in the C preprocessor)
+be valid C—as explicit casting is not meaningful w/ preprocessor directive like `#if`
+that do not supprt runtime constructs—though they are in the case of normal macros..
 
-Therefore it probably will not work to try this in a macro, but it helps for demonstrating w/.
+Therefore it probably will not work to try this in `#if`, but it helps for demonstrating w/.
 Lets say we've casted `int_example` type to the <em>first</em> level, tangent to each variable...
 If we move the cast to one of the outermost levels, we'll have, in turn, casted to each variable
 encapsulated within the same level of the shared parentheses... does that make sense?...
@@ -290,13 +291,19 @@ encapsulated within the same level of the shared parentheses... does that make s
   #if !((int_example((E + 1) / A) &lt;&lt; (F - 2)) &amp; (int_example)G)</span>
 
 In conclusion, we're trying to use our type `int_example` to cast within a preprocessor
-condition (but as we said the preprocessor does not understand or perform type casting)
+condition (but as we said the preprocessor will not understand or perform type casting)
 
 Here ive chosen to cast at the second parentheses level, which means ive excluded `G`
 from the `int_example` association, and so ive added the cast tangent to it.
 You could very well just add the cast to a parentheses that encapsulates ALL,
 and have it applied to all of them, and thats usually what is the easiest to do.
 
+Preprocessor directives like #if, #ifdef, and #ifndef are used in conditional compilation
+to include or exclude parts of code based on certain conditions. We can of course make
+our example into a macro instead, for a relative notion of what the difference is now.
+<span class="alt-text">
+  #define TRYEXAMPLE(E, A, F, G) \
+    (((((E + 1) / (A)) &lt;&lt; ((F) - 2)) &amp; ((int)(G))))</span>
 
   Congratulations...
 You've reached the end.
