@@ -7,21 +7,7 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <script src="style.js" defer></script>
 </head><body>
-<div id="ctrl-anch">operators</div>
-<span class="alt-text">                &amp;&amp;    ||    !</span>    logical \
-<span class="alt-text">    +     -     *     /     %</span>    arithmetic \
-<span class="alt-text">                    ++    - -</span>    unary aerith \
-
-When you use the unary increment (++) or decrement (- -) operators on a variable  \
-they directly modify the variable's value within its lifetime.                      \
-
-This means that the change to the variable's value persists regardless of whether the  \
-variable is being assigned to another variable or used as an rvalue (the right-hand side of an assignment or in an expression)
-<span class="alt-text">                                        ==    !=    &gt;     &lt;    &gt;=     &lt;=</span>    relational    \
-<span class="alt-text">                                           &amp;    |    ^    ~    &lt;&lt;     &gt;&gt;</span>    bitwise         \
-<span class="alt-text">   =   +=     -=     *=    /=     %=     &lt;&lt;=    &gt;&gt;=     &amp;=     ^=     |=</span>    assignment        \
-
---- control flow ---
+<div id="ctrl-anch">--- control flow ---</div>
 
 Perhaps an appropriate place to start in regard to programming is to talk about the
 nature of control flow statements. The `if` statement allows you to execute a block of code
@@ -160,7 +146,36 @@ or scanned in input and output operations... ...
     return 0;
   }</span>
 
-<div id="storage-class-anch">storage class specifier</div>
+
+---operators---
+
+<span class="alt-text">                &amp;&amp;    ||    !</span>    logical \
+<span class="alt-text">    +     -     *     /     %</span>    arithmetic \
+<span class="alt-text">                    ++    - -</span>    unary aerith \
+
+When you use the unary increment (++) or decrement (- -) operators on a variable  \
+they directly modify the variable's value within its lifetime.                      \
+
+This means that the change to the variable's value persists regardless of whether the  \
+variable is being assigned to another variable or used as an rvalue (the right-hand side of an assignment or in an expression)
+<span class="alt-text">                                        ==    !=    &gt;     &lt;    &gt;=     &lt;=</span>    relational    \
+<span class="alt-text">                                           &amp;    |    ^    ~    &lt;&lt;     &gt;&gt;</span>    bitwise         \
+<span class="alt-text">   =   +=     -=     *=    /=     %=     &lt;&lt;=    &gt;&gt;=     &amp;=     ^=     |=</span>    assignment        \
+
+Here's an interesting demonstration of the unary pre-increment, consider `if (++example == newvalue)`.
+Therefore `++example` increments the value of `example` by 1 before performing the comparison,
+whereby the incremented value of `example` is then compared with `newvalue`.
+This sometimes depends on factors such as the size of the "type" that it points to.
+
+During post-increment, the evaluation of the condition happens with the
+original value of the variable, before the increment takes place.
+After the comparison, then `example` is incremented...
+And, because unary increment/decrement affect the variable in the lifetime
+of a given statement, than it still remains effective, albeit for
+different reasoning. <em>We'll be explaining this more as we go</em>.
+
+
+<div id="storage-class-anch">---storage class specifier---</div>
 `static` is used to specify the storage duration (lifetime) and linkage (visibility) of a variable
 when used as a local variable within a function, it makes the variable retain its value
 between function calls and gives it internal linkage
@@ -169,7 +184,7 @@ the variable is visible only within the same translation unit (the same source f
 `extern` is used to declare a variable or function that is defined in another file or translation unit
 it specifies that the variable or function has external linkage (visible across multiple translation units)
 
-<div id="type-qualifier-anch">type qualifier</div>
+<div id="type-qualifier-anch">---type qualifier---</div>
 `const` is used to specify that a variable's value cannot be modified after initialization
 consider it also a form of documentation and a contract with the caller that a function shouldnt
 attempt to modify the provided variable.
