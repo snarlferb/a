@@ -281,7 +281,9 @@ to offsetof,  to set a field's value indirectly.
 In practice, you can simplify your expression by adjusting the cast scope. For instance,
 take the example of a preprocessor condition, whereby we're doing something that may not
 be valid C—as explicit casting is not meaningful w/ preprocessor directive like `#if`
-that do not supprt runtime constructs—though they are in the case of normal macros..
+that do not support runtime constructs—though they are in the case of normal macros..
+That doesnt mean that your allowed to have a directive w/ a macro called in the
+condition, that itself handles the casting. It will cause a compilation error.
 
 Therefore it probably will not work to try this in `#if`, but it helps for demonstrating w/.
 Lets say we've casted `int_example` type to the <em>first</em> level, tangent to each variable...
