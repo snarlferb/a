@@ -272,8 +272,12 @@ Lets give a brief summary of regular expressions (regexp), and how things like p
 modes of character interpretation: literal  or  interpreted patterns (e.g., ANSI C) and those are characteristic of such things
 as regular expressions. Regular expressions can be either ERE, BRE or PCRE (see more about compatibility and expressions)
 
-Apostrophes can often be used to preserve the literal interpretation of characters... A quote begins a sequence,
-and will continue a command until it encounters a closing quotation. You can also use a backslash to continue a command.
+See also about the intepretation of regexp (POSIX) versus PCRE1/PCRE2, and how the shell itself uses the afformentioned POSIX,
+versus commands like grep that are more nuanced. If it was compiled with PCRE support, you can use the -P flag to enable, however
+not all systems have grep compiled with PCRE support by default.
+
+Returning to characters on the command line, 'apostrophes' ('') can often be used to preserve the literal interpretation of characters.
+A quote begins a sequence, and will continue a command until it encounters a closing quotation. You can also use a backslash to continue a command.
 
 <em>ls, find and grep</em> are good examples of commands to get started w/
 
