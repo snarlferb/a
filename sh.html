@@ -272,9 +272,9 @@ Lets give a brief summary of regular expressions (regexp), and how things like p
 modes of character interpretation: literal  or  interpreted patterns (e.g., ANSI C) and those are characteristic of such things
 as regular expressions. Regular expressions can be either ERE, BRE or PCRE (see more about compatibility and expressions)
 
-See also about the aforementioned regexp (POSIX) versus PCRE1/PCRE2(which is a brand new thing, 2015),
-and how the shell itself uses POSIX/PCRE, versus commands like grep; If you compiled the shell and/or coreutils
-w/ PCRE support, than you can use it in both the shell's builtins and coreutils' grep.
+See also about the aforementioned regexp (POSIX) versus PCRE1/PCRE2(original &amp; newish versions),
+and how the shell itself uses POSIX/PCRE, versus commands that derive from e.g. coreutils; Shell's builtins and coreutils' commands
+can both potentially use PCRE as long as they were compiled with it.
 
 Returning to characters on the command line, 'apostrophes' ('') can often be used to preserve the literal interpretation of characters.
 A quote begins a sequence, and will continue a command until it encounters a closing quotation.
