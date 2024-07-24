@@ -340,17 +340,23 @@ such as `aaa`. In contrast, ERE allows for more precise control using `{}` quant
   <b>grep -E '^[0-9]-[0-9]{3}-[0-9]{3}-[0-9]{4}$' file</b>
 
 This command uses `-E` to enable Extended Regular Expressions (ERE). In ERE:
-- {} enables specifying exact repetition counts of characters or character classes.
-- ^  asserts the pattern must match at the beginning of a line.
-- +  quantifier indicates "one or more occurrences" of the preceding element, such as a
+. (period) Matches any single character except newline.
+^ (caret)  asserts the pattern must match at the beginning of a line.
+$ (dollar sign) Matches the end of a line.
+[] (brackets) Match any single character within the brackets. Example: [abc] matches "a", "b", or "c".
+     Or w/ a caret i.e. [^a-z] matches any character that is not a lowercase letter.
+() (parentheses) Group expressions and capture matching text. Example: (abc)+ matches "abc", "abcabc", etc.
+{} (curly braces) enables specifying exact repetition counts of characters or character classes.
++ (plus)  quantifier, indicates "one or more occurrences" of the preceding element, such as a
      character, character class, or group.
-- |  represents alternation, allowing matching of either of two patterns.
-- ?  (Question Mark) is a quantifier that matches zero or one occurrence of the preceding
+| (pipe)  represents alternation, allowing matching of either of two patterns.
+* (asterisk) Matches 0 or more of the preceding element. Example: a* matches "", "a", "aa", "aaa", etc.
+? (question mark) is a quantifier that matches zero or one occurrence of the preceding
       element.
+\b (backslash+character) Matches the position between a word and a non-word character.
+     Example: \bword\b matches "word" if searching for "a word of warning". And you can look up more about anchors, boundaries and special sequences.
 
-The dollar sign (`$`) is just being used as an anchor to denote that the pattern must match at the end of a line. Try exploring what every symbol is for,
-and if it has any significance in the context of a shell command or regexp. In conclusion, these symbols provide us the tools for defining and matching
-complex patterns in text data.
+Try exploring what every symbol is for, and what its significance is within the context of the shell/regexp and pattern matching respectively.
 
 <em>Every now and then you'll end up in a less than desirable situation, where you either have a crashed/frozen terminal session, or you may have
 accidentally pressed a sequence of keys such as Alt+op+Backspace which can causes the cursor to start writing/erasing into the prompt;
