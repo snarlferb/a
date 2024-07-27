@@ -27,6 +27,14 @@ Where as running the following would be  directly specifying that path and file.
 
 This applies to those files you want to execute as well.
 
+<b>./</b>  is a reference to the current directory, and  <b>./*</b>  is a shell globbing pattern that matches files and
+directories in the current directory. <em>We'll talk more about globbing later</em> They both have a catch in that they
+dont help in situations where you need to include hidden files or directories; i.e. when using e.g., `-a` flag.
+Instead you should just use a plain dot.
+
+  <b>cp -a . /dir</b>
+
+Copying files and directories is done with this <b>cp</b> command...
 "Change directory", <b>cd</b> traverses you forward or backward to a relative or absolute
 file path location, wherein you could point and run that file relatively, as we said.
 We'll also describe how environment variables work.
