@@ -37,12 +37,6 @@
 &emsp;&emsp;  --sdc1 /open
 &emsp;&emsp;  --sdc2 /encrypted
 
-&emsp;&emsp; This is an example, however on my machine (which has an ssd,
-&emsp;&emsp; a harddrive and a backup ssd) i like associating it in this way
-&emsp;&emsp; and order: boot/ w/ sda1, ex2/ w/ sda2, ex3/ w/ sda3, and then
-&emsp;&emsp; theres three locations w/ sda4   (root (/),   ex/  &amp;&amp;  home/)
-&emsp;&emsp; mnt/dx1 + mnt/dx2 w/ sdb1 + sdb2   and    backup/ w/ sdc1
-
 &emsp;&emsp; burn iso w/ `dd` selection/command
 &emsp;&emsp; file system: fat32 is the most compatible file system but
 &emsp;&emsp; we'll be exploring the use of other file systems as well
@@ -132,9 +126,9 @@ hr.dotted {
 <span class="alt-text">
 &emsp;&emsp; 1</span>            ```press 1 for EFI system, optional...```
 <span class="alt-text">
-&emsp;&emsp; n</span>            new partition [Enter] [Enter] [+30GB] [y]
+&emsp;&emsp; n</span>            new partition [Enter] [Enter] [Enter] [+30GB] [y]
 <span class="alt-text">
-&emsp;&emsp; n</span>            new partition [Enter] [Enter] [Enter] [y]
+&emsp;&emsp; n</span>            new partition [Enter] [Enter] [Enter] [Enter] [y]
 
 <span class="alt-text">
 &emsp;&emsp; w</span>            writes, finalizes the partitions/&amp;leaves fdisk
@@ -150,10 +144,12 @@ hr.dotted {
 <span class="alt-text">
 &emsp;&emsp; mkfs.ext4 /dev/sda2</span>
 <span class="alt-text">
-&emsp;&emsp; mkfs.ext4 /dev/sda1</span>
+&emsp;&emsp; mkfs.vfat /dev/sda1</span>
+&emsp;&emsp;                     Assuming this is for your boot partition, mkfs.vfat will create a FAT32 if said partition is large enough.
+&emsp;&emsp;
 &emsp;&emsp;                     ```EFI system partitions hold EFI boot loader files and related data, so it doesn't typically contain a traditional filesystem like Ext4, and..
 &emsp;&emsp;                     instead it usually has a FAT32 filesystem. Therefore you dont run `mkfs.ext4` on that partition if you've created an "EFI system"...
-&emsp;&emsp;                     and you run the following instead    `mkfs.fat -F32 /dev/sda1` ```
+&emsp;&emsp;                     and you run the following    `mkfs.fat -F32 /dev/sda1` which is a more explicit version of mkfs.vfat```
 
 &emsp;&emsp;                     ```These are optionals if you had a swap partition```
 <span class="alt-text">
@@ -161,15 +157,14 @@ hr.dotted {
 <span class="alt-text">
 &emsp;&emsp; swapon /dev/sda5</span>
 &emsp;&emsp;                     Keep in mind, we'll be creating things in the `/mnt` directory because that is where we are recreating the directory structure of the system.
-&emsp;&emsp;                     Sometimes you have to explicitly specify    <b>mkdir /mnt/root</b>
+&emsp;&emsp;                     Since /mnt is the mount point for e.g. /dev/sda3, it treats this as the base for the root filesystem, where the rest of the root directory structure will belong,
+&emsp;&emsp;                     so you HAVE to do `/mnt` first  BEFORE you <b>mkdir</b> and <b>mount</b> the others.```
+<span class="alt-text">
+&emsp;&emsp; mount /dev/sda3 /mnt</span>
 <span class="alt-text">
 &emsp;&emsp; mkdir /mnt/part2</span>
 <span class="alt-text">
 &emsp;&emsp; mkdir /mnt/boot</span>
-
-<span class="alt-text">
-&emsp;&emsp; mount /dev/sda3 /mnt</span>
-&emsp;&emsp;                     ```whichever scheme you choose, it should be consistent     `mount /dev/sda3 /mnt/root`   ```
 <span class="alt-text">
 &emsp;&emsp; mount /dev/sda2 /mnt/part2</span>
 <span class="alt-text">
@@ -185,10 +180,15 @@ hr.dotted {
 &emsp;&emsp;                     Try `command --help` for available options, as --debug  or  -v --verbose results</em>
 
 &emsp;&emsp;                     *Network*:
+&emsp;&emsp;                     For ethernet you simply do this:
+<span class="alt-text">
+&emsp;&emsp; sv start connmand</span>
+&emsp;&emsp;                     And for Wifi, you do the following...
 <span class="alt-text">
 &emsp;&emsp; rfkill unblock wifi</span>
 <span class="alt-text">
 &emsp;&emsp; ip addr show</span>
+&emsp;&emsp;                     Here you'll see the interface name e.g. "wlan0", an IPv4 address, "inet 192.168.1.10/24" and a broadcast address "brd 192.168.1.255", etc
 <span class="alt-text">
 &emsp;&emsp; ip link set <em>interface</em> up</span>
 &emsp;&emsp;                     replace interface w/ wireless network e.g. wlan0
@@ -308,16 +308,18 @@ hr.dotted {
 &emsp;&emsp;                     <em>some people find networkmanager gives them trouble, but for me its always connman and the others that dont work</em>
 
 &emsp;&emsp;                     *Reboot or shutdown*:
+&emsp;&emsp;                     <em>Dont forget to set a password for root before shutting down, or you will not be able to log in</em>.
+<span class="alt-text">
+&emsp;&emsp; passwd</span>       New password: EXAMPLE
 
-&emsp;&emsp;                     Before anything, you should consider rebooting to make sure that you did everything up to this point right.
-&emsp;&emsp;                     And that'll atleast eliminate some upcoming variables on the off chance you're troubleshooting a problem.
+&emsp;&emsp;                     You should consider rebooting to make sure that you did everything up to this point right.
+&emsp;&emsp;                     It will eliminate some upcoming variables on the off chance you're troubleshooting a problem.
 <span class="alt-text">
 &emsp;&emsp; exit</span>         You can do this by exiting back into the initial root system, and running...
 <span class="alt-text">
-&emsp;&emsp; umount -R /mnt</span>  and then  <b>reboot</b>  or  <b>reboot -h now</b> (its recommended to unmount however you dont have to..
-&emsp;&emsp;                     rebooting/shutting down properly is important for obvious reasons, wherein you can switch to boot into HDD
+&emsp;&emsp; umount -R /mnt</span>  and then  <b>reboot</b>  or  <b>reboot -h now</b> (its recommended to un-mount for proper shutdown)
 
-&emsp;&emsp;                     *Lastly*:
+&emsp;&emsp;                     *Lastly*: Booting into the canonical system, for Wifi and Ethernet
 <span class="alt-text">
 &emsp;&emsp; ln -s /etc/runit/sv</span>
 &emsp;&emsp;                     Lists auto-startups
@@ -329,6 +331,7 @@ hr.dotted {
 &emsp;&emsp;                     auto-matic start-up
 <span class="alt-text">
 &emsp;&emsp; sv start NetworkManager</span>
+&emsp;&emsp;                     which is what you use to start the ethernet connection.
 <span class="alt-text">
 &emsp;&emsp; nmcli device wifi connect YourSSID password YourPassword</span>
 <span class="alt-text">
@@ -336,7 +339,7 @@ hr.dotted {
 <span class="alt-text">
 &emsp;&emsp; visudo</span>       uncomment `% sudo`
 <span class="alt-text">
-&emsp;&emsp; passwd</span>       New password: EXAMPLE
+&emsp;&emsp; export EDITOR=vim</span>
 <span class="alt-text">
 &emsp;&emsp; useradd -m newuser</span>
 &emsp;&emsp;                     is imperative to make a regular user account and, <b>passwd newuser</b>.
