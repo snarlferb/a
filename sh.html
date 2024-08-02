@@ -7,23 +7,24 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <script src="style.js" defer></script>
 </head><body>
-<em>shell</em>
+<em>what is the shell﹖</em>
+
 <em>~</em>  home (user) directory    <em>/</em>  root (filesystem) directory
 
 Shell is a command interpreter intended for both interactive (from command line) and shell-script use.
 
 Comments <b>#</b> are made w/ hashtag, a special character.
 When used as a sha-bang <b>#!</b> it tells your system which interpreter to use to parse the rest of the file;
-
-  <b>#!/bin/sh</b>
+<span class="alt-text">
+  <b>#!/bin/sh</b></span>
 
 <em>Or you can override it by explicitly specifying the shell and writing the filename of your script to run it.</em>
 
 Command plus a single period <b>.</b> refers to your current working directory.
 When specifying the path to a file  `./my/path/` is pointing to the relative location.
 Where as running the following would be  directly specifying that path and file.
-
-  <b>/path/example_script.sh</b>
+<span class="alt-text">
+  <b>/path/example_script.sh</b></span>
 
 This applies to those files you want to execute as well.
 
@@ -31,8 +32,8 @@ This applies to those files you want to execute as well.
 directories in the current directory. <em>We'll talk more about globbing later</em> They both have a catch in that they
 dont help in situations where you need to include hidden files or directories; i.e. when using e.g., `-a` flag.
 Instead you should just use a plain dot.
-
-  <b>cp -a . /dir</b>
+<span class="alt-text">
+  <b>cp -a . /dir</b></span>
 
 Copying files and directories is done with this <b>cp</b> command...
 "Change directory", <b>cd</b> traverses you forward or backward to a relative or absolute
@@ -52,15 +53,15 @@ Also, if your interests are in understanding what a shell is and its inner worki
 look up; lexer, parser, core, executor (input/output, command execution, etc.), command
 handling (characters, strings and command file), and shell subsystem/input line (history,
 command management, input handling, etc.).</em>
-
-  <b>variable=value</b>
+<span class="alt-text">
+  <b>variable=value</b></span>
 
 Putting a space before or after <b>=</b> equals different results.
 This will be demonstrated as we go on.
 
 Setting a variable to an empty string looks something like:
-
-  <b>variable=""</b>
+<span class="alt-text">
+  <b>variable=""</b></span>
 
 Environment variables are a mechanism that passes information to all processes, created by a parent process.
 By default there are typically some pre-assigned variables. Every program will inherit these variables.
@@ -70,48 +71,48 @@ There are two different kinds of variables. Environment variables that are expor
 spawned by the shell. Their settings can be seen with the env command. A subset of environment variables,
 such as PATH, affects the behavior of the shell itself, ergo it specifies a list of directories where
 the shell looks for executable files after typing a command.
-
-  <b>example_command</b>
+<span class="alt-text">
+  <b>example_command</b></span>
 
 This would be equivalently to run a command who's path is listed under $PATH...
 You can also associate a custom environment variable with a path using `export`
 to create said relationship. Running the commands from the path would then look like...
-
-  <b>$MY_ENV_VAR/example_command</b>
+<span class="alt-text">
+  <b>$MY_ENV_VAR/example_command</b></span>
 
 <b>Local</b> variables affect only the current shell instance. They are defined within a script and
 they are not available outside of the script or function where they are defined...
 To access the value stored in a variable, prefix its name with the dollar sign <b>$</b>  Now,
 the following script will access the value of defined variable `NAME` and print it to stdout;
-
+<span class="alt-text">
   <b>NAME="Marco_Polo"</b>
-  <b>echo $NAME</b>
+  <b>echo $NAME</b></span>
 
 ... or how about passing an argument to a script?... Typically we think of this format w/ a
 command and file:  <em><b>a-w</b> sets <b>w</b>ritable "off" for All-&gt;(user,group,other),
 regardless of set bit occupation, henceforth this file would be considered a "write-protected regular file"</em>
-
-  <b>chmod a-w ./example</b>
+<span class="alt-text">
+  <b>chmod a-w ./example</b></span>
 
 But there's also positional parameters that pass in commands
 like this <em>(will explain further on)</em>.
-
-  <b>./example.sh 1 2 3</b>
+<span class="alt-text">
+  <b>./example.sh 1 2 3</b></span>
 
 You can find out what an individual variable is set to e.g.
-
-  <b>echo $WHATEVER</b>
+<span class="alt-text">
+  <b>echo $WHATEVER</b></span>
 
 <b>$PS1</b> specifies the prompt printed before each command.
 Usually this is <em>$</em>
   <b>$PS2</b> defines the secondary prompt, the prompt you see after
 multi-line commands such as <b>for</b> or <b>if</b>.
-
-  <b>echo $0</b>
+<span class="alt-text">
+  <b>echo $0</b></span>
 
 Displays that shell that had run the command.
-
-  <b>echo $HOME</b>
+<span class="alt-text">
+  <b>echo $HOME</b></span>
 
 is the equivalent of <b>echo /home/user</b> (or whatever your home directory is)
 
@@ -124,30 +125,30 @@ An empty string corresponds to your current directory.
 
   <b>ls /your/directory</b>
 <em>ls: cannot access '/your/directory': No such file or directory</em>
-
-  <b>mkdir /your/directory</b>
+<span class="alt-text">
+  <b>mkdir /your/directory</b></span>
 
 Anytime i use the <b>rm</b> command i follow it up with <b>-ir</b> as ive personally deleted things
 accidently. Or, having a "write-protected regular file" permission set from the start is preferable.
 The same thing using <b>mv</b>, as i recommend using <b>cp</b> over mv when applicable. With that said,
 i find the following behavior insightful;
-
-  <b>rm -i</b> <em>file1 file2</em>
+<span class="alt-text">
+  <b>rm -i</b> <em>file1 file2</em></span>
 
 The shell breaks this line up into four words.
 The first word is the command/program to execute.
 The next three are passed to the program as three
 arguments. So the program <b>rm</b> looks at the first argument,
 realizes it is an option, <em>because of the hyphen</em>, and treats the next two arguments as filenames:
-
-  <b>echo</b> "The directory your in is <b>$PWD</b>/filename.jpg"
+<span class="alt-text">
+  <b>echo</b> "The directory your in is <b>$PWD</b>/filename.jpg"</span>
   <em>The directory your in is /currentdir/filename.jpg</em>
 
 The following is more of a fact about linux and the filesystem, but i still think its one,
 if not the most quintessential and important things to know. If you have a user and a root
 account, you can make a symlink, e.g.
-
-  <b>ln -s /dir/here /my/location/there</b>
+<span class="alt-text">
+  <b>ln -s /dir/here /my/location/there</b></span>
 
 This'll auto-create a directory (symlink)  `/my/location/there/here` and allows you to reference
 those file(s) from what's considered the directory being pointed to.
@@ -169,9 +170,9 @@ ln -s /path/to/original /path/to/symlink
                   can use . or ~ or other relative paths 
 
 For command substitution <b>$(command)</b> is considered the proper method, here's an example of that;
-
+<span class="alt-text">
   <b>A=$(expr $A + 2)</b>
-  <b>echo "$A</b> inefficient yet simple"
+  <b>echo "$A</b> inefficient yet simple"</span>
 
 Single quotes would treat everything as plain characters.
 
@@ -183,7 +184,7 @@ The entr command is a utility that runs arbitrary commands when a file(s) has ch
 used a record command or `watch` in gdb then you've probably done something similar like this before,
 except that entr additionally executes (autonomously) when encountering changes in, continuing to
 monitor and do whatever its been instructed to. This behavior persists (in the background) until
-you$ kill -SIGSTOP <entr_pid> or whatever.
+you$<span class="alt-text"> kill -SIGSTOP <entr_pid></span> or whatever.
 
 As we had briefly mentioned, <b>env</b> and <b>export</b> without specifying anything after it will display the current
 environment variables that are inherited by any command executed within the same shell session.
@@ -191,15 +192,15 @@ environment variables that are inherited by any command executed within the same
 
 <b>set</b> without an argument will also list environment variables, as well as shell-specific variables and functions.
 It can set or unset with the <b>+</b> or <b>-</b> option. It can be used with positional parameters for example:
-
-  <b>set apple banana carrot</b>
+<span class="alt-text">
+  <b>set apple banana carrot</b></span>
 
 This will set <b>apple</b> to correspond to the <b>$1</b> parameter, <b>banana</b> to <b>$2</b>, and <b>carrot</b> to <b>$3</b>
  <em>(..will explain further on)</em>
 
 You can set and export in one line.
-
-  <b>export APPLE="my apple"</b>
+<span class="alt-text">
+  <b>export APPLE="my apple"</b></span>
 
 <b>unset</b> can be used to undefine any variable.
 
@@ -208,8 +209,8 @@ The <b>export</b> command is necessary to update the environment variable. It li
 For environment variables to persist they must be set in file. By default these are hidden files in your system's root.
 However you can setup a user to have environment variables in the <b>/etc</b> designated for system configurations,
 then <b>../environment</b> which should already exist.
-
-  <b>ls -a home/user</b>
+<span class="alt-text">
+  <b>ls -a home/user</b></span>
 
 should also contain familiar configuration files.
 
@@ -218,8 +219,8 @@ IFS is a special variable which lists the characters used to terminate a word.
 Whitespace is what separates characters. This variable contains a space, a tab, and a newline.
 
 <em>If you are unsure about overriding your main IFS, you can set a different variable to it before hand like this;</em>
-
-  <b>OLDIFS=$IFS</b>
+<span class="alt-text">
+  <b>OLDIFS=$IFS</b></span>
 
 <b>env</b> allows you to run another program in a custom environment without modifying the current one.
 
@@ -289,8 +290,8 @@ A quote begins a sequence, and will continue a command until it encounters a clo
 You can also use a backslash to continue a command.
 
 <em>ls, find and grep</em> are good examples of commands to get started w/
-
-  <b>ls</b>  is used to list files and directories.
+<span class="alt-text">
+  <b>ls</b></span>  is used to list files and directories.
 
 <b>help command</b> to view the help page for a command <b>help help</b> for help -options
 and <b>man command</b> to view a man page, <b>man man</b>  traverse page; <em>e, f, z, d, PgDn
@@ -307,12 +308,12 @@ More simply, using an asterisk matches any number of characters.
 So the shell expands these wildcards such as *, ?, and [] before passing arguments to commands.
 
 One use of the wildcard function is to get a list of all the C source files in a directory:
-
-  <b>$(wildcard *.c)</b>
+<span class="alt-text">
+  <b>$(wildcard *.c)</b></span>
 
 We can change the list of C source files into a list of object files by replacing the `<b>.c</b>` suffix with <b>`.o`</b> in the result:
-
-  <b>$(patsubst %.c,%.o,$(wildcard *.c))</b>
+<span class="alt-text">
+  <b>$(patsubst %.c,%.o,$(wildcard *.c))</b></span>
 
 You can of course emulate this in shell, however we're just going over the basic idea.
 In Unix systems you'll be running commands alot of the time, so one way i like to remember which order of options proceeds after e.g.
@@ -320,8 +321,8 @@ In Unix systems you'll be running commands alot of the time, so one way i like t
 
 Keep in mind <b>-iname "example"</b> will not look for joined names such as <b>"anexample"</b>, however you can solve this when using
 <b>*</b> in a pattern.
-
-  <b>find / -type f -iname "*thisword*"</b>
+<span class="alt-text">
+  <b>find / -type f -iname "*thisword*"</b></span>
 
 Basically we wrote look from the <b>/</b> directory of type <b>f</b>ilename for case-insensitive name "*thisword*",
 where the <b>*</b> is to enable globbing, before and after the substring. <em>In regular expressions a <b>.</b> dot is the pattern
@@ -329,8 +330,8 @@ which matches any single character~combined with the asterisk operator in <b>.*<
 
 <b>find</b> does a recursive search on any file or path in quotes, provided that the expression is successfully matched.
 There is other case-insensitive options such as <b>-ilname  -iregex  -iwholename</b>.. One more example with <b>find</b>...
-
-  <b>find . -path "./dir?/file*.txt"</b>
+<span class="alt-text">
+  <b>find . -path "./dir?/file*.txt"</b></span>
 
 This command will find files with names like "file1.txt", "file2.txt", etc., but only within directories named "dir1", "dir2", etc.,
 in the current directory. So an asterisk in a globbing pattern will match zero or more characters, while the question mark matches exactly one character.
@@ -338,19 +339,19 @@ in the current directory. So an asterisk in a globbing pattern will match zero o
 The <b>-path</b> option is used to match the entire path of the file or directory against a specified pattern, and doesnt restrict to either~or.
 
 Pattern matching for words within files is accomplished with grep;
-
-  <b>grep -i "this" script.sh</b>
+<span class="alt-text">
+  <b>grep -i "this" script.sh</b></span>
 
 Case-insensitive search for 'this' inside script.sh
-
-  <b>grep -nr 'yourstring*' . </b>
+<span class="alt-text">
+  <b>grep -nr 'yourstring*' . </b></span>
 
 ..Recursively search through current directory for string w/ -n (line numbers)
 
 In BRE, matching patterns with exact repetition like three consecutive `a` characters can be accomplished by directly specifying the characters,
 such as `aaa`. In contrast, ERE allows for more precise control using `{}` quantifiers, where `a{3}` matches exactly three consecutive `a` characters.
-
-  <b>grep -E '^[0-9]-[0-9]{3}-[0-9]{3}-[0-9]{4}$' file</b>
+<span class="alt-text">
+  <b>grep -E '^[0-9]-[0-9]{3}-[0-9]{3}-[0-9]{4}$' file</b></span>
 
 This command uses `-E` to enable Extended Regular Expressions (ERE). In ERE:
 . (period) Matches any single character except newline.
@@ -391,13 +392,13 @@ So <b>$1,$2..$9</b> are known as <em>Positional <b>Parameters</b></em>, with emp
 of the corresponding parameter. The <b>$</b> sign is just a variable. The number that follows indicates the position on the command line.
 <b>$0</b> represents the actual name of the script. <b>$1</b> indicates the first parameter. <b>$2</b> indicates the second parameter and so on.
 Here's another example in the context of a script;
-
+<span class="alt-text">
   <b>echo "param = $1"</b>
-  <b>echo "param = $2"</b>
+  <b>echo "param = $2"</b></span>
 
 or passed in as an argument;
-
-  <b>./testfile 4 5</b>
+<span class="alt-text">
+  <b>./testfile 4 5</b></span>
 
 <b>$*</b> Asterisk is similar to the filename meta-character, in that it matches all arguments. All positional parameters ($1, $2, $3) are
 concatenated into a single string separated by spaces.
@@ -436,21 +437,21 @@ corresponding to the three standard streams:  Standard Input (stdin), Standard o
 a file or other I/O resource such as a pipe.
 
 Evaluation, pipelines, in this example;
-
+<span class="alt-text">
   <b>cmd1 ; cmd2 ; cmd3 ; cmd4</b>
   <b>cmd1 & cmd2 & cmd3 & cmd4</b>
   <b>cmd1 && cmd2 && cmd3 && cmd4</b>
-  <b>cmd1 || cmd2 || cmd3 || cmd4</b>
+  <b>cmd1 || cmd2 || cmd3 || cmd4</b></span>
 
 Semicolon tells the shell to operate sequentially. First "cmd1" is executed, then "cmd2," etc. Each command starts up, and runs as long as they
 don't need input from the previous command.  The <b>&</b> command launches each process in a detached manner. The order is not sequential,
 and you should not assume that one command finishes before the other. The last two examples, like the first, execute sequentially, as
 long as the status is correct.  In the <b>&&</b> example, "cmd4" is executed if all three earlier commands pass.
 In the <b>||</b> example, "cmd4" is executed if the first three fail.
-
+<span class="alt-text">
   <b>cat wordoc1.txt | cat wordoc2.txt</b>
 
-  <b>cat wordoc1.txt || cat wordoc2.txt</b>
+  <b>cat wordoc1.txt || cat wordoc2.txt</b></span>
 
 Main difference between the two being, when the first command is not recognized it will terminate, where as the double is
 used as comparison (on failure of the first command and ignores the second). So the comparison is unsuccessful and it runs the second command.
@@ -459,8 +460,8 @@ The technicality however of the first example is just how we described operators
 or the manner in which commands are processed.
 
 <b>/proc</b> directory refers to processes currently running.  Lets print a list of registered interrupts on the system.
-
-  <b>cat /proc/interrupts</b>
+<span class="alt-text">
+  <b>cat /proc/interrupts</b></span>
 
 An interrupt is a signal emitted by a device attached to a computer or from a program within the computer. It requires the OS to stop and
 figure out what to do next. An interrupt temporarily stops or terminates a service or a current process. Most I/O devices have a
@@ -474,14 +475,14 @@ these signals are not ignored.  The <b>-i</b> option tells the shell to not igno
 user and group, to whomever is the real user and group.
 
 Basic example of an if statement
-
+<span class="alt-text">
 <b>if test "$(id -u)" == "0"</b>
 <b>then</b>
    <b>echo</b> "This script is running as root" 
 <b>else</b>
    <b>echo</b> "This script is not running as root"<b>1&gt;&amp;2</b>
    <b>exit 1</b>
-<b>fi</b>
+<b>fi</b></span>
 
 <b>id -u</b> flag is used to check the user id of the user who is running the script. And if the user id is not <b>0</b> that means the user is not root
 and the script will print the else statement. The 1&gt;&amp;2 is used to redirect the output to stderr.
@@ -497,23 +498,46 @@ The shell can either examine the integer value of an exit status, or treat the v
 are false. If you do not provide an exit status, the system returns with the status of the last command executed.
 
 Operators take standard input or standard output, and also return an exit status.
-
+<span class="alt-text">
   <b>cat &lt;&lt; testhello</b>
   <b>&gt;</b> Hi!vehello
   <b>&gt;</b> Hollow World
-  <b>testhello</b>
+  <b>testhello</b></span>
 
 testhello on the last line, acts as a delimeter of this script.
 
-‘&gt;‘ symbol is used for stdout redirection.
-
-  <b>ls -lap &gt; /testfile</b>
+‘&gt;‘ symbol is used for stdout redirection, where as `&lt;` is for stdin redirection...
+<span class="alt-text">
+  <b>ls -lap &gt; /testfile</b></span>
 
 This will redirect and REPLACE the output from <b>ls</b> , however you can append to the end of a file without replace;
+<span class="alt-text">
+  <b>ls -lap &gt;&gt; /testfile</b></span>
 
-  <b>ls -lap &gt;&gt; /testfile</b>
+I think it helps to see the whole process here to better understand it...
+<span class="alt-text">
+  <b>sort &lt; input.txt</b></span>
 
-Relational operators always print a zero or one. Options can also be relational operators used for comparison;
+Before executing the command, the shell opens the file input.txt for reading using a system call like open():
+which is something like  <b>int fd = open("input.txt", O_RDONLY);</b>
+
+The shell then needs to make the stdin file descriptor (0) point to the same open file as input.txt.
+This is done using the dup2() system call, wherein it also executes `close(fd);`
+
+The shell forks a new process using fork(), and the child process inherits the modified file descriptors.
+
+After setting up the redirection, the shell executes the `sort` command. The execve() system call or a similar call
+is used to replace the current process image with the new command:
+<span class="alt-text">
+  <b>execve("/usr/bin/sort", ["sort", NULL], envp);</b></span>
+
+`sort` then processes the input from input.txt and produces sorted output, which is finally sent to stdout.
+The same thing is true of (&gt;) stdout redirection too, for `open()` (but w/ O_WRONLY), file descriptor (1),
+forking, command execution, exec system call and processing of the final output. You can look more into file
+descriptors to learn about how they work in converse situations.
+
+Relational operators compare two values and always print a zero for false or one for true.
+Options can also be relational operators used in comparison;
 
   <b>==</b>      Equal to                 <b>-eq</b>
   <b>!=</b>      Not equal to             <b>-ne</b>
@@ -524,23 +548,23 @@ Relational operators always print a zero or one. Options can also be relational 
 
 
 Basic structure of a case statement
-
+<span class="alt-text">
   <b>FRUIT="plum"</b>
     <b>case "$FRUIT" in</b>
       <b>"apple") echo</b> "Tasty."
     <b>;;</b>
       <b>"plum") echo</b> "Yummy plummy."
     <b>;;</b>
-  <b>esac</b>
+  <b>esac</b></span>
 
-FRUIT was equal to plum so we got back Yummy plummy. Well see afterwards if we can get apple in a function.
+FRUIT was equal to plum so we got back Yummy plummy
 
-    <b>expr</b>, is used to perform arithmetic, e.g.
-      <b>expr 1 + 1   expr 2 \* 2   expr 3 / 3</b>   etc.
+    <b>expr</b><em>, is used to perform arithmetic, e.g.</em>
+      <b>expr 1 + 1   expr 2 \* 2   expr 3 / 3</b>   <em>etc.</em>
 
 Functions may be expressed in this way. <em>They're a bit particular about character placement, newlines,
-spacing and indentation although, you can enforce your own tabulated construct</em>
-
+spacing and indentation although you can enforce your own tabulated construct</em>
+<span class="alt-text">
   <b>apple(){</b>
     <b>A=$(expr $A + 1)</b>
   <b>}</b>
@@ -551,12 +575,12 @@ spacing and indentation although, you can enforce your own tabulated construct</
     <b>echo</b> 'apple!'
     <b>apple</b>
   <b>done</b>
-  <b>echo</b> 'yay we got ALOT of apples'
+  <b>echo</b> 'yay we got ALOT of apples'</span>
 
 
 <b>For Loop</b> example, here's an in depth description of a working for loop;
-
-  <b>for</b> NAME [in WORDS ... ] ; <b>do</b> COMMANDS; <b>done</b>
+<span class="alt-text">
+  <b>for</b> NAME [in WORDS ... ] ; <b>do</b> COMMANDS; <b>done</b></span>
 
 Execute commands for each member in a list. The 'for' loop executes a sequence of commands for each member in a
 list of items.  If 'in WORDS ...;' is not present, then 'in "<b>$@</b>"' is assumed.  For each element in WORDS,
@@ -566,5 +590,38 @@ Regarding parentheses and braces: <b>( )</b> and <b>{ }</b> are analogous in som
 expansion, nesting, however they differ in a variety of ways; most simply, parentheses work on numbers,
 commands as well as subshell execution. <em>subshell refers to <b>$variable</b></em> where as the other
 works by user-defined conditions/errors or groups. Square brackets <b>[ ]</b> are similar to parentheses
-except you'll see it used with conditions, arguments and expressions as opposed to environment variables, etc.</p>
+except you'll see it used with conditions, arguments and expressions as opposed to environment variables, etc.
+
+A subshell is a child process launched by the current shell so that you can run a series of commands in
+a separate process. And in shell scripting you create this subshell by enclosing commands in parentheses ().
+A subshell inherits the environment variables of the parent shell at the time it is created.
+<span class="alt-text">
+  (subshell command1; subshell command2)</span>
+
+When you use a variable in the shell, it's accessible within the current shell process and can be inherited
+by a subshell. However, changes to variables within the subshell do not affect the parent shell's environment.
+<span class="alt-text">
+  current_date=$(date)
+  echo "Current date: $current_date"</span>
+
+In this example, the date command runs in a subshell, and its output is captured and assigned to the current_date variable.
+Exporting a variable ensures that the variable is available in the subshell as well as the parent shell...
+<span class="alt-text">
+  export parent_var="I am in the parent shell"</span>
+
+  # Start a subshell<span class="alt-text">
+  (
+    echo "Subshell: $parent_var"</span>
+    # Modify the variable in the subshell<span class="alt-text">
+    parent_var="I am modified in the subshell"
+    echo "Subshell modified: $parent_var"
+  )</span>
+
+  # Back in the parent shell<span class="alt-text">
+  echo "Parent shell: $parent_var"</span>
+
+The modification still doesn't affect the parent shell, that is, changes made to a variable inside the shell are local to the subshell.
+The parent shell remains unaffected by any modifications that occur within the subshell. More generally put, the subshell operates with
+its own copy of the environment variables.
+
 </body></html>

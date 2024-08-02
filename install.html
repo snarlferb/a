@@ -222,19 +222,16 @@ hr.dotted {
 &emsp;&emsp;                     *Basestrap+configuration*:
 <span class="alt-text">
 &emsp;&emsp; basestrap /mnt base base-devel runit elogind-runit linux linux-firmware vim</span>
-&emsp;&emsp;                     ```/mnt/root``` if your roots named explicitly
 
 <span class="alt-text">
 &emsp;&emsp; fstabgen -U /mnt &gt;&gt; /mnt/etc/fstab</span>
 &emsp;&emsp;                     ```mkdir /mnt/etc``` if one does not exist
-&emsp;&emsp;                     ```fstabgen -U /mnt/root ...```
 <span class="alt-text">
 &emsp;&emsp; blkid ext4 /dev/sdb1 &gt;&gt; /etc/fstab</span>
 &emsp;&emsp;                     ```an example to append the UUID of a drive to your fstab```
 
 <span class="alt-text">
 &emsp;&emsp; artix-chroot /mnt</span>
-&emsp;&emsp;                     ```/mnt/root```
 <span class="alt-text">
 &emsp;&emsp; bash</span>         You can use this shell or (`sh`) which can be exited at any time
 <span class="alt-text">
