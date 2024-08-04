@@ -365,10 +365,15 @@ $ (dollar sign) Matches the end of a line.
      character, character class, or group.
 | (pipe)  represents alternation, allowing matching of either of two patterns.
 * (asterisk) Matches 0 or more of the preceding element. Example: a* matches "", "a", "aa", "aaa", etc.
+.+ (period, plus) pattern matches any line with at least one character. Example:  echo -e "Hello\nworld\n\nfoo\nbar" | grep ".+"
+     will produce  <em>Hello world foo bar</em> on separate lines, not matching and showing the empty string in between <em>world</em> and <em>foo</em>
 ? (question mark) is a quantifier that matches zero or one occurrence of the preceding
       element.
 \b (backslash+character) Matches the position between a word and a non-word character.
      Example: \bword\b matches "word" if searching for "a word of warning". And you can look up more about anchors, boundaries and special sequences.
+
+For example, if you want to ensure that a pattern matches exactly, you can anchor it to start and end of the string. Since logs often have multiple
+fields, using exact boundaries with  `^` and `$` might not be practical, so word boundaries or contextual matching may be necessary.
 
 Try exploring what every symbol is for, and what its significance is within the context of the shell/regexp and pattern matching respectively.
 
