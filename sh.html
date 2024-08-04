@@ -422,14 +422,18 @@ This is useful when picking a unique temporary filename. The following will sele
 <b>$!</b> indicates process ID of the process executed with an ampersand, an asynchronous or background process.
 You do something else and wait for a background process.
 
-<b>$?</b> equal to the error returned from the previous program.
-
 <b>$-</b> corresponds to certain internal variables in the shell.
 
-The other class of variables are called flags or options. They are not read like a regular variable.
+<b>$?</b> equal to the error returned from the previous program. The shell keeps track of the exit status of the last command executed
+in a special variable (referred to as $?) This variable is updated automatically by the shell every time a command or script finishes executing.
+So when you execute a command or script, the shell runs it and waits for it to finish, and once its completes, the shell captures the exit status
+(a numeric code returned by the command) and stores it in the $? variable.
+
+The other class of variables are called "options". They are not read like a regular variable.
 They are boolean and internal to the shell.  <em>However i find its best to think of an option as an
-'_extension' to a command, as opposed to some parameter of related letters, as every command is unique,
-so you cant assume so anyway.</em> They do not take assignment with <b>=</b> instead you use the <b>set</b> command.
+"extension" to a command, as opposed to some parameter of related letters, as every command is unique.
+</em> They do not take assignment with <b>=</b> instead you use the <b>set</b> command which sets or unsets
+values of shell options and positional parameters, changing that attributes value.
 
 When trying to understand a script better, there is  <b>-x</b> and <b>-v</b> options.  <b>-v</b> echoes the line as it is read,
 while the <b>-x</b> option echoes as it's executed, <em> with <b>+</b> preceding each line.</em>
