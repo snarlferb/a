@@ -370,17 +370,7 @@ $ (dollar sign) Matches the end of a line.
 ? (question mark) is a quantifier that matches zero or one occurrence of the preceding
       element.
 \b (backslash+character) Matches the position between a word and a non-word character.
-     Example: \bword\b matches "word" if searching for "a word of warning". And you can look up more about anchors, boundaries and special sequences.
-
-For example, if you want to ensure that a pattern matches exactly, you can anchor it to start and end of the string. Since logs often have multiple
-fields, using exact boundaries with  `^` and `$` might not be practical, so word boundaries or contextual matching may be necessary.
-
-Try exploring what every symbol is for, and what its significance is within the context of the shell/regexp and pattern matching respectively.
-
-<em>Every now and then you'll end up in a less than desirable situation, where you either have a crashed/frozen terminal session, or you may have
-accidentally pressed a sequence of keys such as Alt+op+Backspace which can causes the cursor to start writing/erasing into the prompt;
-although you should be able to press Ctrl+C to interrupt,  Ctrl+D for End-of-file signal,  or Ctrl+Z to suspend currently running process.
-You can use   Shift+Alt+C ,   Ctrl+Alt+Fn2  or  Ctrl+Alt+Del  tty session, where you can run <b>kill</b> from there.</em></a>
+     Example: \bword\b matches "word" if searching for "a word of warning".
 
 Most Unix text facilities are line-oriented that search for patterns spanning several lines.
 The end-of-line character <b>$</b> is not included in the block of text that is searched. It is a separator, and regular
@@ -393,9 +383,22 @@ of the pattern, they no longer act as anchors; That is, the <b>^</b> is an ancho
 Dollar sign <b>$</b> is an anchor only if it is the last character. If you need to match a <b>^</b> at the beginning of the line or
 a <b>$</b> at the end of a line, you must escape the special character by typing a backslash <b>\</b> before it.
 
-So <b>$1,$2..$9</b> are known as <em>Positional <b>Parameters</b></em>, with emphasis on 'parameter', as they take on the value
-of the corresponding parameter. The <b>$</b> sign is just a variable. The number that follows indicates the position on the command line.
-<b>$0</b> represents the actual name of the script. <b>$1</b> indicates the first parameter. <b>$2</b> indicates the second parameter and so on.
+For example, if you want to ensure that a pattern matches exactly, you can anchor it to start and end of the string. Since logs often have multiple
+fields, using exact boundaries with  `^` and `$` might not be practical, so word boundaries, contextual matching or special sequences may be necessary.
+
+Try exploring what every symbol is for, and what its significance is within the context of the shell/regexp and pattern matching respectively.
+
+<em>Every now and then you'll end up in a less than desirable situation, where you either have a crashed/frozen terminal session, or you may have
+accidentally pressed a sequence of keys such as Alt+op+Backspace which can causes the cursor to start writing/erasing into the prompt;
+although you should be able to press Ctrl+C to interrupt,  Ctrl+D for End-of-file signal,  or Ctrl+Z to suspend currently running process.
+You can use   Shift+Alt+C ,   Ctrl+Alt+Fn2  or  Ctrl+Alt+Del  tty session, where you can run <b>kill</b> or <b>killall</b> from there.</em>
+
+Looking back at `$`, we know that it has other functions, serving multiple purposes, specifically in the case of variables and how they're interpreted.
+
+<b>$1,$2..$9</b> are known as <em>Positional <b>Parameters</b></em>, special variables that store the arguments passed to a script or function;
+With emphasis on <em>parameter</em> as they take on the value of the corresponding parameter. The <b>$</b> sign is part of the syntax.
+The number that follows indicates the position on the command line. <b>$0</b> represents the actual name of the script.
+<b>$1</b> indicates the first parameter. <b>$2</b> indicates the second parameter and so on.
 Here's another example in the context of a script;
 <span class="alt-text">
   <b>echo "param = $1"</b>
@@ -405,6 +408,7 @@ or passed in as an argument;
 <span class="alt-text">
   <b>./testfile 4 5</b></span>
 
+For positional parameters beyond $9, you need to use braces, such as ${10} for the tenth parameter.
 <b>$*</b> Asterisk is similar to the filename meta-character, in that it matches all arguments. All positional parameters ($1, $2, $3) are
 concatenated into a single string separated by spaces.
 
