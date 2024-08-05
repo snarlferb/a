@@ -249,6 +249,15 @@ the second quote will tell the program to look for that second quote onto the ne
 beginning of an escape value has begun...  \n  within double quotes or $'...' indicates a newline character.
 (we'll talk about some of the available options/flags later too)
 
+A colon (:) serves as a delimiter that separates multiple directory paths, such as in the case of the $PATH variable,
+which has a colon-separated list of directories that the shell searches through when looking for executable files in
+response to a command.
+
+When you type a command in the shell, the system checks each directory listed in $PATH in order, until it finds an
+executable file that matches the command name. If the command is found, it is executed; if not, the shell continues
+to the next directory in the list. If none of the directories contain the executable, the shell will return an error
+indicating that the command was not found.
+
 The semicolon (;) serves as a command separator. It allows you to write multiple commands on a line, as the shell will
 encounter a semicolon and interpret it as the end of the current command-preparing to execute the next command that follows.
 
