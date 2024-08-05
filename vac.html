@@ -48,7 +48,7 @@ Which is for allocating and initializing a `Database` instance. Here's some thin
 It sounds more complicated than it is, since its describing multiple scenarios, however you can
 take it from the last scenario, and sortve trace the steps backwards so to speak...
 
-The last scenario, we said we could take that `(*database&gt;pack)` to access the `buffer` member of the `Anar` struct.
+The last scenario, we said we could take that `(*database-&gt;pack)` to access the `buffer` member of the `Anar` struct.
 
 In C, when you mix (.) period and (-&gt;) arrow operators with dereferencing, parentheses adheres the order of
 operations. Without parentheses, you can’t directly use the (.) operator on a pointer without first dereferencing it.
@@ -56,11 +56,13 @@ operations. Without parentheses, you can’t directly use the (.) operator on a 
 For example, consider  *database-&gt;pack.nar.buffer   Here’s how the C compiler interprets it:
 
 `database-&gt;pack`  is a pointer to Vac.
-`database-&gt;pack.nar`  is an invalid syntax because (-&gt;) should be used for accessing members from a pointer
-to a struct, and `nar` is not a member of ` Vac * `  but of  `Vac`
+`database-&gt;pack.nar`  is an invalid syntax.
 
-To correctly access buffer, you need to dereference `database-&gt;pack` to get the `Vac` struct.
-Access the `nar` member of the `Vac` struct. And access the `buffer` member of the `Anar` struct (as we said when describing the last scenario)
+First, (-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`, however is not a member
+of ` Vac * `. It is a member of `Vac`.
+
+We have to correctly access `buffer` of the `Anar` struct, and `nar` from the rest, you need to dereference
+`database-&gt;pack` to get the `Vac` struct. Once you understand that, it should make sense.
 
 So the correct syntax in that particular situation would be:
 <span class="alt-text">
@@ -71,5 +73,4 @@ At some point you might even consider simplifying access with a temporary variab
 <span class="alt-text">
   Vac *exac = *database-&gt;pack;</span>
 
-Which would allow you to use it as `exac-&gt;nar.buffer`
-
+Which would allow you to use it as `exac-&gt;nar.buffer`, and is just one example of something you might do.
