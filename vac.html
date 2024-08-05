@@ -1,0 +1,75 @@
+<!-- other -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>other example</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+This is a tricky thing to grok at first, so i'll try to illustrate it like this...
+Now, hopefully you already read and learned about how the dot &amp; arrow operators
+work as pointers...
+Consider we have this sortve structure...
+<span class="alt-text">
+  typedef struct {
+    char *buffer;
+  } Anar;
+
+  typedef struct {
+    Anar nar;
+  } Vac;
+
+  typedef struct {
+    Vac *pack;
+  } Database;</span>
+
+`Anar` contains a single member, `buffer`, which is a pointer to a character array.
+`Vac` contains a single member, `nar`, which is of type `Anar`.
+`Database` contains a single member, `pack`, which is a pointer to a `Vac`.
+
+To access the buffer member of `Anar` (which is nested within `Vac`) and then within Database,
+you need to handle the pointers and structs in the right way....
+
+Consider we have a `database` which is a pointer to a Database struct, possibly like this...
+<span class="alt-text">
+  Database *database = (Database *)malloc(sizeof(Database));
+  if (database == NULL) {
+    perror("Failed to allocate memory for Database");
+    return 1;
+  }</span>
+
+Which is for allocating and initializing a `Database` instance. Here's some things we might do...
+`database-&gt;pack` accesses the `pack` member of `Database`, which is a pointer to a `Vac` struct.
+`*database-&gt;pack` would dereference the pointer, yielding the actual `Vac` struct.
+`(*database-&gt;pack).nar` would access the `nar` member of the `Vac` struct.
+`(*database-&gt;pack).nar.buffer` accesses the `buffer` member of the `Anar` struct.
+
+It sounds more complicated than it is, since its describing multiple scenarios, however you can
+take it from the last scenario, and sortve trace the steps backwards so to speak...
+
+The last scenario, we said we could take that `(*database&gt;pack)` to access the `buffer` member of the `Anar` struct.
+
+In C, when you mix (.) period and (-&gt;) arrow operators with dereferencing, parentheses adheres the order of
+operations. Without parentheses, you can’t directly use the (.) operator on a pointer without first dereferencing it.
+
+For example, consider  *database-&gt;pack.nar.buffer   Here’s how the C compiler interprets it:
+
+`database-&gt;pack`  is a pointer to Vac.
+`database-&gt;pack.nar`  is an invalid syntax because (-&gt;) should be used for accessing members from a pointer
+to a struct, and `nar` is not a member of ` Vac * `  but of  `Vac`
+
+To correctly access buffer, you need to dereference `database-&gt;pack` to get the `Vac` struct.
+Access the `nar` member of the `Vac` struct. And access the `buffer` member of the `Anar` struct (as we said when describing the last scenario)
+
+So the correct syntax in that particular situation would be:
+<span class="alt-text">
+  (*database-&gt;pack).nar.buffer
+</span>
+
+At some point you might even consider simplifying access with a temporary variable
+<span class="alt-text">
+  Vac *exac = *database-&gt;pack;</span>
+
+Which would allow you to use it as `exac-&gt;nar.buffer`
+

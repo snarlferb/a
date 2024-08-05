@@ -13,10 +13,15 @@ In C, structures are user-defined data types that group related variables.
 in technical terms they would be described as contiguous blocks of memory,
 wherein the fields (members) are accessed using offsets.
 <span class="alt-text">
+  +---------------+
   |   x   |   y   |</span>
 
-x is at offset 0 within the struct
-y is at offset `sizeof(int)` bytes within the struct
+x is at offset 0 to (e.g. 3), 4 bytes within the struct (the start of the struct)
+y is at offset `sizeof(int)`, presumably 1 byte, afterwards.
+Padding may be added after y to align the structures size.
+In this simple case, the structure could align itself naturally to
+the largest member's alignment requirement. Otherwise the padding after y
+would be 3 bytes to align the total size to the next multiple of 4.
 
 structs can store any data type and
 you can create them like this
@@ -39,13 +44,28 @@ that points to x or y in the original struct, and same for
 
 When you see this `Object.Member, its referred to as a Member that is
 being accessed through the pointer to Object... you use the dot when there's
-direct access, and the (-&gt;) arrow operator when its indirect (i.e. when it's
-being accessed from a pointer already)...
-`newname.x` could be declared w/ direct access
-`something-&gt;x` would have indirect access, seeing
-as its two levels away from `example`
+direct access (used with a struct variable and not a pointer) and the (-&gt;)
+arrow operator when its indirect (i.e. when it's being accessed from a pointer already)
 
-you can declare a struct like this
+`newname.x` could be declared w/ direct access, and `something-&gt;x` would have
+indirect access, seeing as its two levels away from `example`
+
+Because arrow operator is used to access members of a struct through a pointer
+to that struct, its combining a dereference of the pointer with accessing of the struct
+member all in one step.
+<span class="alt-text">
+List *this = &that;
+this-&gt;num = 6;
+strcpy(this-&gt;name, "Activity");
+
+Whereby `this-&gt;num` is equivalent to `(*this).num`, and the same is true for it in
+the proceeding line. In other words, it makes the syntax slightly less involved.
+
+For further reading on more complex situations, such as those that arise when you want to access
+things from <a class="reserve" href="vac.html">multiple structs</a>; Although you can always
+return to it once you've gotten more familiar w/ using structs and pointers...
+
+Lets try simply declaring a struct now:
 <span class="alt-text">
   struct example newA;</span>
 
@@ -254,7 +274,7 @@ anonymous unions must be declared within a containing struct or union, and
 members of the anonymous struct or union are accessed directly as if
 they were members of the containing struct or union.
 
-more links on c standards are <a class="reserve" href="std.html">here</a>
-next, see <a class="reserve" href="macro.html">macros</a>
+More links on C Standards are <a class="reserve" href="std.html">here</a>
 
+next, see <a class="reserve" href="macro.html">macros</a>
 </body></html>
