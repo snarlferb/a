@@ -61,7 +61,7 @@ For example, consider  *database-&gt;pack.nar.buffer   Here’s how the C compil
 First, (-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`, however is not a member
 of ` Vac * `. It is a member of `Vac`.
 
-We have to correctly access `buffer` of the `Anar` struct, and `nar` from the rest, you need to dereference
+We have to correctly access `buffer` of the `Anar` struct, and `nar` after that, you need to dereference
 `database-&gt;pack` to get the `Vac` struct. Once you understand that, it should make sense.
 
 So the correct syntax in that particular situation would be:
