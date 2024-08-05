@@ -40,11 +40,20 @@ Copying files and directories is done with this <b>cp</b> command...
 file path location, wherein you could point and run that file relatively, as we said.
 We'll also describe how environment variables work.
 
+Passing flags or options to a command is quite simple in general. A single dash is commonly used to denote short-form
+options/flags. For example, (-v) might be used as a short option for verbose output. Double dash (--) is used to signify
+the end of command-line options and the beginning of positional arguments, telling the command-line parser that
+everything following it should be treated as positional arguments or options for the command that proceeds (--)
+
+Spaces and dashes alike are then utilized to clearly demarcate boundaries between different commands and their arguments,
+especially in the context of managing complex command pipelines and ensuring that each part of the command is properly
+understood by the command-line parser.
+
 Dollar sign <b>$</b> is a meta-character/sigil and tells the shell the next word is a variable.
 Of course within quotation marks its considered a regular character, as Quoted characters do not
 have a special meaning. Quotes are unique in that they behave like a toggle.
 
-A variable is a character-<a href="strings">string</a> in shell that stores some value.
+A variable is a <a href="strings">string</a> of characters in shell that stores some value.
 That value could be an integer, filename, string or some shell command itself.
 
 A command is just a program interpreted by the system. <em> NOTE: I'll only be going over a
@@ -56,8 +65,7 @@ command management, input handling, etc.).</em>
 <span class="alt-text">
   <b>variable=value</b></span>
 
-Putting a space before or after <b>=</b> equals different results.
-This will be demonstrated as we go on.
+Putting a space before or after <b>=</b> equals different results. This will be demonstrated as we go on.
 
 Setting a variable to an empty string looks something like:
 <span class="alt-text">
@@ -487,15 +495,16 @@ signal, which is associated with signal zero in the trap command.  Also INTERRUP
 these signals are not ignored.  The <b>-i</b> option tells the shell to not ignore these traps. <b>-p</b> unallows changing of the effective
 user and group, to whomever is the real user and group.
 
-Basic example of an if statement
+Basic example of an if statement.
 <span class="alt-text">
-<b>if test "$(id -u)" == "0"</b>
-<b>then</b>
-   <b>echo</b> "This script is running as root" 
-<b>else</b>
-   <b>echo</b> "This script is not running as root"<b>1&gt;&amp;2</b>
-   <b>exit 1</b>
-<b>fi</b></span>
+  <b>if [ "$(id -u)" -eq "0" ]; then</b>
+    <b>echo "This script is running as root"</b>
+  <b>elif [ "$(id -u)" -eq "1000" ]; then</b>
+    <b>echo</b> "This script is running as a regular user with UID 1000"
+  <b>else</b>
+    <b>echo</b> "This script is running as a different user" 1&gt;&amp;2
+    <b>exit 1</b>
+  <b>fi</b></span>
 
 <b>id -u</b> flag is used to check the user id of the user who is running the script. And if the user id is not <b>0</b> that means the user is not root
 and the script will print the else statement. The 1&gt;&amp;2 is used to redirect the output to stderr.
@@ -505,6 +514,16 @@ And if we do not use exit 1 the script will exit with a status code of <b>0</b>,
 It is often the case you can use the logical operators we discussed
   <b>&&</b>    <b>&</b>    <b>||</b>    <b>;</b>
 in place of this type of if statement, as they share similar behavior.
+
+Relational operators compare two values and always print a "0" for false or "1" for true.
+Options can also be relational operators used in comparison...
+
+  <b>==</b>      Equal to                 <b>-eq</b>
+  <b>!=</b>      Not equal to             <b>-ne</b>
+  <b>&gt;</b>       Greater than             <b>-gt</b>
+  <b>&lt;</b>       Less than                <b>-lt</b>
+  <b>&gt;=</b>      Greater than or equal to <b>-ge</b>
+  <b>&lt;=</b>      Less than or equal to    <b>-le</b>
 
 UNIX comes with two programs called true and false, "exit 0" and "exit 1-255". These are known as an Exit status, with integers from 0 to 255.
 The shell can either examine the integer value of an exit status, or treat the value as a boolean. Zero is true (successful), all other values
@@ -548,17 +567,6 @@ is used to replace the current process image with the new command:
 The same thing is true of (&gt;) stdout redirection too, for `open()` (but w/ O_WRONLY), file descriptor (1),
 forking, command execution, exec system call and processing of the final output. You can look more into file
 descriptors to learn about how they work in converse situations.
-
-Relational operators compare two values and always print a zero for false or one for true.
-Options can also be relational operators used in comparison;
-
-  <b>==</b>      Equal to                 <b>-eq</b>
-  <b>!=</b>      Not equal to             <b>-ne</b>
-  <b>&gt;</b>       Greater than             <b>-gt</b>
-  <b>&lt;</b>       Less than                <b>-lt</b>
-  <b>&gt;=</b>      Greater than or equal to <b>-ge</b>
-  <b>&lt;=</b>      Less than or equal to    <b>-le</b>
-
 
 Basic structure of a case statement
 <span class="alt-text">
