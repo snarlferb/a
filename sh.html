@@ -46,8 +46,8 @@ the end of command-line options and the beginning of positional arguments, telli
 everything following it should be treated as positional arguments or options for the command that proceeds (--)
 
 Spaces and dashes alike are then utilized to clearly demarcate boundaries between different commands and their arguments,
-especially in the context of managing complex command pipelines and ensuring that each part of the command is properly
-understood by the command-line parser.
+especially in the context of complex command pipelines—special sequences that separate those arguments, which is
+ensuring that each part is properly understood by the command-line parser.
 
 Dollar sign <b>$</b> is a meta-character/sigil and tells the shell the next word is a variable.
 Of course within quotation marks its considered a regular character, as Quoted characters do not
