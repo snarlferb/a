@@ -23,12 +23,12 @@ Consider we created the following structs to begin w/
   } Vac;
 
   typedef struct {
-    Vac pack
+    Vac *pack
   } Database;</span>
 
 `Anar` contains a member, `buffer`, which is a character array.
 `Vac` contains a member, `nar` which is of type `Anar`.
-`Database` contains a member, `pack`, which is an instance of `Vac`.
+`Database` contains a member, `pack`, which is a pointer to `Vac`.
 
 To access the buffer member of `Anar` (which is nested within `Vac`) and then within Database,
 you need to handle the pointers and structs in the right way....
@@ -42,7 +42,7 @@ Consider we have a `database` which is a pointer to a Database struct, possibly 
   }</span>
 
 Which is for allocating and initializing a `Database` instance. Here's some things we might do...
-`database-&gt;pack` accesses the `pack` member of `Database`, which is of type `Vac`.
+`database-&gt;pack` accesses the `pack` member of `Database`...
 
 It has a member `nar` of type `Anar`.
 `(*database-&gt;pack).nar` accesses the `nar` member of the `Vac` structure.
@@ -54,12 +54,10 @@ however you can take it from the last scenario, and sortve trace the steps backw
 The last scenario, we said we could take that `(*database-&gt;pack)` to access the `buffer` member of the `Anar` struct.
 Consider  *database-&gt;pack.nar.buffer   Here’s how the C compiler would interpret it:
 
-`database-&gt;pack`  is a type of  Vac.
+`database-&gt;pack`  is a pointer to  Vac.
 `database-&gt;pack.nar`  is  invalid syntax.
 
-First, (-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`, however is not a member
-of ` Vac * `. It is a member of `Vac`.
-
+(-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`.
 We have to correctly access `buffer` of the `Anar` struct, and `nar` after that, you need to dereference
 `database-&gt;pack` to get the `Vac` struct. Also it can be confusing because of the order that pointers occur in
 changes how you access them in the long run. As you begin understanding this, it should make sense.
