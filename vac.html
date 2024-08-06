@@ -12,9 +12,7 @@ This is a tricky thing to grok at first, so i'll try to illustrate it like this.
 Now, hopefully you already read and learned about how the dot &amp; arrow operators
 work as pointers...
 
-Consider we have a couple files, one with a `typedef struct {...} Background;`  that
-has some members... And we create  `typedef struct Background *Anar;`
-At which point we create the following structs which are now interacting with others:
+Consider we created the following structs to begin w/
 <span class="alt-text">
   typedef struct {
     char *buffer;
@@ -48,9 +46,6 @@ Which is for allocating and initializing a `Database` instance. Here's some thin
 
 It has a member `nar` of type `Anar`.
 `(*database-&gt;pack).nar` accesses the `nar` member of the `Vac` structure.
-`nar` of type `Anar` also points to a `Background` structure, but in this case,
-it's just a structure with a `buffer` member.
-
 `(*database-&gt;pack).nar.buffer` then accesses the `buffer` member of the `Anar` structure
 
 It sounds more complicated than it is, since its describing multiple scenarios towards the final composite object,
