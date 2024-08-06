@@ -7,10 +7,14 @@
 <meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
 <script src="style.js" defer></script>
 </head><body>
+
 This is a tricky thing to grok at first, so i'll try to illustrate it like this...
 Now, hopefully you already read and learned about how the dot &amp; arrow operators
 work as pointers...
-Consider we have this sortve structure...
+
+Consider we have a couple files, one with a `typedef struct {...} Background;`  that
+has some members... And we create  `typedef struct Background *Anar;`
+At which point we create the following structs which are now interacting with others:
 <span class="alt-text">
   typedef struct {
     char *buffer;
@@ -21,12 +25,12 @@ Consider we have this sortve structure...
   } Vac;
 
   typedef struct {
-    Vac *pack;
+    Vac pack
   } Database;</span>
 
-`Anar` contains a single member, `buffer`, which is a pointer to a character array.
-`Vac` contains a single member, `nar`, which is of type `Anar`.
-`Database` contains a single member, `pack`, which is a pointer to a `Vac`.
+`Anar` contains a member, `buffer`, which is a character array.
+`Vac` contains a member, `nar` which is of type `Anar`.
+`Database` contains a member, `pack`, which is an instance of `Vac`.
 
 To access the buffer member of `Anar` (which is nested within `Vac`) and then within Database,
 you need to handle the pointers and structs in the right way....
@@ -40,29 +44,30 @@ Consider we have a `database` which is a pointer to a Database struct, possibly 
   }</span>
 
 Which is for allocating and initializing a `Database` instance. Here's some things we might do...
-`database-&gt;pack` accesses the `pack` member of `Database`, which is a pointer to a `Vac` struct.
-`*database-&gt;pack` would dereference the pointer, yielding the actual `Vac` struct.
-`(*database-&gt;pack).nar` would access the `nar` member of the `Vac` struct.
-`(*database-&gt;pack).nar.buffer` accesses the `buffer` member of the `Anar` struct.
+`database-&gt;pack` accesses the `pack` member of `Database`, which is of type `Vac`.
 
-It sounds more complicated than it is, since its describing multiple scenarios, however you can
-take it from the last scenario, and sortve trace the steps backwards so to speak...
+It has a member `nar` of type `Anar`.
+`(*database-&gt;pack).nar` accesses the `nar` member of the `Vac` structure.
+`nar` of type `Anar` also points to a `Background` structure, but in this case,
+it's just a structure with a `buffer` member.
+
+`(*database-&gt;pack).nar.buffer` then accesses the `buffer` member of the `Anar` structure
+
+It sounds more complicated than it is, since its describing multiple scenarios towards the final composite object,
+however you can take it from the last scenario, and sortve trace the steps backwards so to speak...
 
 The last scenario, we said we could take that `(*database-&gt;pack)` to access the `buffer` member of the `Anar` struct.
+Consider  *database-&gt;pack.nar.buffer   Here’s how the C compiler would interpret it:
 
-In C, when you mix (.) period and (-&gt;) arrow operators with dereferencing, parentheses adheres the order of
-operations. Without parentheses, you can’t directly use the (.) operator on a pointer without first dereferencing it.
-
-For example, consider  *database-&gt;pack.nar.buffer   Here’s how the C compiler interprets it:
-
-`database-&gt;pack`  is a pointer to Vac.
-`database-&gt;pack.nar`  is an invalid syntax.
+`database-&gt;pack`  is a type of  Vac.
+`database-&gt;pack.nar`  is  invalid syntax.
 
 First, (-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`, however is not a member
 of ` Vac * `. It is a member of `Vac`.
 
 We have to correctly access `buffer` of the `Anar` struct, and `nar` after that, you need to dereference
-`database-&gt;pack` to get the `Vac` struct. Once you understand that, it should make sense.
+`database-&gt;pack` to get the `Vac` struct. Also it can be confusing because of the order that pointers occur in
+changes how you access them in the long run. As you begin understanding this, it should make sense.
 
 So the correct syntax in that particular situation would be:
 <span class="alt-text">
@@ -74,3 +79,4 @@ At some point you might even consider simplifying access with a temporary variab
   Vac *exac = *database-&gt;pack;</span>
 
 Which would allow you to use it as `exac-&gt;nar.buffer`, and is just one example of something you might do.
+Take your time to work out the quarks w/ these kinds of situations, as it'll help you understand access-members.
