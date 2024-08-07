@@ -1,0 +1,55 @@
+<!-- memory errors -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>common errors</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+In the context of programming, a "memory error" typically refers to an issue related to how
+your program manages computer memory. This can lead to unexpected behavior, crashes, or even
+security vulnerabilities.
+
+Segmentation Fault (or segfault) is a common type of error that occurs when a program tries to access
+a memory location that it's not allowed to, for example...
+<span class="alt-text">
+  int *ptr = NULL;
+  *ptr = 10;</span>
+
+Whereby, `*ptr=10` is trying to write to a <em>null pointer</em>. Segmentation faults can occur in other
+cases too, such as attempting to access a value that exceeds your arrays index or accesssing invalid memory addresses.
+
+Buffer Overflow, yet another common error, happens when a program writes more data to a buffer than it can
+hold, potentially overwriting adjacent memory.
+<span class="alt-text">
+  char buffer[10];
+  char long_string[] = "This string is too long";
+  strcpy(buffer, long_string);</span> <em>// Buffer overflow occurs here</em><span class="alt-text">
+  printf("%s\n", buffer);</span> <em>// Undefined behavior</em>
+
+This overflows the buffer because `buffer[10]` can only hold a maximum of 10 characters (which includes the null
+terminator character (\0) that marks the end of a string) and the string "This string is too long" is significantly
+longer than 10 characters; Therefore, when `strcpy` tries to copy this string into the buffer, it will write beyond
+the allocated space, overwriting memory that belongs to other variables or data structures.
+
+You should ensure that the destination buffer is always large enough to hold the source string.
+"Use After Free" errors are another kind of error you may encounter. This occurs when a program tries to use
+memory <em>after</em> it has already been freed, leading to undefined behavior. There are plenty of issues that are
+bound to happen to you at some point, but from experience you can learn to avoid them.
+
+Memory Leaks are another common error. They can happen when a program successfully allocates memory,
+but fails to free it when it's no longer needed, leading to gradual memory depletion.
+<span class="alt-text">
+  int *ptr = (int*)malloc(sizeof(int));</span>
+
+Later on, if we dont free it or do not provide an if statement where its free'd because of a certain condition,
+than much like the other errors that lead to malformations in memory, it'll cause issues at some point.
+
+Mind you, you can go without noticing an error/bug for awhile... And, its not until the program starts
+having issues w/ performance, or it crashes at some stage that you then discover there was a bug somewhere.
+
+Therefore you always want to catch those bugs sooner than later.
+
+</body></html>

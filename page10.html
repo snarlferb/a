@@ -32,9 +32,9 @@ When you think of OR, think of words like <em>passive and so always active, or a
   } FilePermit;
 
   int main() {
-    FilePermit.is_hidden |= (1 &lt;&lt; 3);
+    FilePermit.is_hidden |= (1 &lt;&lt; 3);</span>
 
-    // Check if the 4th bit is set
+    <em>// Check if the 4th bit is set</em><span class="alt-text">
     int isFourthBitSet = (FilePermit.is_hidden &amp; (1 &lt;&lt; 3)) != 0;
     printf("4th bit set to: %d\n", isFourthBitSet);
 
@@ -43,8 +43,8 @@ When you think of OR, think of words like <em>passive and so always active, or a
 
 Here's an arbitrary example that does the same thing w/ bitwise shift.
 <span class="alt-text">
-  #define KERMIT (1 &lt;&lt; 0) | (1 &lt;&lt; 1) | (1 &lt;&lt; 2) | (1 &lt;&lt; 3)
-  // Individualized flags, for clarity
+  #define KERMIT (1 &lt;&lt; 0) | (1 &lt;&lt; 1) | (1 &lt;&lt; 2) | (1 &lt;&lt; 3)</span>
+  <em>// Individualized flags, for clarity</em><span class="alt-text">
   #define THEFROG (1 &lt;&lt; 0)
   #define THETOAD (1 &lt;&lt; 1)
   #define THEPIG (1 &lt;&lt; 2)
@@ -170,3 +170,4 @@ __attribute__((__unused__))
 __attribute__((__used__))
 
 you can learn more about gcc attributes here, https://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html
+</body></html>
