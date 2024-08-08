@@ -577,6 +577,29 @@ The same thing is true of (&gt;) stdout redirection too, for `open()` (but w/ O_
 forking, command execution, exec system call and processing of the final output. You can look more into file
 descriptors to learn about how they work in converse situations.
 
+Of course using the `strace` command, you might see something different (this is just the basic explanation)
+The initial execution might look like:
+<span class="alt-text">
+  execve("/usr/bin/sort", ["sort"], ...) = 0</span>
+
+And this shows that `sort` was executed, and its at this point where the `sort` binary is loaded and executed.
+Several system calls related to loading libraries (openat(), mmap(), read(), etc.) are seen, which is normal
+and involves setting up the environment for the sort command to run.
+<span class="alt-text">
+  fstat(0, {st_mode=S_IFREG|0644, st_size=49, ...}) = 0</span>
+
+And  `read(0, "...")` indicate that `sort` is reading from file descriptor 0, which is stdin.
+This is where  `input.txt` contents are being read.
+
+     `read(0, "plum\ngooseberry\n...", 4096)` shows the data read from  input.txt
+`write(1, "...")` shows the sorted output being written to file descriptor 1 (stdout), that the output is
+sorted and written line by line. And the close(0), close(1), and close(2) calls at the end indicate that
+the file descriptors for stdin, stdout, and stderr are closed when sort completes.
+
+note: `open()` as well as `dup2()` and `fork()` are managed by the shell as part of preparing the environment
+for sort before the command runs, and thus the strace output only shows what happens within the context of
+the command and not the file redirection setup being done by the shell.
+
 Basic structure of a case statement
 <span class="alt-text">
   <b>FRUIT="plum"</b>
