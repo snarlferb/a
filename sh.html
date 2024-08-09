@@ -600,6 +600,16 @@ note: `open()` as well as `dup2()` and `fork()` are managed by the shell as part
 for sort before the command runs, and thus the strace output only shows what happens within the context of
 the command and not the file redirection setup being done by the shell.
 
+In shell scripts, arrays are 0-based. Here’s how you work with arrays:
+<span class="alt-text">
+  arr=("apple" "plum" "gooseberry")
+  echo "First element: ${array[0]}"
+  echo "Second element: ${array[1]}"
+  echo "Third element: ${array[2]}"</span>
+
+Later we will demonstrate a situation where you have to convert a
+1-based index into a 0-based.
+
 Basic structure of a case statement
 <span class="alt-text">
   <b>FRUIT="plum"</b>
@@ -611,13 +621,70 @@ Basic structure of a case statement
   <b>esac</b></span>
 
 FRUIT was equal to plum so we got back Yummy plummy
+<span class="alt-text">
+    <b>expr</b></span><em>, is used to perform arithmetic, e.g.</em><span class="alt-text">
+      <b>expr 1 + 1   expr 2 \* 2   expr 3 / 3</b></span>
 
-    <b>expr</b><em>, is used to perform arithmetic, e.g.</em>
-      <b>expr 1 + 1   expr 2 \* 2   expr 3 / 3</b>   <em>etc.
-          bare w/ me as i work on a cool example using `expr` </em>
+Here is an example w/ expr in a script
+<span class="alt-text">
+  string="Hi!veHollow"
+  n1=15
+  n2=7
 
-Functions may be expressed in this way. <em>They're a bit particular about character placement, newlines,
-spacing and indentation although you can enforce your own tabulated construct</em>
+  len=$(expr length "$str")
+  echo "length of the string \"$str\" is: $len"
+
+  differ=$(expr $n1 - $n2)
+  echo "difference between $n1 and $n2 is: $differ"</span>
+
+  # Extract a substring using expr (from position 2, 4 characters long)<span class="alt-text">
+  substr=$(expr substr "$str" 2 4)
+  echo "substring of \"$str\" starting at position 2 with length 4 is: \"$substr\""</span>
+
+The `length` keyword is specific to `expr` and its function in manipulating strings, that is
+The length operator is used to determine the number of characters in a string.
+
+You can use parameter expansion w/ the `#` feature to get the length of a string without needing expr
+<span class="alt-text">
+  str="Hi!veHollow"
+  len=${#str}
+  echo "The length of the string \"$str\" is: $len"</span>
+
+`${#str}` is a shell built-in that directly gives the length of the string that was stored in "$str"
+
+We can also go as far to create a custom substring like this...
+<span class="alt-text">
+  substr() {
+    local str="$1"
+    local pos="$2"
+    local len="$3"
+    echo "${str:$((pos-1)):len}"
+  }</span>
+
+  # Call the custom function<span class="alt-text">
+  substr "Hi!veHollow" 2 4</span>  # Output: "i!ve"
+
+The <b>local</b> keyword in shell scripting is used to declare variables with a scope limited to the
+function in which they are defined. This means that variables declared with local are only accessible
+within that function and are not visible or modifiable outside of it.
+
+Substring extraction `${str:$((pos-1)):len}` goes by the following recipe:
+<span class="alt-text">
+  ${variable:start:length}</span>
+
+`<b>length</b>` is obviously the <b>number</b> of characters to include in the substring.
+`<b>variable</b>` is the variable containing the string (str in this case).
+`<b>starting</b>` is the starting position of the substring; but shell parameter expansion (meaning
+`${variable:start:length}` ), is 0-based, therefore when specifying "start", you need to convert a
+1-based index to a 0-based index. Thus our expression $((pos-1)) converts a 1-based index pos
+into a 0-based index suitable for shell parameter expansion,  and is thus responsible for
+calculating the starting position for the substring of our original example.
+
+If you don't convert a 1-based index to a 0-based index when using shell parameter expansion,
+the shell would misinterpret the starting position, resulting in incorrect extraction from there.
+
+Functions may be expressed in this way, though they're a bit particular about character placement,
+newlines, spacing and indentation although you can enforce your own tabulated construct</em>
 <span class="alt-text">
   <b>apple(){</b>
     <b>A=$(expr $A + 1)</b>
@@ -631,8 +698,17 @@ spacing and indentation although you can enforce your own tabulated construct</e
   <b>done</b>
   <b>echo</b> 'yay we got ALOT of apples'</span>
 
+note, that that parentheses after the function name are are purely syntactical and do not
+serve any functional purpose other than indicating that- <em>*what follows is a function*</em>
+also notice that all variables are treated as strings and otherwise the shell will
+perform said type conversion as needed, and based on the context that its in:
+<span class="alt-text">
+  str_var="42"
+  echo "As a string: $str_var"
+  result=$((str_var + 8))
+  echo "As an integer, after arith: $result"</span>
 
-<b>For Loop</b> example, here's an in depth description of a working for loop;
+<b>For Loop</b> example... here's an description/ingredients of a working for loop:
 <span class="alt-text">
   <b>for</b> NAME [in WORDS ... ] ; <b>do</b> COMMANDS; <b>done</b></span>
 
