@@ -239,10 +239,24 @@ same program as the parent process. In this case <b>exec</b> is used. It will ex
 command-to-follow replaces the current shell -&gt; which means no subshell is created during this, and the
 'current process' is replaced with this new command.
 
+You can also monitor and control jobs in the shell. Jobs are processes or groups of processes created for
+commands or pipelines.  At a minimum, the shell keeps track of the status of the background (i.e. asynchronous)
+jobs that currently exist; this information can be displayed using the jobs commands.
+
+If job control is fully enabled (using set -m or set -o monitor), as it is for interactive shells,
+the processes of a job are placed in their own process group.  Foreground jobs can be stopped by typing
+the suspend character from the terminal (normally ^Z), jobs can be restarted in either the foreground or
+background using the fg and bg commands, and the state of the terminal is saved or restored when a
+foreground job is stopped or restarted, respectively. Continuing on to syntax and such...
+
 The (\) escape character acts as a form of a delimeter, but in such a way where the proceeding character (newline or
 whitespace) is consumed—at the same time, it can be used for control sequences, or even command continuation (in the
 same way that starting a cmdline command with a single quoted string, and going to the next line without completing
 the second quote will tell the program to look for that second quote onto the next line (until its found)
+<span class="alt-text">
+  echo "Hello, \$USER! Today is \`date\`."</span>
+
+And this is an example of using backslash expansion in order to escape special characters.
 
 <b>\e</b> is an example of an escape sequence. This means it interprets the backslash as escaping or doing something
 (such as a control character) w/ the proceeding character, however introducing the bracket <b>\e[</b> means that the
@@ -302,7 +316,7 @@ See also about the aforementioned regexp (POSIX) versus PCRE1/PCRE2(original &am
 and how the shell itself uses POSIX/PCRE, versus commands that derive from e.g. coreutils; Shell's builtins and coreutils' commands
 can both potentially use PCRE as long as they were compiled with it.
 
-Returning to characters on the command line, 'apostrophes' ('') can often be used to preserve the literal interpretation of characters.
+Returning to characters on the command line, apostrophes (' ') can often be used to preserve the literal interpretation of characters.
 A quote begins a sequence, and will continue a command until it encounters a closing quotation.
 You can also use a backslash to continue a command.
 
@@ -516,7 +530,7 @@ Basic example of an if statement.
   <b>fi</b></span>
 
 <b>id -u</b> flag is used to check the user id of the user who is running the script. And if the user id is not <b>0</b> that means the user is not root
-and the script will print the else statement. The 1&gt;&amp;2 is used to redirect the output to stderr.
+and the script will print the else statement. The 1&gt;&amp;2 is used to redirect the standard output to standard error.
   <em>i.e. (stderr=2, stdout=1, stdin=0)..</em>  Exit 1 will exit the script with a status code of 1, a failure.
 And if we do not use exit 1 the script will exit with a status code of <b>0</b>, a success.
 
@@ -533,6 +547,9 @@ Options can also be relational operators used in comparison...
   <b>&lt;</b>       Less than                <b>-lt</b>
   <b>&gt;=</b>      Greater than or equal to <b>-ge</b>
   <b>&lt;=</b>      Less than or equal to    <b>-le</b>
+
+The (|&amp;) operator is commonly referred to as the pipe-and-error operator. Its a shorthand way to pipe both the
+stdout stderr of the command (from the left) into the command on the right.
 
 UNIX comes with two programs called true and false, "exit 0" and "exit 1-255". These are known as an Exit status, with integers from 0 to 255.
 The shell can either examine the integer value of an exit status, or treat the value as a boolean. Zero is true (successful), all other values
@@ -609,6 +626,27 @@ In shell scripts, arrays are 0-based. Here’s how you work with arrays:
 
 Later we will demonstrate a situation where you have to convert a
 1-based index into a 0-based.
+
+Associative arrays allow you to use strings as indices instead of just numbers, which is useful for storing
+key-value pairs in situations where you need to map keys to specific values (this is a dummy example)
+<span class="alt-text">
+  typeset -A fruit_colors
+
+  fruit_colors[apple]="red"
+  fruit_colors[plum]="purple"
+  fruit_colors[gooseberry]="green"
+
+  echo "The color of an apple is ${fruit_colors[apple]}"
+  echo "The color of a plum is ${fruit_colors[plum]}"
+  echo "The color of a gooseberry is ${fruit_colors[gooseberry]}"</span>
+
+  # Iterate over all keys<span class="alt-text">
+  for fruit in "${!fruit_colors[@]}"; do
+    echo "The color of $fruit is ${fruit_colors[$fruit]}"
+  done</span>
+
+Typeset allows you to give variables specific attributes, like making them readonly, integer, etc.
+The -A option specifically tells typeset that the variable is an associative array.
 
 Basic structure of a case statement
 <span class="alt-text">
