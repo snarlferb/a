@@ -40,6 +40,20 @@ Copying files and directories is done with this <b>cp</b> command...
 file path location, wherein you could point and run that file relatively, as we said.
 We'll also describe how environment variables work.
 
+The `-a` flag is an example of an option (or flag, whichever you prefer to call it) They are not read like a
+regular variable, as they are boolean in nature and internal to the shell (they are not boolean in value).
+
+i find its best to think of an option as an "extension" to a command, as opposed to some parameter of related
+letters, as every command is unique. They do not take assignment with <b>=</b> instead you use the `<b>set</b>`
+command which sets or unsets values of shell options and positional parameters, changing that attributes value.
+
+So when trying to understand a script better for example, there is  <b>-x</b> (debug) and <b>-v</b> (verbose) options.
+<b>-v</b> echoes the line/process as it is read, while the <b>-x</b> option echoes as it's executed <em>(with <b>+</b> preceding each line)</em>
+This helps you see exactly what commands are being run and what their final arguments are after any variable substitutions or expansions.
+
+<b>-n</b> will read a script and parse commands, but it does not execute. <b>-e</b> immediately exits the script if an error is present.
+<b>-t</b> executes one line and then exits.  <b>-a</b> , all variables that have been modified or created are exported.
+
 Passing flags or options to a command is quite simple in general. A single dash is commonly used to denote short-form
 options/flags. For example, (-v) might be used as a short option for verbose output. Double dash (--) is used to signify
 the end of command-line options and the beginning of positional arguments, telling the command-line parser that
@@ -238,6 +252,14 @@ existing process to start a new one. However, there may be situations where a ch
 same program as the parent process. In this case <b>exec</b> is used. It will execute a program; however the
 command-to-follow replaces the current shell -&gt; which means no subshell is created during this, and the
 'current process' is replaced with this new command.
+
+Ampersand is a funny symbol that functions differently depending on context, just as most symbols do.
+<span class="alt-text">
+  ls /path/to/directory &amp; sleep 10</span>
+
+In this example we list the contents of the specified directory and (&amp;) puts the ls command in the background,
+allowing the shell to immediately start executing the next command. `sleep 10` pauses for 10 seconds. Since ls is
+running in the background, `sleep 10` starts executing right away.
 
 You can also monitor and control jobs in the shell. Jobs are processes or groups of processes created for
 commands or pipelines.  At a minimum, the shell keeps track of the status of the background (i.e. asynchronous)
@@ -460,25 +482,14 @@ in a special variable (referred to as $?) This variable is updated automatically
 So when you execute a command or script, the shell runs it and waits for it to finish, and once its completes, the shell captures the exit status
 (a numeric code returned by the command) and stores it in the $? variable.
 
-The other class of variables are called "options". They are not read like a regular variable.
-They are boolean and internal to the shell.  <em>However i find its best to think of an option as an
-"extension" to a command, as opposed to some parameter of related letters, as every command is unique.
-</em> They do not take assignment with <b>=</b> instead you use the <b>set</b> command which sets or unsets
-values of shell options and positional parameters, changing that attributes value.
+Streams and File descriptors, brief introduction...
 
-When trying to understand a script better, there is  <b>-x</b> and <b>-v</b> options.  <b>-v</b> echoes the line as it is read,
-while the <b>-x</b> option echoes as it's executed, <em> with <b>+</b> preceding each line.</em>
-
-<b>-n</b> will read a script and parse commands, but it does not execute. <b>-e</b> immediately exits the script if an error is present.
-<b>-t</b> executes one line and then exits.
-
-<b>-a</b> , all variables that have been modified or created are exported. Streams and File descriptors, brief introduction
-When you want to do input or output to a file, you have a choice of two basic mechanisms for representing
-the connection between your program and the file:  File descriptors and Streams. File descriptors are represented as objects of type int,
-while streams are represented as FILE * objects. Both file descriptors and streams can represent a connection to a device (such as a terminal),
-or a pipe or socket for communicating with another process, as well as a normal file.  Each Unix process has three standard POSIX file descriptors,
-corresponding to the three standard streams:  Standard Input (stdin), Standard output (stdout), and Standard error (stderr). They can be used for
-a file or other I/O resource such as a pipe.
+When you want to do input or output to a file, you have a choice of two basic mechanisms for representing the connection between your
+program and the file:  File descriptors and Streams. File descriptors are represented as objects of type int, while streams are represented
+as FILE * objects. Both file descriptors and streams can represent a connection to a device (such as a terminal), or a pipe or socket for
+communicating with another process, as well as a normal file.  Each Unix process has three standard POSIX file descriptors, corresponding
+to the three standard streams:  Standard Input (stdin), Standard output (stdout), and Standard error (stderr). They can be used for a
+file or other I/O resources such as a pipe.
 
 Evaluation, pipelines, in this example;
 <span class="alt-text">
