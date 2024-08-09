@@ -534,6 +534,10 @@ and the script will print the else statement. The 1&gt;&amp;2 is used to redirec
   <em>i.e. (stderr=2, stdout=1, stdin=0)..</em>  Exit 1 will exit the script with a status code of 1, a failure.
 And if we do not use exit 1 the script will exit with a status code of <b>0</b>, a success.
 
+Similarly, <b>-f</b>  checks if a file exists and is a regular file.  <b>-d</b> checks if a directory exists and <b>-s</b> checks if a file is not empty.
+Likewise, <b>-r</b> , <b>-w</b> and <b>-x</b> are for checking whether a file is readble, writable or executable.
+You can find a comprehensive list of test operators in the man pages for the shell.
+
 It is often the case you can use the logical operators we discussed
   <b>&&</b>    <b>&</b>    <b>||</b>    <b>;</b>
 in place of this type of if statement, as they share similar behavior.
