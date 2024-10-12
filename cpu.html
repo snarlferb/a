@@ -1,0 +1,137 @@
+<!-- cpu overview -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>cpu</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<em>The following is a very rough, compact description of how i view the internals
+of the cpu, starting with dram and then everything else from the cpu's perspective.
+This is what i have come to understand <b>so far</b>  and should in no way be
+taken as a total understanding. This is my attempt to summarize cpu components
+in a broad sense as well as the underlying memory cell/logic gate structuring.
+The complexity and elegance of the broader design shouldnt be taken for granted.
+It should be noted however that we are focusing on the more elaborate and hard -to-
+parse components, such as: registers, control unit, ALU, clock, mmu, and cache,
+albeit in elementary terms. Therefore this is only a basic description of a
+processor, even still, everything can be understood as a circuit of tiny wires,
+capacitors and transistors that carry an electrical charge. Knowing what your
+basic logic gates are is an important first step: NOT  OR  AND  NOR  NAND  XOR</em>
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; "cpu.register&gt;&gt;dram"
+
+("<em>a summary on dram</em>"): Part 1 <a href="dram">How</a> <a href="dram">dram?</a>
+
+Part 2 How computer = cpu.register&gt;&gt;dram?
+[fetch][decode][execute]
+
+Storage in dram is volatile (meaning it relies on power or electrical charge to
+maintain said data's integrity) and dram is intimately connected w/ the cpu and its
+ability to calculate as well as in determining which instruction to perform.
+And this cpu.register&gt;&gt;dram relationship has an affinite connection with the
+rest of the computer/hardware, or 'device drivers'; in terms of this loop;
+
+ <em>cpu -> to a storage device -> and back to cpu.register>>dram</em>.
+
+So coupled w/ the real-time clock, used to keep counting, in conjuction with the
+low standby power CMOS Static RAM, ssd/hdd retain a small level of voltage/or charge
+to keep memory persistent. In conclusion its regarded as safe, but generally not
+recommended to unplug storage drives and keep it un-housed from its host netgate.
+
+register (technical facts) = in cell terms, it is a group of flip-flop circuits
+that store 1 or 0. There are many different kinds of registers, but this one is
+for storing a binary word, and one flip-flop is needed for each bit in the word.
+What are the internals of a flip-flop?!__!
+
+A register in actuality is itself a storage element for addresses.
+During the fetch phase, it is meant to retrieve an instruction from dram.
+The Address register is wired into dram. dram interprets that as a value and then
+sends back the associated address to the Instruction register. Next, opcode,
+or the first 4 bits of the address corresponds to Load-A instruction.
+The other bits of the address correspond to a dram address.
+Here are some registers.... General-purpose register, stack pointer,
+status flag register, vector registor, control register... accumulator           =  stores data for ALU
+program counter       =  points to next instruction
+instruction register  =  stores instruction
+data register         =  stores data
+address register      =  stores address
+temporary register    =  stores temporary data
+input/ouput registers =  stores input and output data
+
+control unit () = which is responsible for decoding and executing instructions, determines
+how to translate each high-level instruction into the appropriate micro-operations.
+There's typically only one high-level instruction like `ADD` available to developers
+in assembly language. However, under the hood, the CPU's microarchitecture breaks down
+this single high-level instruction into multiple micro-operations to execute it efficiently.
+The choice of micro-operations for a particular high-level instruction depends on:
+First off, the microarchitecture of the CPU determines how that instruction is executed internally.
+Different CPUs have different microarchitectures, which dictate how instructions are decoded,
+executed, and retired. Each microarchitecture may have its own strategies for breaking down
+instructions into micro-operations based on factors like pipeline depth, instruction scheduling,
+and available execution units. It also checks for data dependencies to ensure that instructions
+are executed in the correct order and waits (if necessary) until the required data is available.
+
+The control unit also ensures that the necessary resources, such as registers, execution units,
+and functional units, are available to execute the micro-operations. It coordinates the allocation
+and scheduling of these resources to optimize execution efficiency. **Branch prediction** is crucial
+as well, and itll determine the "flow" of execution... Therefore, the decoder may predict those outcomes
+of "conditional branching" -therein fetching and decoding a subsequent instruction(s).
+
+The control unit of a CPU includes an optimization technique known as pipelining, which allows multiple
+instructions to be executed concurrently by dividing the execution process into sequential stages.
+Each stage of the pipeline is responsible for a specific task, such as instruction fetching, decoding,
+execution, and memory access. As one stage is fetching an instruction, another related instruction is
+simultaneously being decoded. This handoff between stages allows for efficient overlap of instruction
+execution, maximizing throughput and performance.
+
+Control signals are generated based on the decoded instruction and specify the actions to be taken by
+each stage of the pipeline. These control signals determine which functional units are activated,
+which data paths are selected, and how the instruction progresses through the pipeline stages.
+Control signals are encoded to facilitate efficient instruction execution and minimize delays in the pipeline.
+
+Pipeline encoding includes mechanisms for detecting and handling pipeline hazards, such as data hazards,
+control hazards, and structural hazards. Techniques such as forwarding, stalling, and branch prediction
+are used to mitigate the impact of hazards on pipeline performance. Control signals are encoded to trigger
+these hazard detection and resolution mechanisms as needed.
+
+Data forwarding and bypassing mechanisms are used to transfer data directly from one pipeline stage to another
+without waiting for it to be written to memory or registers.
+
+In superscalar and out-of-order execution pipelines, instructions are scheduled for execution based on availability
+of resources and dependencies between instructions. Instruction scheduling algorithms determine the order in which
+instructions are issued to execution units, taking into account pipeline constraints and dependencies.
+
+control unit <b>(technical facts)</b> = It recognizes Load-A instruction circuit by matching the opcodes 4 bit address.
+The physical circuit layout IS the match. In other words, each transistor will output the opcode correctly or not.
+Which leads to the execute phase. The output of that Load-A checking instruction turns on dram's read/enable line and sends
+the remaining bits of the dram address. dram retrieves the value at that address. Because it stems from a Load-A instruction,
+the value has to be stored in register A, (none of the other registers). When dram's data wires are wired to 4 data registers,
+the Load-A match circuit turns on the write/enable of only register A. For the next instruction, everything is turned off.
+The Address register is then incremented by 1 bit, and we do the entire process again.
+
+Again the control unit is responsible for selecting the right registers to pass in as inputs and to configure the ALU to
+perform the right operation. So for example, the Control Unit enables register B and feeds its value into the first input of
+the ALU. It also enables register A and feeds that into the second input of the ALU <em>ALU (lookahead carry circuit !__!
+composed of AND/OR gates)</em> The 'add' instruction determined by the opcode, is a 2 bit address. The add opcode is passed
+into the ALU. The output will be saved to register A. For this, the Control Unit uses an internal register of its own to
+temporarily save the output, turn off the ALU and then write the value into the proper register.
+Then we begin again, incrementing the Address register by 1 bit. It goes through the usual fetch and decode.
+The address is then passed to dram but this time its a 'STORE' instruction. So instead of read-enabling, it write-enables.
+At the same time it read-enables register A. This opens the data line to pass in the value stored in from register A.
+
+clock = () Triggers an electrical signal within specific intervals. It advances the operation of the cpu, corresponding with specific registers.
+What are the internals of TODO!__!
+[<em>Describe a pulse transition detector here</em>]
+
+mmu = () is a memory unit responsible for mapping addresses to ram. It keeps track of shifts between virtual and physical addresses.
+
+cache = () a storage element. It is sram, by which it does not have a refresh step. It finds application in the correspondence of main memory blocks
+and those in the cache. This is specified by the specific mapping instruction.
+Cache internally is also a group of flip-flop gates.
+
+<em>... to be continued...</em>
+
+</body></html>
