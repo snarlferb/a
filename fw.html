@@ -1,0 +1,106 @@
+<!-- fw -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>frameworks</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+  <b>Applications and the Right Framework</b>
+
+  Choosing the right framework for your application is important for many reasons, especially since it means
+  managing your project in a specific way that may or may not have the right balance and maintainability.
+  A clean, modular framework helps ensure that your project remains scalable and easier to manage over time,
+  which we will explain why that is.
+
+  It goes without saying that clean, hygienic, intuitive code is what you're aiming for. Streamlining and
+  optimizing code specific to your situation is more about how you want the code to look and feel based on
+  your own interpretation of how well-structured code should appear and how it may function.
+  
+  You must also consider the foundation and try to imagine what the end result might look like. In order to do
+  that we need to take a speculative look at the blueprints and rely on our experience to determine what would
+  be best used for the unique purposes of the project in question.
+
+  Of course, unless you have had the experience yourself and probed at each framework, you may not know which
+  direction to go. Its something you have to learn for yourself in order to comprehend programming as a whole,
+  and perhaps reading this will give you an idea—at the very least—some idea of what to look for.
+
+  Frameworks consist of header files (.h) and source (or implementation) files w/ the extension (.c)
+
+  .cpp, .cc, .cxx, .hpp or .tpp  serve the same purposes, but for code thats written in C++
+
+  In GNU-based contexts, when specifying which compiler to use in a Makefile you assign  `CC = gcc` for the
+  C compiler, and `CXX = g++` for the C++ version. However you can compile C++ respectively w/ "gcc" as well
+  by manually linking the flag -lstdc++ to invoke the C++ front-end (-l = link, stdc++ = C++ standard library)
+
+  Also if you have a file, e.g. main.c, which is normally treated as a C source file, in the case where the
+  content is actually C++ code you can use:  gcc -x c++ main.c
+
+  <b>Framework Interdependencies</b>
+
+  Including the right header file is important, and this is especially true when you have to use the same header
+  across multiple ".c" files. Header files contain declarations for functions, variables, structures, and macros
+  that are used across different source files, each of which must be shared. That is, each ".c" file is compiled
+  independently and relies on these declarations via the appropriate header, in order to know how to use said
+  components.
+
+  Even if a file is linked by another file already, frameworks will reference these dependencies to pull in or
+  reference the required headers, such that all components are correctly integrated. It is then this shared
+  functionality that the files depend on during for both linking and successfully compiling it all.
+  
+  This isn't specific to frameworks, but it's a common pattern required when working with them. In a perfect world,
+  we could have a single translation unit that could bring in each file in a cascading manner that wasnt dependent on
+  redefining a header in its particular section of the code, going downstream to say whether or not it had already
+  been seen. While this concept aligns with some behaviors of the linker and the builder, it is not fully achievable
+  due to several inherent limitations. 
+
+  First, the C/C++ preprocessor lacks the intelligence to track header inclusions across multiple translation units
+  effectively. It relies on "include guards" (#ifndef, #define, #endif) or  #pragma once   to prevent multiple
+  inclusions within a single translation unit, but it does not manage inclusions across the entire project scope.
+
+  ps. i should also mention here that you can use  the  #ifdef __cplusplus  block, along w/ `extern "C"` in BOTH C/C++
+  header files, for compatibility with C or C++ respectively:
+<span class="alt-text">
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
+
+    void my_function();
+
+    #ifdef __cplusplus
+    }
+    #endif</span>
+
+  Second, while linkers do handle symbol resolution and can merge identical symbols, they do not operate at the level of 
+  header file inclusion during compilation. They work with object files generated after the preprocessing and compilation
+  stages, meaning they cannot influence how headers are included.
+
+  Finally, the dependency management and build optimization performed by modern build systems are designed to handle these
+  complexities to some extent. They track dependencies and only recompile files when necessary, but the cascading inclusion
+  approach remains impractical due to the inherent limitations of the C/C++ compilation model.
+
+    (1) Extern Declarations and Precompiled Headers: Frameworks may utilize `extern` declarations to reference functions or
+    variables defined elsewhere. This is often done to leverage precompiled header files, which can improve build times by
+    storing commonly used declarations in a single file.
+
+    (2) Direct Definitions and Efficiency: Some frameworks define everything within their *own* header files, avoiding any
+    external dependencies. This approach can streamline the build process and potentially improve efficiency by reducing the
+    need for the compiler to search for references across multiple files.
+
+    (3) The Hybrid Approach adopts a scheme that can balance both performance and clarity. It is best carried out through what
+    are called *Unity builds*; that utilize precompiled headers to store frequently used declarations for faster build times.
+    As such, it is divided into modules, wherein each module has its own header file. This promotes code organization and
+    reusability. It may also selectively utilize `extern` declarations for specific functions or variables defined in the
+    core engine to avoid redundant definitions, and thus streamlining the build process.
+
+  However, unity builds are generally unavailable for systems that dont wish to use CMake, or some other equivalent, as its
+  really a feature that exists in the realm of *extended* build automation and is less critical for applications that
+  leverage their build systems in more specific contexts.
+
+  In conclusion, its best to choose the right approach for the type of application you're making and how you think it ought
+  to be. For more complex projects, you might find it necessary to use a central framework header that references everything
+  to ensure proper integration. On the other hand, simpler projects can often manage without the need for external headers,
+  thus defining everything once within the header files themselves.
+
+</body></html>

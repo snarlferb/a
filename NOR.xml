@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://i.imgur.com/qZCiyeI.png -->
+<logicGates>
+    <gate type="NOT">
+    <!-- Unary NOT gate (flip row of bits)
+  ~0 = 1;  ~1 = 0                     -->
+        <input>A</input>
+        <output>!A</output>
+    </gate>
+    
+    <gate type="OR">
+    <!-- OR gate with two inputs (all on unless already off)
+  0 | 0 = 0;  0 | 1 = 1;  1 | 0 = 1;  1 | 1 = 1         -->
+        <input>A</input>
+        <input>B</input>
+        <output>A OR B</output>
+    </gate>
+    
+    <gate type="AND">
+    <!-- AND gate with two inputs (all off unless already on) 
+  0 & 0 = 0;  0 & 1 = 0;  1 & 0 = 0;  1 & 1 = 1          -->
+        <input>A</input>
+        <input>B</input>
+        <output>A AND B</output>
+    </gate>
+    
+    <gate type="NOR">
+    <!-- NOR gate with two inputs (all off unless already off)
+  0 + 0 = 1;  0 + 1 = 0;  1 + 0 = 0;  1 + 1 = 0           -->
+        <input>A</input>
+        <input>B</input>
+        <output>!(A OR B)</output>
+    </gate>
+    
+    <gate type="NAND">
+    <!-- NAND gate with two inputs (all on unless already off)
+  0 + 0 = 1;  0 + 1 = 1;  1 + 0 = 1;  1 + 1 = 0           -->
+        <input>A</input>
+        <input>B</input>
+        <output>!(A AND B)</output>
+    </gate>
+    
+    <gate type="XOR">
+    <!-- XOR gate with two inputs (opposite bits on, same bits off) 
+  0 ^ 0 = 0;  0 ^ 1 = 1;  1 ^ 0 = 1;  1 ^ 1 = 0                -->
+        <input>A</input>
+        <input>B</input>
+        <output>A XOR B</output>
+    </gate>
+
+    <!-- Reference to an external HTML file for further demonstration -->
+    <demonstration>
+        <description>temporary description</description>
+        <htmlFile>/l/NOR.html</htmlFile>
+    </demonstration>
+</logicGates>
+
