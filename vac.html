@@ -1,0 +1,95 @@
+<!-- other -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>other example</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+One thing i think i forgot was how you can have a function call within another function
+and pass parameters to the called function that include members and pointers, e.g.
+<span class="alt-text">
+  void abcd(XType exac) {</span>
+  <em>// .. rest of code</em><span class="alt-text">
+    elmnop(
+      qwac.brack,
+      exac-&gt;nar.buffer,
+    );
+  }</span>
+
+This includes calling functions normally `CreatedFunction(qwac.brack, exac-&gt;nar.buffer);`
+
+This is a tricky thing to grok at first, so i'll try to illustrate it like this...
+Hopefully you already read and learned about how the dot &amp; arrow operators
+work as pointers...
+
+Consider we created the following structs to begin w/
+<span class="alt-text">
+  typedef struct {
+    char *buffer;
+  } Anar;
+
+  typedef struct {
+    Anar nar;
+  } Vac;
+
+  typedef struct {
+    Vac *pack
+  } Database;</span>
+
+`Anar` contains a member, `buffer`, which is a character array.
+`Vac` contains a member, `nar` which is of type `Anar`.
+`Database` contains a member, `pack`, which is a pointer to `Vac`.
+
+To access the buffer member of `Anar` (which is nested within `Vac`) and then within Database,
+you need to handle the pointers and structs in the right way....
+
+Consider we have a `database` which is a pointer to a Database struct, possibly like this...
+<span class="alt-text">
+  Database *database = (Database *)malloc(sizeof(Database));
+  if (database == NULL) {
+    perror("Failed to allocate memory for Database");
+    return 1;
+  }</span>
+
+Which is for allocating and initializing a `Database` instance. Here's some things we might do...
+`database-&gt;pack` accesses the `pack` member of `Database`...
+
+It has a member `nar` of type `Anar`.
+`(*database-&gt;pack).nar` accesses the `nar` member of the `Vac` structure.
+`(*database-&gt;pack).nar.buffer` then accesses the `buffer` member of the `Anar` structure
+
+It sounds more complicated than it is, since its describing multiple scenarios towards the final composite object,
+however you can take it from the last scenario, and sortve trace the steps backwards so to speak...
+
+The last scenario, we said we could take that `(*database-&gt;pack)` to access the `buffer` member of the `Anar` struct.
+Consider  *database-&gt;pack.nar.buffer   Here’s how the C compiler would interpret it:
+
+`database-&gt;pack`  is a pointer to  Vac.
+`database-&gt;pack.nar`  is  invalid syntax.
+
+(-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`.
+We have to correctly access `buffer` of the `Anar` struct, and `nar` after that, you need to dereference
+`database-&gt;pack` to get the `Vac` struct. Also it can be confusing because of the order that pointers occur in
+changes how you access them in the long run. As you begin understanding this, it should make sense.
+
+So the correct syntax in that particular situation would be:
+<span class="alt-text">
+  (*database-&gt;pack).nar.buffer
+</span>
+
+At some point you might even consider simplifying access with a temporary variable
+<span class="alt-text">
+  Vac *exac = *database-&gt;pack;</span>
+
+Which would allow you to use it as `exac-&gt;nar.buffer`, and is just one example of something you might do.
+Sometimes its a matter of convenience; That is, our structure is part of an original struct that we make a `*member.
+And by using `*member` you can directly reference its data without copying it around or dealing with dereferencing multiple times.
+
+So for example, when you access the field from `MyType mylist`, you're directly referring to that mylist data. Using `MyType *reflist`
+in your code allows you to work with this data directly without additional dereferencing. Consider the (&amp;) address-of operator and the
+(*) dereference operator can be used in various contexts involving pointers and variables, such as how they're used w/ <em>pointers to pointers.</em>
+Take your time to work out the quarks w/ these situación aw'kwards, as it'll help w/ access-members and pointers alike.
+</body></html>
