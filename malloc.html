@@ -1,0 +1,106 @@
+<!-- page7 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>malloc</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+--malloc--
+
+First of all, what is dynamic memory allocation needed for?
+
+When you need to manage a pool of data or when the exact size of data structures (like arrays
+or linked lists) is not known until runtime, dynamic memory allocation is utilized.
+
+It's especially useful for handling user input for example. Another example might be for large
+data sets of some sort. The programmer is responsible for managing and freeing this memory
+(e.g., using free() in C), or else it could lead to memory leaks.
+
+In simple terminology, malloc is just a void pointer,  void *malloc(size_t size);  and so
+it returns a pointer to the allocated memory block...
+
+But here is how i like to think of it. You have things like the Task Manager or "Setting-&gt;App"
+on your device, right?... Think of how those metrics are used to track the CPU% used by a process
+(program) to show a total memory for a given application. Therefore, we can say that there's three
+parts or metrics the computer uses: (1) Processor or CPU% usage, (2) RAM-based memory consumed,
+(3) local-memory storage.
+
+Thats why you can look at the total size of an app and it'll say like (5Kb), when clearly its
+doing a whole lot more on that device/machine.  Well, thats because its taking advantage of
+system resources, and these resources require extra amounts of stored memory that doesnt exist
+within the realm of that 5Kb's or whatever. So, it stores the 5Kb, but then its dynamically
+changing size and interacting with the system (hence dynamic memory allocation) 
+
+Therefore we can say that the program doesn't know the exact size it needs beforehand, and so
+malloc provides a way to request memory from the heap based on the program's needs after it has
+been executed, and while it is running.
+
+Now we have to go over some concepts and terminology. The stack is a fixed-size memory region
+used for function calls, local variables, and arguments. its size is determined at compile time.
+The heap on the other hand is a more flexible memory pool that can grow and shrink dynamically
+during runtime...
+
+So instead of directly pushing memory onto the stack, it may reside on the heap. This heap can
+grow and shrink as needed during program execution. We store the memory only by location, as a
+*pointer address*, which does not contain information regarding the length or size of that data
+being pointed to. It is then incumbent on the user to manage and track the memory subregions w/
+in the heap, which distinguishes between those that are occupied versus those that are still
+available.
+
+To put it simply, dynamic memory is allocated at runtime—Where the  size of this memory can
+change during execution (execution refers to a running program, hence "runtime"). And this
+implies that the program requests memory on an as-needed basis; Functions like malloc(),
+calloc(), and realloc() can be used, malloc and free being the go-to functions.
+
+`malloc` takes the size of the memory block you want to allocate in bytes as input (size_t size)
+It returns  void*, a generic pointer type. You typically need to cast it to a specific
+pointer type (e.g., int*) to access the allocated memory (a region of memory where a valid
+return address or link may be associated with a given stack frame, after the function call).
+
+The return address acts purely to indicate where the function execution should resume after the
+function completes, for example:
+
+This is analogous to a temporary detour where you call a function. But before the detour, you
+mark where you left off, at the return address.  The CPU runs the function... And once the
+function finishes, the CPU jumps back to where it was before, using the return address to
+continue from exactly where it left off during the calling function.
+
+Unlike memory thats on the stack, the heap can become fragmented as different-sized blocks of
+memory are allocated and freed. The system doesn’t necessarily return memory in the same order
+it was allocated, and it may reuse freed memory in any order that suits the memory allocator—
+based on which blocks are available and the size of the allocation request.
+
+The function `malloc_info` can be used to export the state of malloc to a stream in XML format,
+providing the current state of the heap memory like the size of allocated and free blocks.
+When using GNU Libc (glibc), the heap is managed by internal structures like malloc_state,
+malloc_chunk. Lets turn our attention back to malloc and see how it works in context:
+<span class="alt-text">
+  void *malloc(size_t size);</span>
+
+as you see, it returns a pointer to the allocated memory block...
+<span class="alt-text">
+  struct Point {
+    int x; int y;
+  };
+
+  struct Point *myPoint = malloc(sizeof(struct Point));</span>
+
+You then might use offsetof (or `offsetof()`) that helps in determining the correct
+size to allocate when using memory allocation (*malloc, calloc, etc..*) for a structure.
+It has two parameters (type, member) and returns the offset of a given member within
+the given type, in units of bytes:
+<span class="alt-text">
+  size_t structSize = sizeof(struct Point);
+  offsetof(struct Point, y);</span>
+
+You'll be able to use  myPoint  and  yOffset  to access the "y" member.
+
+Note: When you free memory, the pointer to that memory becomes invalid, and the memory is returned
+to the system’s pool of available memory. The content of the freed memory is not changed/cleared.
+
+return to <a class="reserve" href="index.html">index</a>
+
+</body></html>

@@ -1,0 +1,124 @@
+<!-- page11 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>attributes continued</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<h3>___ Attributes Continued ___</h3>
+When defining a class-like structure in C and associating it with a static instance,
+any initialization logic encapsulated in a 'constructor' function must be invoked
+early in the program's lifecycle, typically at the start of execution. This guarantees
+that the static instance is in a well-defined state before any operations are performed on it.
+
+When you don't specify a priority, the execution order of constructors and destructors follows
+the natural order dictated by the compiler or runtime environment. In GNU extensions
+`(__attribute__((constructor))`  and  `__attribute__((destructor)))`  constructors,
+without explicit priority,  run in an unspecified, but consistent, order, typically
+based on the linking or declaration order.
+
+There's no need to assign priorities explicitly if your program doesn't have strict
+dependencies between objects or resources, and initialization/cleanup order doesn't matter.
+
+And so, for specifying priorities, you can fine-tune the order in which constructors and
+destructors are executed. Default priority exists within the range 0—100... And if we say
+<span class="alt-text">
+  void prioritized_constructor() __attribute__((constructor(101)));
+  void prioritized_destructor() __attribute__((destructor(101)));</span>
+
+Then, prioritized_constructor() and prioritized_destructor() will be executed after
+constructors/destructors with said default priority, if that makes sense.
+
+The following code defines a test function that demonstrates the use of constructors and
+destructors to initialize and terminate a sequence. This is achieved through ELF '.section'
+manipulation, leveraging the 'section' attribute to explicitly place functions in the '.ctors' and '.dtors' sections.
+
+<span class="alt-text">
+  #define SECTION(S) __attribute__ ((section ( S )))
+
+  void test(void) {
+    printf("\n\ttest() utilizing -- (.section .ctors/.dtors) w/o priority\n");
+  }</span>
+
+  <em>/* custom section placement */</em><span class="alt-text">
+
+  void (*funcptr1)(void) SECTION(".ctors") =test;
+  void (*funcptr2)(void) SECTION(".ctors") =test;
+  void (*funcptr3)(void) SECTION(".dtors") =test;</span>
+
+  <em>/* create the prioritized entries in the .ctors, .dtors ELF sections */</em><span class="alt-text">
+
+  void construct_num1 () __attribute__ ((constructor (101)));
+  void construct_num2 () __attribute__ ((constructor (102)));
+  void destruct_num1 () __attribute__ ((destructor (101)));
+  void destruct_num2 () __attribute__ ((destructor (102)));</span>
+
+  <em>/* init_some_function() - called by elf_init() */</em><span class="alt-text">
+
+  int init_some_function() {
+    printf("\n  init_some_function() called by elf_init()\n");
+    return 1;
+  }</span>
+
+  <em>/* elf_init uses inline assembly to place itself in the ELF .init section,
+         i.e. what/where it is being called within during startup sequence */</em><span class="alt-text">
+
+  int elf_init(void) {
+    __asm__ (".section .init \n call elf_init \n .section .text \n");</span>
+
+    <em>/* if initialization fails, the program will exit early with an error */</em><span class="alt-text">
+
+    if(!init_some_function ())
+    {
+      exit(1);
+    }
+
+    printf("\n  elf_init() -- (.section .init)\n");
+
+    return 1;
+  }</span>
+
+  <em>/* function definitions for construct_numX and destruct_numX */</em><span class="alt-text">
+
+  void construct_num1() {
+    printf("\n  construct_num1() constructor -- (.section .ctors) priority 101\n");
+  }
+  
+  void construct_num2() {
+    printf("\n  construct_num2() constructor -- (.section .ctors) priority 102\n");
+  }
+  
+  void destruct_num1() {
+    printf("\n  destruct_num1() destructor -- (.section .dtors) priority 101\n");
+  }
+  
+  void destruct_num2() {
+    printf("\n  destruct_num2() destructor -- (.section .dtors) priority 102\n");
+  }
+
+  int main(int argc, char *argv[]) {
+    printf("\n\t this is main \n");
+    return 0;
+  }</span>
+
+You would then go on to run this program, and analyze the order that said output
+falls within—should it reflect what we had intended it to be in the code.
+
+you may go back to the <a class="reserve" href="page10.html">previous page</a>, should you have missed any
+of the meanings or definitions of these keywords and attributes.
+
+<h3>___ Calling Conventions ___</h3>
+There's one last thing I want to talk, and that's called "calling conventions", as it is sortve a bridge into the next...
+
+For modern Linux systems (on x86-64 architecture) the calling convention used is the System V AMD64 ABI,
+which has largely replaced (cdecl) for default function calling. Instead, the first six integer or pointer
+arguments are passed in registers RDI, RSI, RDX, RCX, R8, and R9 in that order.
+
+__attribute__((cdecl)) isnt used as much on Linux for new code because the default convention (System V AMD64 ABI)
+is generally more efficient with its register usage. cdecl is more relevant in 32-bit environments where stack-based
+argument passing is more common due to fewer registers. You might still see or need __attribute__((cdecl)) when
+interfacing with older libraries or code that uses cdecl.
+</body></html>
