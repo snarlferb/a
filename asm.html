@@ -1,0 +1,629 @@
+<!-- asm (1) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>assembly</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+I have made a new assembly page, but its still under construction, les you view it in the meantime. If youve come here by accident,
+you can continue on to the next page to learn about <a class="reserve" a href="page10.html">bit manipulation and attributes</a>.
+
+I'm still debating how i want to present the information here. We'll likely go over assembly/assembler, disassembly, instructions,
+registers, immediate values, subroutines, control flow, atomic operations, call stack, directives, non-section directives, headers,
+segments, sections, relocation, general architectural information, etc.
+
+You interpret this <span class="alt-text">instruction [reg/val]-&gt;[destination]</span> reading from left to right. While in Intel
+syntax, the destination goes in place of the [reg/value], so it appears as: <em>instruction [destination]&lt;-[reg/value]</em>
+<span class="alt-text">
+  .global _start</span>               <em># This is the start (equivalent of `int main`)</em><span class="alt-text">
+  hello_str:
+    .ascii "12345\n\0"</span>           <em># A string of characters (in this case numbers)</em><span class="alt-text">
+  .text</span>                        <em># This is a "section", where the code will reside</em><span class="alt-text">
+  _start:</span>                      <em># Start execution here</em><span class="alt-text">
+    movq %rsp, %rbp</span>            <em># To save the stack pointer into the base pointer (%rbp)
+
+    # Write string to stdout</em><span class="alt-text">
+    movq $1, %rax</span>              <em># This corresponds to the write system call (sets %rax to 1)</em><span class="alt-text">
+    movq $1, %rdi</span>              <em># This corresponds to file descriptor 1 (stdout)</em><span class="alt-text">
+    leaq hello_str(%rip), %rsi</span> <em># Our string goes to %rsi (a pointer to hello_str)</em><span class="alt-text">
+    movq $6, %rdx</span>              <em># Our string length, as we move (n) amount of characters (our string has six total)</em><span class="alt-text">
+    syscall
+
+    movq $60, %rax</span>             <em># This corresponds to the exit system call</em><span class="alt-text">
+    movq $0, %rdi</span>              <em># Exit Code (success)</em><span class="alt-text">
+    syscall</span>
+
+In this example, `hello_str` does not have an explicitly declared section, so it is placed in the current section, which defaults
+to  .text, if no section directive was specified before hello_str. This is not ideal because data should be explicitly placed in
+the  .data section or another appropriate section rather than mixing with code.
+
+Typically, in GNU Assembly, if theres no section, the assembler assumes the  .text  section, and this demonstrates what sections
+are usually associated w/ what. hello_str (a label)  serves as a reference to the memory location where "12345\n\0" is stored.
+An ASCII string is a sequence of bytes; And we explicitly add the null char (\0), the null character being a sentinel value that
+denotes the end of the string. This demonstrates the difference between `ascii`, versus  `asciz` which is ASCII with the zero or
+null termination happening automatically.
+
+In assembly, when you use a dollar sign w/ a symbol, e.g. `$counter`, it represents the immediate value of the address of that symbol.
+This means it's using the address of the memory location `counter` rather than the content that's stored at that memory location.
+When used without a dollar sign, it represents the content stored at the memory location. You'll have to know what each keyword
+is, what its for and how its used. For example you have directives, symbols, flags, string literals, operands (i.e.
+labels, registers, values, memory addresses, etc), instructions, conditional codes, macros, a type attribute
+(which specifies the nature of symbols), etcetera.
+
+If you want to see more examples that elaborate on whats going on, see <a class="reserve" href="asm2.html">this page on assembly</a>
+
+Makes sense so far, right?.. I think ive mentioned before, that you compile code with -o and it also specifies the name of the program.
+And, you can also use -c which lets you compile it to an object file, <em>but without linking</em>. When you create an assembly program,
+you have to do this explicit object/linking step yourself, which can be accomplished without using -c. In GCC, -o not only specifies the
+name of the output executable, but, when used with "AS" in the following example, it specifies the name of the output object file too.
+<span class="alt-text">
+  AS = as</span>                      <em># Assembler</em><span class="alt-text">
+  LD = ld</span>                      <em># Linker</em><span class="alt-text">
+  CFLAGS = -g</span>                  <em># Flags</em><span class="alt-text">
+
+  hive: hive.o
+    $(LD) -o hive hive.o
+
+  hive.o: hive.s
+    $(AS) -o hive.o hive.s
+
+  clean:
+    rm -f hive hive.o</span>
+
+Now just to give a brief explanation of some things from our example before we unload pandora's box...
+
+`.global _start` is a directive that makes `_start` visible to the linker, indicating that `_start` is the entry point of the program.
+
+`_start` is the label defining the entry point of the program. When the program is executed, the operating system begins execution here.
+
+The beginning sections define/organize various parts of the program into distinct areas that in turn say how the program is stored in memory.
+Segments refer to parts of a program that are used for organizing and managing different types of code and data. They are a broader concept
+that describe the executable image itself and how memory is managed or mapped into the address space for a process in memory, how code and
+data are laid out in it.
+
+For example, there is a text segment that appears in the final executable that holds the machine code instructions. When the program is
+loaded into memory, the text segment is where the code is placed. When you assemble and link your program, the `.text `section is
+translated into machine code and placed into the text segment of the executable file. An example of a section is `.strtab` (String Table)
+which contains string data (functions and variables) used by symbols in the symbol table, which is a data structure used in compilers and
+linkers to manage and track symbols (such as variable names, function names, and other identifiers)
+
+When making a syscall, the syscall number is placed into the %rax register. This number tells the kernel which system call to execute.
+You can interact with syscalls inside of assembly on linux. There is a table from syscall_64.tbl. This file defines the system call
+table for 64-bit systems. Each entry in the table corresponds to a specific system call, including its ID (number), name, and other attributes,
+connecting the system call number to the actual function implemented in the kernel.
+
+For example, the "sys_read" entry point refers to the specific function that handles the read system call. It allows user-space programs to
+read data from a file descriptor into a buffer (`read(fd, buf, count)` is the user-space version of the function)  Other syscalls are:
+"1" associated w/ "write", "2" associated w/ "open", "3" associated w/ close, etc. At the time of writing this, there are approximately
+456 system calls that are to be placed in the %rax register.
+
+The syscalls.h header file typically declares the prototypes for system calls and sometimes includes necessary macros and definitions.
+The DEFINE_SYSCALLx macros are used in the kernel source code to define the entry points for system calls. The "x" in DEFINE_SYSCALLx stands
+for the number of arguments the syscall takes (e.g., DEFINE_SYSCALL0, DEFINE_SYSCALL1, etc.). The macros expand to define the actual function
+that implements the system call and associate it with its corresponding syscall number.
+<span class="alt-text">
+  #define DEFINE_SYSCALL1(name, type1, arg1) \
+  asmlinkage long sys_##name(type1 arg1)
+
+  DEFINE_SYSCALL1(getpid, void);</span>
+
+This defines a system call getpid that takes no arguments and returns the process ID. When making a syscall, a file descriptor would be
+passed into the %rdi register. Here's how some common syscall arguments map to registers: for example, making a <em>read</em> syscall, %rax
+contains the syscall number, %rdi (first argument) would contain the file descriptor, %rsi (second argument) would contain the buffer's address
+(buffer pointer), and %rdx (third argument) would contain the size or flags (the number of bytes to read)
+
+Speaking of, in the context of x86 assembly and architecture, there's a flags register, the EFLAGS (Extended Flags) register, which is used to
+hold the status and control flags for the processor. The associated flags are specific to x86 (e.g. `clc` or clear carry flag, which is useful
+for preparing the status flags for subsequent arithmetic or logical operations, ensuring that the carry condition is explicitly handled for the
+needs of the program). These flags can potentially be used in an assembly instruction. The GAS (GNU assembler) or whatever assembler you choose
+will provide the instructions to manipulate the said-additional features of the architecture.
+
+Mastering low-level system architecture and code analysis requires more than just knowing how to write instructions; it involves a deep
+understanding of the underlying CPU architecture, interactions, CPU front end, how data is structured and managed, and how it interprets
+and how it executes code. Each of these architectural features—that is, registers, selectors, descriptors, stack frames, opcode encoding,
+data types/structures, paging structures, condition codes, exceptions and interrupts, CPUID, global, local and interrupt descriptor tables
+and task state segments, etcetera—is what you'd need to know to understand x86 and assembly in general.
+
+I'll just very briefly discuss a couple of what those that i said. The Interrupt Descriptor Table (IDT) is a data structure used by the CPU to
+map interrupts and exceptions to their corresponding handler routines. When an exception or interrupt occurs, the CPU looks up the IDT to find
+the address of the appropriate handler that should be executed...
+
+Global descriptor tables define global memory segments and their attributes, while local descriptor tables define local memory segments,
+specific to individual tasks. The task state segment is a special segment that contains information about a task’s state. This includes CPU
+register values, stack pointers, and other information needed to resume a task after a context switch. We wont be going over context switches.
+
+RISC-V employs a flat memory model, which simplifies the CPU's memory management architecture. In a flat memory model, there is no need for
+segment descriptors or tables to define memory regions. All processes work with a single, consistent memory space, with isolation handled purely
+through paging or other virtual memory mechanisms.
+<h3>___ Summary ___</h3>
+These <em>segments</em> are of course different to the sections or segments (parts of an executable or object file) that we are going to be
+referencing in the context of ELF format. Instead, <b>these</b> segments are part of the CPU’s memory management and protection mechanisms.
+Theres alot more to x86 architecture that we wont be going over here. Its best that we dont turn this into a bottomless pit of information,
+and focus on how to read and write assembly code, as well as how to debug code on your own.
+
+Disassembly is the process of converting machine code back into assembly language. A disassembler reads the binary machine code and
+translates it into human-readable assembly instructions. The assembler ("as" in GNU toolchain, masm, nasm, etc.) converts this assembly
+into machine code, producing an object file (`.o` extension). An object file contains information such as the sections we talked about,
+including headers with metadata, a symbol table for linking and debugging, relocation information for address adjustments, debugging
+information for source code mapping, and a string table for names used in the object file.
+
+Even though an object file contains machine code with the aforementioned context, it isn't fully ready to run because the addresses of
+variables, functions, and other resources aren't yet fully determined. That is, it does not define an entry point, and does not have
+a program header yet. It does contain unresolved symbols and relocation entries, which arent resolved until the linking phase.
+
+This is where <em>relocation</em> comes into play. We'll talk more about this later. For now, lets go into the contents of an
+assembly file, then afterwards i will touch on the relationships between assembly, disassembly and the ELF file structure.
+
+Disassembling your assembly or compiled code shows you both the instructions and the machine code that implements them.
+Not only are there hundreds of different x86 instructions, there can be dozens of different machine code encodings for
+a given instruction (more on this later)
+
+  ASM    MACHINE CODE    DESCRIPTION
+  add    0x03 ModR/M     Add one 32-bit register to another
+  mov    0x8B ModR/M     Move one 32-bit register to another
+  mov    0xB8 DWORD      Move a 32-bit constant into register eax
+  ret    0xC3            Returns from current function
+  xor    0x33 ModR/M     XOR one 32-bit register with another
+  xor    0x34 BYTE       XOR register al with this 8-bit constant
+
+<h3>___ Registers ___</h3>
+General-purpose registers (64-bit Registers) may look like:  %rax (accumulator register), %rbx (base register), %rcx (counter register),
+and %rdx (data register). Additional 64-bit Registers are: %rsi (source index register), %rdi (destination index register),
+%rbp (base pointer register) and %rsp (stack pointer register)
+
+%rax, we already know can be used to specify the system call number (e.g., the write system call number is 1). It is also used to hold
+the return value of a function or system call.  %rdi  is used to pass the first argument to functions or system calls. For example,
+in the write system call, %rdi specifies the file descriptor (e.g., 1 for stdout). Likewise, %rsi is used to pass the second
+argument and  %rdx passes the third argument to functions or system calls.
+
+16-bit and 8-bit Versions (lower part of the corresponding 32/64-bit register):
+- %ax, %ah, %al: Accumulator (full, high, low)
+- %bx, %bh, %bl: Base (full, high, low)
+- %cx, %ch, %cl: Counter (full, high, low)
+- %dx, %dh, %dl: Data (full, high, low)
+- ... and so on.
+
+Special-purpose registers:
+%rip: Instruction pointer (contains the address of the next instruction to be executed)
+%rsp: Stack pointer (points to the top of the stack)
+%rbp: Base pointer (used to point to the base of the current stack frame)
+%flags: Flags register (contains various condition code flags)
+%rflags: Full register including flags
+%r8 - r15: Additional general-purpose registers
+
+Preserved registers or "callee-saved registers" (according to the x86_64 System V ABI or Application Binary Interface) are responsible
+for saving the original values of these registers at the beginning of the function and restoring them before returning.
+This ensures that the caller's values in these registers remain unchanged after the function call:
+- %rbx: Used for general-purpose calculations and as a base register
+- %r12: A general-purpose register, often used for temporary storage in functions.
+- %r13: Another general-purpose register, similar to %r12.
+- %r14: A general-purpose register.
+- %r15: A general-purpose register.
+
+In contrast, caller-saved registers (or volatile registers) are %rax, %rcx, %rdx, %rsi, %rdi, %r8 to %r11. The caller must save these
+registers if it needs their values preserved across function calls because the callee is free to modify them.
+
+Segment registers:
+%cs: Code segment
+%ds: Data segment
+%ss: Stack segment
+%es, %fs, %gs: Extra segments (often used for additional purposes like thread-local storage)
+
+Suffixes like   b,  w,  l, and  q  denote the size of the data being operated on: "b" (byte) is 8 bits, "w" (word) is 16 bits, "l" (long) is 32 bits,
+"q" (quad) is 64 bits. <b>Load/Store instructions</b>, for example:  "movb"  moves a byte of data, "movw"  moves a word of data,  "movl" moves a double
+word (or long) of data, and "movq" moves a quad word of data.
+
+Other data movement variants are the "movs" instruction for moving and optionally sign-extending or zero-extending data from one location to another.
+In simpler terms its used to move data between strings (we'll explain the terms above later)
+
+Control Transfer Instructions:  jmp (unconditional jump),  je, jne, jg, etc. (conditional jumps),  call (to call a procedure/subroutine),
+ret (to return from a procedure)
+
+Conditional Move Instructions:  cmov (conditional move based on flags)
+
+A <b>Procedure</b>, "subroutine", or what you might consider a "function", transfers control to a specified address and saves the return
+address, allowing the program to return to the original point after the subroutine completes its execution. This procedure is called `print_hello`
+
+Note: I'll be referring to things as a <em>subroutine</em> in the context of assembly, as the term function (funct) is associated with the encoded fields
+of RISC instructions, as we may be focusing on RISC-V architecture at some point.
+<span class="alt-text">
+  print_hello:</span>
+    <em># Write string to stdout</em><span class="alt-text">
+    mov $1, %rax
+    mov $1, %rdi
+    lea msg(%rip), %rsi
+    mov $13, %rdx
+    syscall
+    ret</span>
+
+The call instruction handles pushing the return address, e.g. (call print_hello). It invokes a subroutine from within _start or another subroutine,
+where the ret instruction is used at the end of the subroutine. It pops the return address from the stack and jumps to that address, effectively
+returning control to the point right after where the call was made. So, you do not need to manually push or pop the return address onto the
+stack when using call and ret instructions.
+
+`push`  and  `pop`  are used when you need to manually manage data on the stack. These instructions are useful for saving and restoring the
+values of registers, passing parameters to functions, or managing local variables.
+
+Unlike higher-level languages, assembly doesnt have a builtin called a structure or union. Instead, you manually manage memory and access
+fields using "offsets". Control flow in assembly often involves manipulating flags and using conditional jumps to change the execution path.
+
+Arithmetic Instructions are:  add,  sub,  div,  imul (signed),   mul (unigned multiplication)
+
+Packed decimal operations are essential in applications where exact decimal representation is important. Unlike binary arithmetic, which can
+introduce rounding errors in decimal calculations, packed decimal arithmetic ensures precision by maintaining the decimal format within operations.
+
+Packed decimal operands, also known as Binary-Coded Decimal (BCD) operands, handle decimal arithmetic operations in a way that's directly aligned w/
+decimal digits. Each decimal digit is stored in a 4-bit nibble (half of a byte). This allows two decimal digits to be stored in a single byte.
+For example, the decimal number "93" would be stored as 0x93 in packed decimal format, where 9 is represented by 1001 and 3 by 0011 in binary.
+
+BCD (Binary-Coded Decimal) is a binary-encoded representation of integer values where each digit of a decimal number is represented by its own
+binary sequence. Packed BCD as mentioned has two decimal digits per byte, where unpacked BCD has each decimal digit stored in a separate byte.
+Operations on packed decimal formats often involve specific instructions designed to handle the peculiarities of decimal arithmetic:
+
+AAD (ASCII Adjust AX Before Division), i.e. `aad` instruction adjusts the AX register to prepare for a division of BCD numbers. It converts
+packed BCD in AX to binary before performing a division. If you have packed BCD digits in AX and you need to divide these digits, AAD converts
+them to binary form so that a division can be performed correctly.
+
+The key difference between packed and unpacked operations is in how the data is organized and processed within CPU registers. In an unpacked
+approach, each pair of integers is processed sequentially, one by one, rather than all at once. In a packed operation, multiple data elements
+(integers, floating-point, etc.) are stored side by side in a single register, and the operation is applied to all of them at once.
+
+So instead of loading and storing data one element at a time, SIMD loads and stores multiple elements at once (we'll talk about SIMD later)
+
+Floating-Point Instructions:  fld, fstp (load and store, for floating-point values),  fadd, fsub, fmul, fdiv (floating-point arithmetic)
+
+Floating Point Registers are used by the x87 floating-point unit (FPU) to perform floating-point arithmetic. In x86 architecture, the FPU is depicted
+by the x87 FPU stack, which consists of 8 registers (st(0)—st(7)) which are eight 80-bit wide floating-point registers. The x87 registers work as a
+stack, where operations typically push and pop values to and from the stack. Instructions like fld (load), fadd (add), fsqrt (square root), and
+others manipulate these registers.
+
+For historic value, <em>x87</em> refers to the specific co-processor model number, the 8087, which was the first FPU (released in 1980) designed to
+work alongside the 8086/8088 CPUs. The 8087 handled floating-point arithmetic that the base 8086/8088 CPU did not directly support.  P.S.
+advanced features like out-of-order execution, superscalar architecture, and dynamic branch prediction didnt come out until much later.
+
+Logical Instructions:   bitwise AND is `and`,  bitwise OR is `or`,  bitwise XOR is `xor,  bitwise NOT is `not`
+
+Bit manipulation and common idioms:  shl, shr (shift left/right),  rol, ror (rotate left/right)
+
+XOR (`xor`) can also be used to set the value of (zero'ing out) a register to 0, and is a common idiom in assembly. `xor` is a logical
+operation that doesn’t depend on the previous value of the register. This means that using `xor` to zero a register can break data
+dependencies, allowing for better pipelining in modern CPUs.
+
+Setting a register to -1 (all bits set to 1) is often done with (`or`) or (`not`). The `test` instruction is similar to `and` but doesn’t
+store the result, just sets the flags. It’s often used to check if a register is zero:
+<span class="alt-text">
+  test %rax, %rax
+  jz zero_label</span>    <em># Then jump if zero</em>
+
+Multiplication by a power of 2 can be done more efficiently with a shift left operation.
+<span class="alt-text">
+  shl $3, %rax</span>  <em># Multiply %rax by 8 (2^3)</em>
+
+These instructions are used to sign-extend values from smaller to larger registers.
+<span class="alt-text">
+  mov %al, %eax</span>  <em># Zero-extend 8-bit value to 32 bits</em><span class="alt-text">
+  cbw</span>            <em># Sign-extend %ax to %eax (convert byte to word)</em>
+
+For an 8-bit "signed" integer, the range is from -128 to 127. The number -12 (decimal) is represented in binary as 11110100; When extended
+to 16 bits using sign extension, the result would be  11111111 11110100 (the most significant bit is "1", indicating a negative number).
+The original 8 bits are preserved, and the additional 8 bits are filled with 1s to maintain the negative value. 
+
+Sign extension is used when you need to preserve the sign (positive or negative) of a value when converting it from a smaller size to a larger size.
+We mentioned sign extension earlier. There are other instructions its performed with like   cwd (convert word to doubleword)  cdq (convert doubleword
+to quadword) cqo (convert quadword to octoword)  You can move with a sign extension, i.e.  movsx (move with sign extension)  movsxd (move with sign
+extension doubleword)  Sign extension is always used with signed data.
+
+Truncation, or reducing the size of a value by discarding higher-order bits can lead to loss of data. That is, in the same way we filled the
+additional 8 bits with ones, the same is true for zero extension, but using "zeroes" instead. Zero extension (e.g. movzx) converts a smaller
+unsigned value to a larger size, and thus it must always be used with unsigned data.
+
+`nop` (no operation) does nothing, consuming a single clock cycle. It is used for padding instructions, often in aligning code
+or creating delay loops.
+
+Comparison Instructions:  cmp  to compare two operands
+
+String Instructions are:  cmps (compare strings), scas (scan string),
+
+Stack Instructions are:  push (push data onto the stack), pop (pop data from the stack)
+
+<h3>___ Calling Convention ___</h3>
+For modern Linux systems (on x86-64 architecture) the calling convention used is the System V AMD64 ABI,
+The first six integer or pointer arguments are passed in registers RDI, RSI, RDX, RCX, R8, and R9 in that order.
+
+Integer or pointer return values are returned in RAX. The stack is aligned to 16 bytes before a call, and
+the return address is pushed by the call instruction, so the stack is 8 bytes off from 16-byte alignment
+upon entering a function. Functions must maintain this alignment by adjusting the stack pointer if they
+push an odd number of 8-byte values.
+
+<h3>___ Register Preservation ___</h3>
+Callee-saved registers that must be preserved (if used): RBX, RBP, R12, R13, R14, R15.
+Caller-saved registers that can be modified: RAX, RCX, RDX, RDI, RSI, R8, R9, R10, R11.
+
+<h3>___ Call Stack ___</h3>
+The call stack is divided up into contiguous pieces called stack frames ("frames" for short), wherein each frame is the data associated with
+one call to one function. The frame contains: (1) the arguments given to the function, (2) the function's local variables, and (3) the address
+at which the function is executing.
+
+When your program is started, the stack has only one frame (that of the function "main"). This is called the initial frame or the outermost frame.
+Each time a function is called, a new frame is made. Each time a function returns, the frame for that function invocation is eliminated.
+If a function is recursive, there can be many frames for the same function. The frame for the function in which execution is actually occurring
+is called the innermost frame. This is the most recently created of all the stack frames that still exist
+
+There's a conceptual idea about how the stack grows from the *"bottom-&gt;up"*... Higher memory addresses are at the "bottom" of the stack, and
+lower memory addresses are at the "top." *push* meaning it goes onto the stack, *pop* means it gets removed, hence <em>"popped-off the stack"</em>
+—which means it gets popped off from the "TOP" of the stack—where the lower memory addresses are at... Thus the stack pointer then gets incremented
+(increased in value) to point to the new top element, where memory is descending, as we've so aptly illustrated.
+
+Each architecture has a convention for choosing one of those bytes, whose address serves as the address of the frame. Usually this address is kept
+in a register called the <em>frame pointer register</em>, while execution is going on in that frame.
+
+The memory allocator (malloc, free, etc. in C) can check if there is enough space to expand the heap. The OS can enforce limits on stack size (e.g.,
+via ulimit settings in Unix-like systems) to prevent the stack from growing indefinitely. If a collision is imminent, the OS can terminate the process
+or raise an error to prevent corruption.
+
+The compiler generates code that manages stack allocation and deallocation for function calls. It inserts instructions to adjust the SP register and
+manage the stack frames. The memory allocator handles requests for dynamic memory allocation. The internal mechanism of our memory allocator keeps
+track of free and allocated memory blocks within the heap using data structures such as free lists (data structures used by memory allocators to manage
+and organize available memory blocks of specific sizes within the heap) or binary trees.
+
+When a program requests memory, the allocator finds a suitable free block, marks it as allocated, and returns a pointer to the program. When memory is
+freed, the allocator marks the block as free and may merge adjacent free blocks to reduce fragmentation.
+
+The OS manages the overall memory space for each process. It provides system calls like brk and sbrk to increase the size of the heap. Modern systems
+may use more advanced mechanisms like mmap for large allocations. The OS ensures that the heap and stack do not collide by imposing limits on their
+growth and monitoring their usage.
+
+There's two main kinds of interrupts, "software" and "hardware" interrupts... software are identified by the "int" assembly instruction... and these trigger
+instructions within the program (e.g. system calls/request from os)... hardware are strictly generated by external devices or internal processor events...
+such as (keyboard input, timer events, disk operations)... InterruptServiceRoutines (IRS) are special routines that handle interrupts.
+<h3>___ More Instructions ___</h3>
+Atomic Operations:
+These are some of the instructions used for parallel and atomic operations. They provide mechanisms for ensuring atomicity, synchronization, and
+ordering of memory operations in multi-threaded or multi-processor environments.
+
+lock: This prefix is used to ensure atomicity when performing operations on memory locations shared between multiple processors.
+
+Atomic Compare-and-Swap Instructions:
+cmpxchg: Performs a compare-and-swap operation on a memory location.
+cmpxchg8b: Performs an 8-byte compare-and-swap operation on a memory location.
+cmpxchg16b: Performs a 16-byte compare-and-swap operation on a memory location (available on 64-bit CPUs).
+
+Atomic Increment and Decrement Instructions:
+lock inc: Atomically increments the value of a memory location.
+lock dec: Atomically decrements the value of a memory location.
+
+Atomic Exchange Instructions:
+xchg: Exchanges the contents of a register with a memory location atomically.
+xadd: Atomic exchange and add operation. Exchanges the contents of a register with a memory location and then adds the original value of the
+memory location to the register.
+
+Fence Instructions:
+mfence: Memory fence instruction ensures that all memory operations before the fence are globally visible before any memory operations after the fence.
+lfence: Loads fence instruction ensures that all load memory operations before the fence are globally visible before any memory operations after the fence.
+sfence: Stores fence instruction ensures that all store memory operations before the fence are globally visible before any memory operations after the fence.
+
+Unique Instructions, e.g., lea: Load Effect Address computes the address of a memory location and loads it into a register, but it does not access the
+memory at that address. It performs address calculation and is often used for arithmetic operations that involve memory addresses.
+<h3>___ More Registers ___</h3>
+SIMD or (Single Instruction, Multiple Data) Vector Registers, for example:  64-bit MMX (mm0-mm7) i.e. MultiMedia eXtensions  perform operations on multiple
+integer values simultaneously and in parallel, such as w/ packed bytes, words, and doublewords.
+
+SIMD instructions have their own specific opcodes and prefix bytes in x86 machine code, and they represent operations like adding, multiplying, shifting,
+etc., but applied to multiple data elements at once. For example, the instruction paddw (Packed Add Word) adds eight 16-bit integers from one XMM register—
+to eight 16-bit integers in another XMM register (XMM registers are 128 bits wide, 128 divided by 16 is 8). The machine code encoding might look something
+like (66 0F FD /r), where "66" is the prefix, "0F FD" is the opcode, and "/r" specifies the registers involved.
+
+SIMD Floating-Point Vector Registers are used for SIMD operations, which can perform the same operation on multiple data points simultaneously as well.
+Examples include 128-bit XMM registers (used with SSE and SSE2 instructions), 256-bit YMM registers (used with AVX and AVX2 instructions), and 512-bit
+ZMM registers (used with AVX-512 instructions) (e.g., %xmm0–%xmm15, %ymm0–%ymm15, %zmm0–%zmm15)
+
+Instructions like addps (Add Packed Single-Precision Floating-Point Values), mulps (Multiply Packed Single-Precision Floating-Point Values), vaddps
+(Vector Add Packed Single-Precision Floating-Point Values) operate on these registers.
+
+You can also convert between flaoting point and integer values, e.g. cvttps2dq converts packed single-precision floating-point values into packed 32-bit integers.
+
+Address Space Identifier (ASID) registers are used to handle address space identification, differentiating processes or context. ASID allows the TLB to hold
+multiple address spaces simultaneously, tagging each TLB entry with an ASID. This means that the TLB can retain entries for different processes or address
+spaces without invalidating them during a context switch.
+
+Control Registers are used to control various aspects of the CPU's operation, such as enabling protected mode or paging. Examples include CR0, CR2, CR3, and CR4.
+There's more to control registers of course, for example, CR3 can hold the base address of the page directory or page table (for virtual address translation)
+When you change the value of CR3, it effectively switches the page directory being used, which typically necessitates a TLB flush to ensure that address
+translations are correct for the new page directory.
+
+Debug Registers are used primarily for debugging purposes. They allow setting hardware breakpoints and control debugging features. Examples include DR0, DR1,
+DR2, DR3, DR6, and DR7.
+
+Model-Specific Registers are used to control and report on various CPU-specific features, such as performance monitoring, power management, and system
+configuration. They are often accessed using the rdmsr and wrmsr instructions.
+
+Table Registers include the Global Descriptor Table (GDT), Local Descriptor Table (LDT), Interrupt Descriptor Table (IDT), and Task Register (TR)
+
+Test Registers (TR6 and TR7) are less commonly used but can be important for testing, debugging and system programming tasks.
+
+PMCs (Performance Monitoring Counters) are for tracking events such as CPU cycles, instructions retired, cache hits/misses, etc.
+The registers are   rdpmc  and  rdmsr/wrmsr  instructions to access performance counters and MSRs (Model-Specific Registers)
+
+MSRs are accessed using the  rdmsr  and  wrmsr  instructions  but they require privilege levels that are generally available only to the kernel or
+higher-level system software. This is because writing to MSRs can affect the system's stability and security, so access to these instructions is
+restricted to prevent misuse.
+
+<h3>___ Directives ___</h3>
+Directives provide additional information to the assembler, helping with data allocation, defining sections, etc...
+<span class="alt-text">
+  .section .text
+  .global  _start</span>
+
+This makes the _start symbol is visible to the linker. As a user-defined label, _start helps you identify and reference the location of the
+entry point, as a symbol, _start allows the linker to recognize and use this location as the program’s entry point. On its own, a label does
+not affect the linking process or make the symbol visible outside the module where it is defined.
+<span class="alt-text">
+  .section .data
+  msg:     .asciz "Hi!ve hollow"</span>
+
+When you explicitly declare the .data section using .section .data, the string "Hi!ve hollow" will be stored in the data segment of the program.
+The .data section is typically used for initialized, static data (like strings or global variables). The label  `msg` refers to its memory location.
+
+Lets describe each section, including user-defined labels, etc. The Data Section is reserved for initialized data, constants, and possibly
+space for uninitialized data (BSS). For example in,
+<span class="alt-text">
+  .section .data
+  mylabel:
+    .long 1, 2, 3, 4</span>
+
+mylabel is the label for an array with (.long directive) 32-bit integers, and in this context it initializes the data w/ 1, 2, 3 &amp; 4
+
+.data   defines a section for initialized data
+.bss    defines a section for uninitialized data (BSS is Block Started by Symbol)
+.text   defines a section for the program's code
+
+The Text Section (Code Section) contains the executable code. A function prologue prepares the function for execution. It saves register values that need
+to be preserved (push). It also allocates space for local variables and function parameters. The "function epilogue" cleans up after the function execution.
+It deallocate space for local variables and parameters (add esp), restores saved register values (pop) and returns from the function (ret).
+<h3>___ Non-Section Directives ___</h3>
+.if, .elif, .else, .endif, are conditional directives that allow you to include or exclude parts of the assembly code based on certain conditions.
+.set  defines a symbol with a value, similar to .equ, but can be redefined within the same assembly source.
+.align, aligns the data or code to a specified boundary. This is useful for optimizing memory access or satisfying some required width.
+.offset  is used to calculate the offset of a symbol relative to a base address, often in conjunction with linker scripts.
+.global  declares symbols as global, making them accessible from other files or modules. For example, .global _start  makes the _start symbol available
+for linking;   .local  marks a symbol as local to the file, meaning it is not visible outside of it (restricted to the current file)
+.extern  declares symbols defined in other files (external and defined in another file)
+.comm  declares a common symbol, which is a global symbol that is allocated space in memory. The linker will resolve this symbol.
+.equ   defines a symbolic constant. For example, .equ BUFFER_SIZE, 1024 creates a symbolic constant named BUFFER_SIZE with the value 1024.
+.type  sets the type of a symbol. Commonly used with ELF file formats to define symbol types (e.g., STT_FUNC for functions).
+.size  specifies the size of a symbol. This is useful for debugging information and certain linker operations.
+.file  sets the current file name for debugging information, helpful for tools that process debug information.
+
+.macro and .endm,  define and end macros... and  .rodata  is associated w/ readonly data, much like the `const` keyword
+.weak  declares a symbol as weak, meaning it can be overridden by a symbol of the same name with higher precedence.
+.previous   reverts to the previous section settings; Useful when you have multiple sections in the same file and want to switch to an earlier section.
+`.hidden _internal_symbol` is an example of marking a symbol as hidden from the dynamic linker, preventing it from being exposed in shared libraries.
+
+You can use directives like .byte, .word, .long, and .quad to define sequences of memory with specific initial values. Each directive is used to reserve
+and initialize a block of memory with data of different sizes.
+
+.space  is for reserving a `n` amount of space in the section it's used (typically .bss for uninitialized data) and is a more general directive to operand
+<span class="alt-text">
+  .section .bss
+  fd: .space 8</span>
+
+This reserves 8 bytes (quadword) for the file descriptor... There's many reasons you might want to reserve something. In this case, you store the
+file descriptor for later use. This can be useful if you need to keep the file descriptor around for multiple operations, wherein it needs to be accessed
+or modified in different parts of the program, or maybe you just want to clearly delineate the logic this way.
+<h3>___ More Assembly/Instruction ___</h3>
+In many situations it may be necessary to use the Scale, Index, and Base (SIB) byte when you need to access memory locations based on a combination of
+registers and constants. An example is for arrays and multi-dimensional data, where the SIB byte provides a direct and efficient way to calculate the
+address of elements based on their index and the size of each element. This is important when dealing with large datasets or when performance is critical.
+<span class="alt-text">
+  movl (%ebx, %esi, 4), %eax</span>
+
+Here, %ebx (base address) is a displacement that points to the start of the array, %esi is the index register (index into the array), and 4 is the
+scale factor (multiplied by the size of each integer (4 bytes)). The value is moved into %eax. This instruction effectively loads a 32-bit value from the
+address calculated by  base + index * element_size  into the %eax register.
+
+Many instructions use a single byte for the opcode. For example, the mov instruction can use the 0x8A opcode for moving data between a register and memory.
+Some instructions require a two-byte opcode. For example, the mov instruction with a 0x0F prefix indicates a two-byte opcode is needed for certain operations.
+The MOD R/M byte follows the opcode (whether one or two bytes) to specify the details of the operands. For example, for the instruction  `mov %ebx, %eax`,
+the MOD R/M byte specifies that both operands are registers. The MOD R/M byte is just a part of the instruction encoding that specifies how operands are
+addressed in an instruction.
+
+More specifically ModR/M specifies what the source and destination are. Separating it into its constituent parts (MOD, REG, R/M): MOD (2 bits) which acts as
+a selector (a field within a byte(s) that specifies a particular option or operand) is indicative of whether R/M is treated as a plain register or a memory
+address. It also determines if there is additional data, such as displacement bytes for memory addressing. REG specifies the register involved in the
+operation, which is usually the destination register and determines the column in the ModR/M table. And a final register "R/M", which usually specifies the
+source register, and selects the row of the ModR/M table.
+
+This is just one part of the machine code instruction format, which refers to the binary encoding of instructions, including prefix bytes, opcodes, etc.
+Each part also contributes to several micro-operations performed by the CPU. Please look online to learn more about this including the CPU instruction cycle,
+microcode, microprograms, microinstructions and anything else that may be relevant.
+<h3>___ Executable and Object File Information ___</h3>
+When you run the objdump command on a compiled binary, you're inspecting the low-level details of the binary, including its disassembled code.
+And it will show disassembly information, such as for a given function e.g.
+<span class="alt-text">
+  0000000000400b00 &lt;do_something&gt;:
+  ... (disassembly of the function)
+    400be0:       48 89 e5        mov    %rsp,%rbp
+    400be3:       55             push   %rbp</span>
+
+The line with `0000000000400b00 &lt;do_something&gt;` indicates the starting memory address of the function do_something (within the binary),
+w/ the hex address 0x400b00 showing where the function begins in the program's memory space. The proceeding lines are machine instructions translated
+into assembly language. The left side (400be0, 400be3) shows the offset within the function where each instruction occurs, relative to the start
+of the function. The right side shows the machine code as hexadecimal bytes (e.g., 48 89 e5) and the corresponding assembly instruction (e.g.,
+mov %rsp,%rbp). The objdump command can give you alot of information about a program, including a comprehensive view of the binary's structure
+and contents.
+<h3>___ ELF File Structure ___</h3>
+The next question we need to ask is, "How is this data structured, and how is it executed?" An ELF (Executable and Linkable Format) file serves as
+a container for compiled code and data, allowing programs to be executed by the operating system. It contains sections for code, initialized and
+uninitialized data, and metadata needed for execution. For executable files, it includes details such as the entry point now, where the program
+starts, and instructions for loading and linking dynamically. Essentially, an ELF file provides the structure necessary for a program to run,
+whether as a standalone executable or as part of a larger application.
+
+The ELF header is conceptually placed at the beginning before everything, so you wont actually see it. Instructions like mov, call, jmp, etc.,
+directly manipulate program state and control flow, and are tied to specific segments loaded into memory. Sections are named blocks like .text,
+.data, .bss, .rodata, .symtab, .strtab, etc. and the ELF header helps make sure that these sections are correctly placed and managed during program
+execution.
+
+The Program Header describes a segment within the ELF file, for how portions of the file should be loaded into memory, and a Section Header defines
+attributes for each section within the ELF file.
+
+Instructions like mov -0x20(%rbp), %rax or mov 0x98(%rax), %rax are accessing specific memory locations relative to the base pointer (rbp) or other
+registers (rax, rdx, etc.). The offsets and addresses used in these instructions (a negative offset in this case) align with the segment and section
+definitions in the ELF structure (Program Header and Section Header), for the proper memory map/access during execution.
+
+The ELF file contains a symbol table that lists all the symbols referenced or defined within the file. Each symbol entry has a name, type
+(function, variable, etc.), and potentially a section index indicating where it's defined. It may also contain one or more relocation sections.
+
+Many symbol table entries are associated with a section. This association tells the linker (during program creation) where to find the symbol's
+definition within the object file. The section index within the symbol table entry points to the corresponding section header in the object file,
+allowing the linker to resolve references between symbols across those files. These sections hold entries that specify how to adjust symbol
+references based on their relocation type. You wont typically see them directly in a segment/section view when looking at functions, etcetera.
+
+Sections like `.text` provide information about individual instructions, or rather the encoded assembly instructions that we grazed by, each associated
+with individual bytes that represent a machine code instruction. The `.data` is a subsection with initialized data (as opposed to uninitialized data in
+`.bss`), where as `.rodata` contains read-only data like string literals and constant tables. Many sections can be found in an ELF file, and it depends
+on the program and how it was compiled, or rather the specific flags/options it was being compiled with.
+
+<h3>___ Relocation ___</h3>
+Relocations are entries within the ELF file that instruct the linker/loader on how to adjust symbol addresses at runtime. While these entries might
+reference the symbol itself, they are distinct from the symbol information that you see. For example, say we have an ELF formatted file generated
+from a program called <em>hive</em> that references a function do_something defined in a shared library  mysharedlib.so. The symbol table in  <em>hive</em>
+would have an entry for do_something, and there might be a relocation section indicating that references to this symbol needs to be adjusted by a
+certain value when loaded into memory.
+
+Each entry in a relocation table contains information such as: location, type and symbol. Location refers to the address within the section where
+the relocation should be applied, specified by the offset field. An offset is the address within the executable where the symbol reference needs to
+be adjusted.
+
+The relocation type is part of the info field and tells the linker how to process the relocation, a key part of how the info field is used.
+Some relocation types might involve adding the symbol's value to the offset. `info` encodes the relocation type (like, adding a base address,
+absolute address or relative address) and an index into the symbol table (symbol index). <em>Some relocation types might involve adding the symbol's
+value to the offset</em>. The symbol index within the info field points to the symbol table entry from which the value will be used for relocation.
+
+Linking is the process that's responsible for resolving placeholders and offsets using the information in the relocation tables (to produce the
+executable w/ all of its addresses set). Function calls and variable references contain placeholders or offsets. Offsets are relative distances
+from a certain reference point, typically used within the same module. When generating machine code, the compiler inserts this placeholder (often
+a zero or an address that can be easily identified as needing replacement) wherever the actual address of a function or variable is needed.
+
+These placeholders indicate unresolved references, which must be replaced with the addresses during the linking stage. Sometimes, especially for
+internal references within the same object file, the compiler uses offsets (relative addresses) as opposed to the absolute addresses. Offsets can
+indicate the distance from a certain base address (like the start of a function) to where the actual code or data resides.
+
+Relocation is thus the process of adjusting these addresses so that the code can run properly at the point where everything is put together.
+So to reiterate, first the compiler translates source code into object files. Each object file contains machine code, symbol definitions (functions and
+variables it defines), and symbol references (functions and variables it needs). These symbols aren’t fully resolved; their addresses are placeholders.
+
+The linker takes multiple object files and combines them into a single executable or shared library. During this process, the linker resolves all symbol
+references by updating the placeholders with actual memory addresses. The linker updates the machine code with these addresses so that function calls and
+variable accesses point to the correct locations. Therefore, the relocation tables in the object files guide the linker on where adjustments are needed.
+
+After relocation, only the addresses are present in the final executable. Here's some extra points to consider: We know sections in an ELF file are
+defined in the section header table. Each section has an address field called sh_addr in its section header. The purpose of these addresses is to
+facilitate linking and relocation processes. sh_addr, is where the section should reside in the virtual address space of the process when loaded into
+memory, sh_offset (file offset) is the position within the ELF file where the section's data starts. The section header has several fields like this.
+
+go <a class="reserve" href="compiler.html">back</a>
+
+</body></html>
