@@ -1,0 +1,26 @@
+<!-- efi -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>efi</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+By using efibootmgr, you can add a boot entry, telling the UEFI firmware to load the kernel directly,
+whereupon it then points to your kernel on the ESP, making the kernel act as both the bootloader and
+operating system.. Therefore, using efibootmgr with an EFI-stubbed kernel can act as a minimalist
+alternative to a bootloader, provided you’re comfortable with the trade-offs in functionality.
+<span class="alt-text">
+efibootmgr --create --disk /dev/sdX --part Y --label "MyLinux" --loader /vmlinuz-linux --unicode "root=/dev/sdXY initrd=\initramfs-linux.img" --verbose</span>
+
+This setup is generally faster and simpler if you’re running a single OS (no dual-boot) and are
+comfortable managing kernel parameters yourself. However, this approach can be less flexible than a
+traditional bootloader, (GRUB, etc.) as it lacks built-in tools for things like fallback kernels,
+recovery options, and easy configuration changes. You would typically need to manually update
+the EFI boot entry if you update the kernel too.
+
+go <a class="reserve" href="install.html">back</a>
+
+</body></html>
