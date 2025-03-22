@@ -1,0 +1,73 @@
+<!-- memory errors -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>common errors</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+In the context of programming, a "memory error" typically refers to an issue related to how
+your program manages computer memory. This can lead to unexpected behavior, crashes, or even
+security vulnerabilities.
+
+Segmentation Fault (or segfault) is a common type of error that occurs when a program tries to access
+a memory location that it's not allowed to. For example, consider the following;
+<span class="alt-text">
+  int *ptr = NULL;
+  int x = 10;
+  </span><em>//*ptr = 20;  Wouldnt be safe yet (undefined behavior)</em><span class="alt-text">
+  ptr = &amp;x;
+  *ptr = 20;</span> <em>// Now it's safe</em>
+
+Wherein `*ptr=20` wouldve written to a <em>null pointer</em> that we hadnt dereferenced.
+It may have contained a garbage value leading to an attempt to write to, or read from an
+invalid memory location (resulting in a segmentation fault)
+
+You also have to consider the variable's lifetime and initialization.
+When you set a pointer to a valid memory location, at any point during its lifetime,
+it becomes safe to dereference it, which means its safe to assign a value to. Dereferencing
+a pointer means accessing the value stored at the memory location the pointer is pointing to.
+
+Segmentation faults can occur in other cases too, such as attempting to access a value
+that exceeds your arrays index or accessing invalid memory addresses.
+
+Buffer Overflow, yet another common error, happens when a program writes more data to a buffer than it can
+hold, potentially overwriting adjacent memory.
+<span class="alt-text">
+  char buffer[10];
+  char long_string[] = "This string is too long";
+  strcpy(buffer, long_string);</span> <em>// Buffer overflow occurs here</em><span class="alt-text">
+  printf("%s\n", buffer);</span> <em>// Undefined behavior</em>
+
+This overflows the buffer because `buffer[10]` can only hold a maximum of 10 characters (which includes the null
+terminator character (\0) that marks the end of a string) and the string "This string is too long" is significantly
+longer than 10 characters; Therefore, when `strcpy` tries to copy this string into the buffer, it will write beyond
+the allocated space, overwriting memory that belongs to other variables or data structures.
+
+You should ensure that the destination buffer is always large enough to hold the source string.
+"Use After Free" errors are another kind of error you may encounter. This occurs when a program tries to use
+memory <em>after</em> it has already been freed, leading to undefined behavior. There are plenty of issues that are
+bound to happen to you at some point, but from experience you can learn to avoid them.
+
+Memory Leaks are another common error. They can happen when a program successfully allocates memory,
+but fails to free it when it's no longer needed, leading to gradual memory depletion.
+<span class="alt-text">
+  int *ptr = (int*)malloc(sizeof(int));</span>
+
+We often use an if statement, e.g. `if (ptr) {...` to check before. Attempting to free a NULL pointer is safe and
+has no effect in C, nevertheless a NULL value in `ptr` would cause the `if (ptr)` check to not be executed.
+This check would be prior to calling `free(ptr)` inside the body, to make sure that we do not inadvertently
+free memory that hasn't been allocated, or free memory that has already been freed. So the effective use of
+the if statement here promotes safer and more reliable code.
+
+Later on, if we forgot to free this, or if we did not provide an if statement where its free'd because of a
+certain condition, than much like the other errors that lead to malformations in memory, it would inevitably
+cause issues, either very earlier on or at a later point in time. You can go without noticing an error/bug
+for quite awhile. And, then its not until the program starts having issues w/ performance, or it crashes
+that you then discover there was a bug. Therefore you want to catch those bugs sooner than later.
+
+go <a class="reserve" href="qfmtsp.html">back</a>
+
+</body></html>
