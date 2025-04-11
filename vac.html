@@ -1,0 +1,103 @@
+<!-- other -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>other example</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<b>Pointers and the Vacuum of Space</b>
+
+This is a tricky thing to grok at first, so i'll try to illustrate it like this...
+Hopefully you already read and learned about how the dot &amp; arrow operators
+work as pointers...
+
+Consider we created the following structs to begin w/
+<span class="alt-text">
+  typedef struct {
+    char *buffer;
+  } Anar;
+
+  typedef struct {
+    Anar nar;
+  } V;
+
+  typedef struct {
+    V *obj
+  } Database;</span>
+
+`Anar` contains a member, `buffer`, which is a character array.
+`V` contains a member, `nar` which is of type `Anar`.
+`Database` contains a member, `obj`, which is a pointer to `V`.
+
+To access the buffer member of `Anar` (which is nested within `V`) and then within Database,
+you need to handle the pointers and structs in the right way....
+
+Consider we have a `database` which is a pointer to a Database struct, possibly like this...
+<span class="alt-text">
+  Database *database = (Database *)malloc(sizeof(Database));
+  if (database == NULL) {
+    perror("Failed to allocate memory for Database");
+    return 1;
+  }</span>
+
+Which is for allocating and initializing a `Database` instance. Here's some things we might do...
+`database-&gt;obj` accesses the `obj` member of `Database`...
+
+It has a member `nar` of type `Anar`.
+`(*database-&gt;obj).nar` accesses the `nar` member of the `V` structure.
+`(*database-&gt;).nar.buffer` then accesses the `buffer` member of the `Anar` structure
+
+It sounds more complicated than it is, since its describing multiple scenarios towards the final composite object,
+however you can take it from the last scenario, and sortve trace the steps backwards so to speak...
+
+The last scenario, we said we could take that `(*database-&gt;obj)` to access the `buffer` member of the `Anar` struct.
+Consider  *database-&gt;obj.nar.buffer   Here’s how the C compiler would interpret it:
+
+`database-&gt;obj`  is a pointer to  V.
+`database-&gt;obj.nar`  is  invalid syntax.
+
+(-&gt;) is used for accessing members from a pointer to a struct. And we want to use `nar`.
+We have to correctly access `buffer` of the `Anar` struct, and `nar` after that, you need to dereference
+`database-&gt;obj` to get the `V` struct. Also it can be confusing because of the order that pointers occur in
+changes how you access them in the long run. As you begin understanding this, it should make sense.
+
+So the correct syntax in that particular situation would be:
+<span class="alt-text">
+  (*database-&gt;obj).nar.buffer
+</span>
+
+At some point you might even consider simplifying access with a temporary variable
+<span class="alt-text">
+  V *exac = *database-&gt;obj;</span>
+
+Which would allow you to use it as `exac-&gt;nar.buffer`, and is just one example of something you might do.
+Sometimes its a matter of convenience; That is, our structure is part of an original struct that we make a `*member.
+And by using `*member` you can directly reference its data without copying it around or dealing with dereferencing multiple times.
+
+So for example, when you access the field from `MyType mylist`, you're directly referring to that mylist data. Using `MyType *reflist`
+in your code allows you to work with this data directly without additional dereferencing. Consider the (&amp;) address-of operator and the
+(*) dereference operator can be used in various contexts involving pointers and variables, such as how they're used w/ <em>pointers to pointers.</em>
+Take your time to work out the quarks w/ these situación aw'kwards, as it'll help w/ access-members and pointers alike.
+
+One last point, if the dot operator is already accessing a member, for example, `(*database.obj)`, to get the address of `obj`, you need to apply
+the address-of operator to the whole expression, so it looks like `(&amp;(*database.obj)`
+
+In C/C++ you can have a reference to a pointer, or a pointer to a pointer, but you CANNOT have a pointer to a reference, or reference to a pointer to a reference.
+That is to say, a reference is like a one-time usecase alias for an existing variable (reference type or address-of, whatever..), and a pointer is a kind of pointer object
+that must be dereferenced before it can be used/accessed again. Once you can see the precedence levels of everything, and how they extend away from (.), it should be fairly
+simple to understand. So you can think of the dot (and pointer) as a period that accesses members within the scope (individual levels) of an object, or it points to its memory.
+As we move out from the original dot, if you use the dereference operator (*) its as if you are navigating out from that solar system into a specific memory address, or you are
+doing a rudimentary (-&gt;) operator to indicate that youve left the homeworld. It’s like saying, "I want to record different regions of space, and I also want it to be crystal
+clear when I have left the homeworld, whereby I can go further on to Alpha Centauri, and other known places (addresses) in the vacuum of space. And each time we leave a new place,
+we'll also de-reference and/or reference that place, if its important to know what address it is in space."
+
+This kind of sentiment is true as well for understanding dynamic memory, and the effect it has on heap memory when you use `malloc` and `free`, in that you are thinking about
+how you allocate and release memory from a specific location, much like charting new territories in space. When you use malloc, you’re carving out a new road map in space, and
+when you call free, you’re returning to the homeworld, making sure it is available for the future XD, avoiding memory leaks and ensuring efficient resource management.
+
+go <a class="reserve" href="struct.html">back</a>
+
+</body></html>

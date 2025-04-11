@@ -1,0 +1,95 @@
+<!-- page6 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>memcpy</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<b>Memcpy</b>
+
+memcpy is a standard library function in C that copies a specified number of bytes from a
+source memory location to a destination memory location. It is commonly used for copying
+blocks of memory, such as arrays or structures. The function operates quickly but has a
+limitation: it assumes that the source and destination memory regions do not overlap.
+
+If there is overlap, the behavior is undefined, which can lead to corrupted data.
+In contrast, memmove also copies a specified number of bytes from a source to a destination,
+but it is designed to handle overlapping memory regions safely. It ensures that the copy
+operation completes correctly even if the source and destination areas overlap.
+This makes memmove more versatile, though potentially slightly slower than
+memcpy due to the additional checks it performs. Assume we initialize boxes, e.g.
+
+Box | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+Data| 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+
+when trying to move boxes or a region of to some other region w/ memcpy, it can lead
+to this overlap situation we see here...
+
+Box | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+Data| 1 | 2 | 1 | 2 | 1 | 6 | 7 |
+
+In other words, we were trying to copy the original  Box 1-3  (4 boxes) to  Box 3-7 (5 spaces)
+however we did not handle the overlap, and so the corruption occurred where Box 1 moves
+to Box 3, overwriting the original data in Box 3;  Box 2 gets moved to Box 4, overwriting
+Box 4's data. And Box 3 (now holding data 1 from Box 1) moves to Box 5, overwriting the
+original data in Box 5.
+
+Obviously you dont want this kindve staggered behavior—which'll happen if the source
+and destination regions are overlapping. In a typical "move" operation, the first box that
+is moved goes to the target location that would best align with the destination (without
+overwriting existing data). Also, if you're copying from one part of memory to another
+part that overlaps, it's better to use a temporary buffer to hold the data you need to
+move first. This way, you can copy the data in the correct order without corruption.
+
+Otherwise you should use `memmove` or, `safe_copy` which is a user-implemented version
+of memcpy that takes advantage of a secure data type `rsize_t` (which provides context
+about the size/boundaries of memory regions) and which is safer to use. And when properly
+implemented it can be used for this overlapping memory situation that we discussed.
+
+for simplicity, let's just copy a subset of the source buffer.
+<span class="alt-text">
+  #define BUFFER_SIZE 7
+
+  void resizeVideo(int *source, int srcWidth, int *dest, int destWidth) {
+    memcpy(dest, source, sizeof(int) * destWidth);
+  }
+
+  int main() {
+    int sourceBuffer[BUFFER_SIZE] = {1, 2, 3, 4, 5, 6, 7};
+    int destinationBuffer[BUFFER_SIZE];
+
+    int sourceWidth = BUFFER_SIZE;
+    int destWidth = BUFFER_SIZE;
+
+    int scalingFactor = 1;
+
+    if (scalingFactor == 1) {</span>
+        <em>// Directly copy the content from sourceBuffer to destinationBuffer</em><span class="alt-text">
+        memcpy(destinationBuffer, sourceBuffer, sizeof(int) * destWidth);
+    } else {
+       </span><em>// Resize the video (in this example, copy a subset of the source buffer)</em><span class="alt-text">
+        resizeVideo(sourceBuffer, sourceWidth, destinationBuffer, destWidth);
+    }</span>
+
+    <em>// Print the content of destinationBuffer</em><span class="alt-text">
+    for (int i = 0; i &lt; BUFFER_SIZE; i++) {
+        printf("%d, ", destinationBuffer[i]);
+    }
+
+    printf("\n");
+    return 0;
+  }</span>
+
+In this example, `memcpy` is used when the scaling factor is 1 to copy the
+entire content of `sourceBuffer` to `destinationBuffer`; Two separate buffers
+means we wont have any overlap because they are two separate arrays. Continuing on,
+if the scaling factor is different, a hypothetical `resizeVideo` function is called
+to perform some resizing operation; In this case, just copying a subset of the source buffer,
+and thats the gist of what this code does, and something you can think about when working w/ memcpy.
+
+return to <a class="reserve" href="index.html">index</a>
+
+</body></html>
