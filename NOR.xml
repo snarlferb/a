@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logicGates>
+    <gate type="NOT">
+    <xxx>Unary NOT gate (flip row of bits)
+  ~0 = (1),  ~1 = (0)</xxx>
+        <input>A</input>
+        <output>!A</output>
+    </gate>
+    
+    <gate type="AND">
+    <xxx>AND gate with two inputs (all off unless already on) 
+  0 &amp; 0 = (0),  (0),  1 &amp; 1 = (1)</xxx>
+        <input>A</input>
+        <input>B</input>
+        <output>A AND B</output>
+    </gate>
+    
+    <gate type="XOR">
+    <xxx>XOR gate with two inputs (opposite bits on, same bits off) 
+  0 ^ 0 = (0),  (1),  1 ^ 1 = (0)</xxx>
+        <input>A</input>
+        <input>B</input>
+        <output>A XOR B</output>
+    </gate>
+
+    <gate type="OR">
+    <xxx>OR gate with two inputs (all on unless already off)
+  0 | 0 = (0),  (1),  1 | 1 = (1)</xxx>
+        <input>A</input>
+        <input>B</input>
+        <output>A OR B</output>
+    </gate>
+    
+    <gate type="NOR">
+    <xxx>NOR gate with two inputs (all off unless already off)
+  0 + 0 = (1),  (0),  1 + 1 = (0)</xxx>
+        <input>A</input>
+        <input>B</input>
+        <output>!(A OR B)</output>
+    </gate>
+    
+    <gate type="NAND">
+    <xxx>NAND gate with two inputs (all on unless already off)
+  0 + 0 = (1),  (1),  1 + 1 = (0)</xxx>
+        <input>A</input>
+        <input>B</input>
+        <output>!(A AND B)</output>
+    </gate>
+    
+    <gate type="SHL">
+    <xxx>Shift Left (logical)
+  00011001 &lt;&lt; 1 = 00110010</xxx>
+        <input>A</input>
+        <input>n</input>
+        <output>A &lt;&lt; n</output>
+    </gate>
+
+    <gate type="SHR">
+    <xxx>Shift Right (logical)
+  10011000 &gt;&gt; 1 = 01001100</xxx>
+        <input>A</input>
+        <input>n</input>
+        <output>A &gt;&gt; n</output>
+    </gate>
+
+    <gate type="ROL">
+    <xxx>Rotate Left (Shift Left w/ Wrap)
+  10011001 rol 1 = 00110011</xxx>
+        <input>A</input>
+        <input>n</input>
+        <output>ROL(A, n)</output>
+    </gate>
+
+    <gate type="ROR">
+    <xxx>Rotate Right (Shift Right w/ Wrap)
+  10011001 ror 1 = 11001100</xxx>
+        <input>A</input>
+        <input>n</input>
+        <output>ROR(A, n)</output>
+    </gate>
+</logicGates>
+

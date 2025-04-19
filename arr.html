@@ -1,0 +1,360 @@
+<!-- page3 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fly^p4rray</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+<div id="arr-anch"><b>fly^p4rray</b></div>
+<span class="alt-text">
+  int arr[3];</span>
+
+If `int arr[3] = ...`, were to equal something then we could gain access
+and receive a normal integer value when specifying its index.
+
+otherwise the index of an array is random when uninitialized or its being
+determined by the initializer e.g.
+<span class="alt-text">
+  int arr[] = {3, 4, 5};</span>
+
+The size of our array is just the amount of said elements, the 0th element being
+the first number or character.
+
+Speaking of which, we can also create individual characters and access the third
+element, or whichever you want, like so <em>(note: `{...}` is the initializer list)</em>
+<span class="alt-text">
+  char arr[3] = {'a', 'b', 'c'};</span>
+
+Continuing on, the next example will assign (5) however its not an array (not directly
+storing the number 5). That is, an "un-parenthesized" single character, not quoted, is
+treated as an integer and stores the character's ASCII code:
+<span class="alt-text">
+  char exp = 5;</span>
+
+"5" in ASCII corresponds to ENQ (Enquiry) control character. Control character's
+ASCII values are found within the inclusive range of  0—31. "32" is the space
+character '  ', and ASCII values 33—126 are various printable symbols,
+numbers, letters, and punctuation marks. Note, there are ASCII values
+after 126 that are not part of the standard 7-bit ASCII table.
+
+Another way to store a character's ASCII code
+<span class="alt-text">
+  char exp = '\a';</span>
+
+Characters like '\a' which represents the alert (bell), '\n' (newline), and '\t' (tab)
+are part of a set of escape sequences in C that map to specific ASCII control characters.
+
+The following is referring to the character constant, or character literal 'a'
+<span class="alt-text">
+  char exp = 'a';</span>
+
+single quotes (') are used for character constants. They represent a single character,
+even if you put multiple characters within them.
+
+character literals (like `char exp = 5`)  represents a single, unchanging value.
+For example, the character literal 'a' always corresponds to the ASCII value 97,
+and as such this value is constant and will never change.
+
+double quotes (") are used for string literals. They represent a sequence of characters,
+including spaces and special characters.
+
+In C, character variables are treated as a type of integer, often signed integers
+(they can hold both positive and negative values). when you assign, ` e.g. char exp = 0xFF `.
+Compilers and modern systems tend to treat char as signed by default.
+
+The actual value stored depends on whether char is signed or unsigned.
+
+If char is signed, the upper bit (most significant bit) of 0xFF is interpreted as a
+sign bit (1 for negative). This can result in a negative value depending on the
+system's implementation.  if char is unsigned, all 8 bits of 0xFF are used to
+represent the value, resulting in 255 decimal number.
+
+In conclusion, you can see that there's quite the amount of variation when it
+comes to characters and arrays. and we still havent shown string literals:
+<span class="alt-text">
+  char str[] = "abc";</span>
+
+character arrays, specifically strings, are null-terminated, which means that
+an additional null character (\0) is  implicitly  added at the end of the
+initialized elements, even if you don't explicitly include it to the initializer list.
+<span class="alt-text">
+  char element = str[2];</span>
+
+We could modify a string, e.g. `element[2] = 'W'` or something, or we could declare,
+and later assign a pointer we also declared, to it, like `ptr = element`. As long
+as you modify the array, not the literal pointed to, its safe and legal, given that
+string literals are <b>read-only</b>. That means, if you store a string literal in a pointer, modifying directly = undefined behavior!
+
+`\0` (Null character or NUL) is a single character literal in C represented by \0.
+It is essentially the ASCII character with the value 0 (zero). In string literals,
+(\0) denotes the null-terminating character, which signifies the end of a string
+
+NULL on the other hand is a macro defined in several standard C libraries
+(typically as (void *)0). It is used primarily to represent a null pointer, that
+does not point to any object or function. It's commonly used in pointer contexts
+to signify that the pointer does not currently refer to any valid memory location.
+Returning to array declaration,
+<span class="alt-text">
+  int arr[3];</span>
+
+The name "arr" itself represents the address of the first element of the array.
+In other words its equivalent to a pointer to the first element of the array.
+Therefore, you can simply use the array name `arr` to point to the array...
+<span class="alt-text">
+  int *ptr = arr;</span>
+
+`int arr[3]` is considered an <b>integer array</b>, `int[]` with the name "arr"
+of size (3)... As such its created a pointer to the integer named "arr"
+(a contiguous block of memory with (3) integers). However if we had declared
+`int *` (a pointer variable w/ the address of an integer) this would change
+what we could do with it.
+
+We could use the integer array to point to an array, or it could be used for
+dynamically allocating memory w/ a variable-size array (which we explain below)
+
+while we have an array we can also declare a pointer to an array of an
+unspecified size, cause why not. we're showing all possible entrees you can serve,
+<span class="alt-text">
+  int (*ptr)[];</span>
+
+the compiler needs to know how big each array is, so you wouldnt just have an empty index.
+still, now that you know the anatomy, you can decompose this to cast it — in this case,
+to a `NULL`, that which is in the place of the <b>variable</b> you would cast it to...
+<span class="alt-text">
+  ptr_cast = (int (*)[])NULL;</span>
+
+or you can allocate memory for n arrays of e.g. "3" integers each:
+<span class="alt-text">
+  int (*ptr)[3] = malloc(n * sizeof(*ptr));</span>
+
+note: in all cases there is implicit conversion, of malloc (void *malloc) to int,
+or any type its being assigned to, so you dont need an explicit cast to it.
+this is for all types, except when assigning a function pointer.
+<span class="alt-text">
+  void (*func_ptr)() = (void (*)())malloc(sizeof(void (*)()));</span> // Correct
+
+sizeof() is a special operator in C that evaluates to the size (in bytes)
+of a given type or expression. Therefore it is useful for determining memory
+requirements, especially for arrays and structures, without executing code at runtime.
+Since it returns a value of type  size_t , it can be used in expressions and function arguments.
+
+if all that is too confusing, you can reserve it for later
+we'll be explaining malloc in more depth (or you can find the dedicated page <a class="reserve" href="malloc.html">here</a>)
+
+When we write sizeof(*ptr), we're getting the size of the object that `ptr`
+points to (hence the asterisk next to `ptr`). And since `ptr` is a pointer
+to an array of 3 integers:  int[3],  sizeof(*ptr)  correctly allocates memory—
+the right size—for said array of arrays—a 2D array, w/ the memory required to store 3 ints.
+
+Without sizeof, the expression in malloc() would not allocate the correct amount of memory. 
+Now, returning back to our valuable array to review what we've learned so far,
+<span class="alt-text">
+  int arr[3];</span>
+
+We can conclude that theres a difference between indexing, accessing and
+initializing. in the expression arr[3], the "3" is sometimes called the "subscript".
+
+The term "subscript" is used to describe the index or indices that are used
+to access a specific element of an array.
+
+In C99 and newer, C allows you to declare arrays with a size that isn’t known at
+compile time, but is known at runtime. These are called VLAs — Variable Length Arrays.
+
+Unlike static arrays (which need a fixed size), VLAs can be created using a variable, as long as:
+(A) It’s inside a function (i.e., local scope)
+(B) The size variable is available and valid when the array is created
+
+Global arrays need their size known at compile time. You can only use literal constants or macros here.
+This is a bit nuanced to explain, so lets go through which examples are legal, and which are illegal:
+  //int size = 5;
+  //int arr[size]; <em>// ❌ ILLEGAL at global scope (not constant)</em>
+
+or in this context:
+  //const int SIZE = 5;
+  //int arr[SIZE];</span> <em>// ❌ Still ILLEGAL at global scope — `const` isn’t a constant expression in this context</em>
+
+But this is OK:
+<span class="alt-text">
+  #define SIZE 5
+  int arr[SIZE];</span> <em>// ✅ OK: SIZE is a macro (constant expression)</em>
+
+So only <b>macros, numeric literals, or enum constants</b> work for global array sizes:
+<span class="alt-text">
+  enum { SIZE = 10 };
+  int arr[SIZE];</span> <em>// ✅ OK</em>
+
+note: this is specific to <b>global arrays</b>, not global variables in general—which includes everything!
+C also allows for arithmetic expressions within the brackets of an array's index:
+<span class="alt-text">
+  buffer[bytes_read - 1];</span>
+
+<em>this is the case as well for the expression being assigned to.</em>
+of course, this isnt something you can do in a global array context,
+since it defies the compile-time constants. you can however initialize
+a global array using an initializer list, which is a form of assignment
+that happens at program startup, i.e.
+<span class="alt-text">
+  char buffer[10] = {'a', 'b', 'c'};</span>
+
+<b>Compound Literals</b>
+
+Before C99, if you wanted to pass a struct or array to a function, you’d typically need a named variable:
+<span class="alt-text">
+  int p[] = { 1, 2 };
+  func(p);</span>
+
+C99 introduced compound literals to let you skip the variable:
+<span class="alt-text">
+  func((int[]){ 1, 2 });</span>
+
+You can also declare an array and assign it to the compound literal:
+<span class="alt-text">
+  int *arr = (int[]){1, 2, 3, 4, 5};</span>
+
+The example above must be a pointer however, as you're assigning the
+address of the first element of the temporary array to `arr`. In C,
+you cannot assign a normal array to another array (not special to compound literals)
+
+Besides this special situation, they can be of any type (struct and union included,
+but NOT void type) as the purpose is to create an anonymous instance `(type UniqName){}`
+of a specific type and initialize its members inline, for using immediately.
+
+When calling a function you can have a compound literal as a parameter.
+Returning a value can also be a compound literal; Or you can have a compound
+literal that recursively initializes arrays or struct members, just
+as far as what other areas you can have a compound literal expressed.
+
+Lets take a normal array of type struct w/ two elements (assume we had a struct target defined)
+<span class="alt-text">
+  struct target arr[2] = {{5}, {10}};</span>
+
+The first int represents `x` and the second `y`. Here's the compound literal version:
+<span class="alt-text">
+  struct target arr = (struct target){5, 10};</span>
+
+And this is not to be confused w/ designated initializers, which we learn about
+<a class="reserve" href="struct.html">on the next page</a>. Alas i thought i would mention it here first, to establish
+when you'd want to use them, the main reason being when you want to
+initialize specific elements, aggregates of, an array or structure,
+and without explicitly initializing every element:
+<span class="alt-text">
+  int arr[5] = {
+    [1] = {.a = 1, .b = 2},
+    [2] = 3};</span>
+
+`[1] = {.a = 1, .b = 2}`  initializes the element at index 1 of the array to a
+struct with (a = 1) and (b = 2)
+`[2] = 3`  initializes the element at index 2 of the array to 3.
+The remaining elements (indices 0, 3, and 4) will be initialized to 0...
+For a struct, youd initialize specific members like so:
+<span class="alt-text">
+  struct Foo foo = { .a = 1, .b = 2 };</span>
+
+If you've seen enough examples here, you may start to ask yourself, <em>"wait.. what
+on earth is the difference between compound literals and designated initializers?"</em>
+—Besides the explicit typecast, there doesnt seem to be a difference, does there?
+
+Designated initializers and compound literals are related but distinct concepts.
+Designated initializers are about specifying member initialization, compound
+literals, as we said before, are about creating temporary objects.
+
+With designated initializers, you have the added bonus that each member will be
+initialized to zero. This rule is rooted in the language's rules for object
+initialization and applies to arrays of any storage duration. In static or global
+arrays all elements are initialized to zero if not explicitly initialized.
+
+only explicitly initialized elements are set, and uninitialized elements are
+default-initialized (that is they are set to zero)
+
+according to the C99 standard (ISO/IEC 9899:1999), section 6.7.8:
+
+  <em>"if there are fewer initializers in a brace-enclosed list than there are
+  elements or members of an aggregate, the remainder of the aggregate shall be
+  initialized implicitly the same as objects that have static storage duration."</em>
+
+also arrays declared at global or static scope are automatically initialized to zero too,
+however that is not the case if they are declared within a function and without `static`.
+
+both compound literals and designated initializers were introduced in C99, so you wont
+see them in ANSI C. i can see how it might be confusing to have all of these different
+versions of C, but here's all you need to know; the core syntax and semantics of C
+have remained remarkably stable since C89, so i think you cant go wrong using any
+version -from ANSI C and upwards.
+
+ANSI C is of course colloquially used to refer to C89, as ANSI played a big role in creating
+the first C standard, but it in turn became an international effort under ISO. Therefore
+some consider the term "ANSI C" to be incorrectly used, although its caught on w/ enough ppl
+
+C99 also introduced implicit flexible array declaration, whos purpose is to allocate variable-
+length data, specifically associated w/ a struct. It must always be the last element of a given
+struct and is declared as an array that has zero elements, e.g.
+<span class="alt-text">
+  int data[];</span> <em>// flexible array member</em>
+
+C89 only let you declare them as `int data[1]`.  Regardless of, any explicit zero use, i.e.
+ `int data[0]`  isnt legal in any version of C no matter what.
+
+The arrays we were working with until now were all <em>fixed</em>, wherein their size was
+determined at compile time, e.g.
+<span class="alt-text">
+  int arr[var] = {a, b, c};</span>
+
+Variable-sized arrays can be created w/ malloc, for example you can create a new array w/
+a larger size and copy the existing elements from the old array to the new one, then
+continue adding elements:
+<span class="alt-text">
+  int MaxSize = 5;
+  int *FixedArray = (int*)malloc(MaxSize * sizeof(int));</span>
+
+`malloc(MaxSize * sizeof(int))` dynamically allocates memory for an array of MaxSize
+integers. `sizeof(int)` is used to determine the size of each integer element in bytes.
+
+`(int*)` is being cast to malloc, assuring that the variable (malloc) is that type as well.
+Youll see this alot in C, specifically for type compatibility reasons. The compiler will perform
+this conversion implicitly and issue warnings for implicit conversions that could result in data loss...
+
+and `malloc` is just a function w/ a `size_t`(atleast 16bit) parameter.
+<span class="alt-text">
+  void *malloc(size_t size)</span>
+
+You can learn about <a class="reserve" href="malloc.html">malloc and dynamic memory allocation here</a>.
+
+Now just to give a closing thought on what we learned so far, theres three things that
+sound similar but that are distinct. There's variable-sized arrays, which refers to
+arrays whose size is determined at runtime, which can include both VLAs (stack-allocated)
+and dynamically allocated arrays (heap-allocated). Theres also flexible array declaration.
+The flexible array member feature (introduced in C99) allows you to define an array with
+no specified size at the end of a struct, which means the size can be determined
+dynamically when memory for the struct is allocated.
+
+Last but not least, I want to show an example of a program, to give you something to think on.
+Also I think its the inclusive nature of it, that gives it a distinguishable meaning:
+<span class="alt-text">
+  int getIndex(int param) {
+    return param % 5;
+  }
+
+  int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int parameter = 7;</span>  <em>// Example parameter for a subsequent argument</em>
+
+    <em>// Assigned array element uses function param, and subsequent return value as index</em><span class="alt-text">
+    int result = arr[getIndex(parameter)];
+
+    printf("Value at index %d in array: %d\n", getIndex(parameter), result);
+
+    return 0;
+  }</span>
+
+<em>note: that you can have nested function arguments, both w/ return values; the outside function is evaluated after.</em>
+7mod5 equals 2 and, following along w/ the rest of the logic, why does it say the array variable's value is "3"?
+It was one of the very first things we said about arrays and their unique properties, and should be obvious
+you're not counting over twice, but looking at the arrays actual <u>index#2</u>, and the element of that position.
+
+see <a class="reserve" href="malloc.html">malloc</a> on page8, or   see <a class="reserve" href="struct.html">struct</a> on page5
+
+or <a class="reserve" href="func.html">back</a>
+
+</body></html>

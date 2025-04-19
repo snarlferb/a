@@ -1,0 +1,333 @@
+<!-- page5 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>macro preprocessor</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<div id="macro-anch"><b>Macros</b></div>
+
+Macro's are another useful, though complicated idea that requires its own dedicated pretext
+to adequately show and expand upon.
+
+In certain cases, macros can help eliminate branching by replacing conditionally evaluated
+expressions with branchless operations. For example, the following function introduces a
+conditional branch (ternary operation):
+<span class="alt-text">
+  int min(int a, int b) {
+    return (a &lt; b) ? a : b;</span>  // TODO: Replace this line.<span class="alt-text">
+  }</span>
+
+Thus we can replace this with a macro:
+<span class="alt-text">
+  #define MIN(a, b) ((a) &amp; -((a) &lt; (b)) | (b) &amp; -((b) &lt;= (a)))</span>
+
+Macros are inherently harder to read, as they require explicit parentheses that
+feel more like what the compiler would have to do to understand the skeleton code
+and the sequences that each evaluation should to happen in order to fully parse things out.
+
+The preprocessor (the first part of the process for macros) doesn't care about program
+logic or control structures. It just handles textual substitution and directives in order
+to pass said text off to the compiler, who then does all the logic and semantic handling.
+
+We will break down what is happening in macros, how they are evaulated, etcetera.
+Before we do that we have to briefly explain the order of operations; We sometimes
+refer to as PEMDAS where "P" stands for <em>parentheses</em>, "E" is for exponent, etc.
+
+C has specific ordering rules regarding operator precedence (which operators are evaluated first)
+and associativity (the order in which operators of the same precedence level are evaluated).
+I often find that the confusion arises in situations due to the way it looks w/ extra parentheses,
+the added protection around a given token(s). Macros depend on having this terse separation,
+so you will often see it exaggerated.
+
+Next time you see something that fits this description try stripping away the parentheses;
+then, look at it again and it should be a bit more clear to delineate, and in a way that
+invovles following the normal hierarchy of precedence within the expression. Macros, being
+that they are like their own compile-time language, are just another perspective on the code.
+
+Lets talk about some utilities that macros have. Macro's can simplify an expression.
+Heres an example related to r-values <em>(This is prior to simplification)</em>
+<span class="alt-text">
+  int max_val = type_max(typeof(var));
+  int min_val = type_min(typeof(var));</span>
+
+Then when we change it to become a macro, and assign it after.
+<span class="alt-text">
+  #define TYPE_MAX(val) type_max(val)
+  #define TYPE_MIN(val) type_min(val)
+  
+  int max_val = TYPE_MAX(var);
+  int min_val = TYPE_MIN(var);</span>
+
+which you can see is simpler now to call.
+
+This behavior applies to all other forms of C and its decree...
+Heres a macro to access some element of a tuple-like structure (array)
+<span class="alt-text">
+  #define MACRO(x) ((x)[2])
+    int tuple[] = {10, 20, 30, 40};</span>
+
+MACRO(x) defines a macro named MACRO that takes a parameter x.
+inside the macro, (x)[2]  accesses the third element of the array x.
+
+tuple[] is an integer array with four elements, ` {10, 20, 30, 40} `
+now, if you use the macro MACRO with the array tuple: ` int third_element = MACRO(tuple);`
+expands to the following:
+<span class="alt-text">
+  int third_element = ((tuple)[2]);</span>
+
+which effectively accesses the third element of the array tuple. In this case,
+tuple[2] refers to 30 (because arrays are zero-indexed)
+
+    tuple[0] is 10
+    tuple[1] is 20
+    tuple[2] is 30
+    tuple[3] is 40
+
+So, MACRO(tuple) will evaluate to tuple[2], giving you 30.
+and the same is the case if `x` were a string, then MACRO(x) would access the third character of the string.
+and that gives you a re-elucidates what you've learned so far about arrays and such.
+
+The macro `#define C(x) ((x)-'@') ` , i.e. (x-64)  is another example that can be used in various contexts
+to denote &lt;Key&gt;Ctrl, characters (e.g. 65 - 64 = 1, and Ctrl-A is the ASCII control character SOH
+(Start of Heading) with an ASCII code of "1") making it easy to recognize and handle "Ctrl-X" mappings,
+<span class="alt-text">
+  if (key == C('S')) {
+    save_file();
+  }</span>
+
+Let's look at something that I personally like using macros for. And that is, creating a macro out of
+a header path, a path of the same name or place where its defined, wherein the named macro can be used
+w/ `#include`... e.g.,
+<span class="alt-text">
+  #define HI_H "/path/to/macro.h"</span>
+
+and then you can use it like `#include HI_H`, where by the preprocessor replaces it with the
+actual header file path during the preprocessing stage.  Next here's an example of ifdef..
+
+<span class="alt-text">
+  #ifdef PLATFORM
+  #include &lt;platform.h&gt;
+  #define MESSAGE "Hello from whatever platform!"
+
+  #else
+  #include &lt;planetform.h&gt;</span><em> // Assume some other platform</em><span class="alt-text">
+  #define MESSAGE "Hello from non-native planetform!"
+
+  #endif
+
+  int main() {
+    printf("%s\n", MESSAGE);
+    return 0;
+  }</span>
+
+`ifdef` checks if a macro named "PLATFORM" is defined. if so, the line `#include <platform.h>`
+gets included because the condition is true. <em>And presumably, you can deduce the rest from there.</em>
+
+be careful not to get `ifdef` mixed up with `ifndef`, which checks if a given macro is NOT defined.
+its exactly the same as `#if !defined`, but a less obvious; They're both used interchangeably
+
+Here we have a macro that shifts `2`, to the left by (n)bits, and then subtracts `1`.
+<span class="alt-text">
+  #define b(n) (2 &lt;&lt; (n))
+  #define a(n) ((b(n))-1)</span>
+
+if you call b(3), it would be equivalent to 2 &lt;&lt; 3, resulting in 16
+if you call a(3), it would be equivalent to (2 &lt;&lt; 3) - 1
+resulting in 15, which is a binary number with three bits set to 1 (111 in binary)
+<span class="alt-text">
+  printf("b is %d\n", b(3));
+  printf("a is %d\n", a(3));</span>
+
+    8 in binary = 1000
+    4 in binary = 0100
+    2 in binary = 0010
+    1 in binary = 0001
+
+3 in binary is a combination of 1 and 2, yadayada... Instead if we start with 2
+and shift it over three places to the left, we have 100000, and 1 is in the 16th spot
+making it 16
+
+give these examples time to marinate, the Taj Mahal wasnt built in 45 seconds.
+<span class="alt-text">
+  #define MY_MACRO(ptr)  ((*ptr) * 2)</span>
+
+and you use it as follows:
+<span class="alt-text">
+  int array[5] = {1, 2, 3, 4, 5};
+  int *ptr = array;
+  int result = MY_MACRO(ptr);</span>
+
+During preprocessing, `MY_MACRO(ptr)` will be replaced with `((*ptr) * 2)`
+the `(*ptr)` is just a textual replacement that occurs before actual compilation.
+
+These are variations of the backslash (\) character, in which it cancels-out the proceeding
+character (we talk about the behavior of backslash characters in other sections) but in any
+other case an escape sequence is determined by the proceeding character e.g. "\n" newline
+<span class="alt-text">
+  char s1[] = "Ca\\ncel";</span> <em>// ASCII</em><span class="alt-text">
+  char s2[] = "Ca\134ncel";</span> <em>// octal</em><span class="alt-text">
+  char s3[] = "Ca\x5Cncel";</span> <em>// hex</em>
+
+Technically speaking, the backslash is an ID token that goes until it hits whitespace
+in which case it might have the effect of continuating a line (or removing the line break
+whichever way u prefer to see it) which may fall into the running logic of the rest of the code
+
+This'll make sense as your brain unlocks the harder-to-grok details.
+when you compile and run the following program, it will output: "sequence"...
+<span class="alt-text">
+  #define QUOTE(seq) "\""#seq"\""
+
+  int main() {
+    printf("%s\n", QUOTE(sequence));
+  return 0;
+  }</span>
+
+... by preserving the " " air-quotes around sequence.
+
+Note, the preprocessor has specific ways in which it expands a variable such in
+our example `#seq` which acts as the stringification operator, converting the
+macro argument seq into a string literal.
+
+If you read everything on the page about functions, you would have learned that you can use
+them to make a `type` of some variable... You can do the same with macro's here:
+<span class="alt-text">
+  #define DEFINE_SERVICE(name)              \
+    typedef struct Service_##name##Rec {     \
+        /* Define the structure fields here */\
+    } Service_##name##Rec;                   \
+    typedef Service_##name##Rec* Service_##name; \</span>
+
+`name` is a placeholder in the macro, which gets replaced with the actual service name when
+the macro is invoked. The first part of the macro, `Service_ ## name ## Rec;` , defines a
+structure named w/ `Service_&lt;name&gt;Rec`. The placeholder name is replaced with the argument
+provided as the macro is used (e.g., AppendThis).
+
+The second part of the macro, `typedef Service_ ## name ## Rec* Service_ ## name;`, defines
+a pointer type for the structure. It uses the same structure name (`Service_&lt;name&gt;Rec`) and
+creates a pointer type `Service_&lt;name&gt;`, which points to a structure of that type.
+
+These all come together via the `##` operator that does concatenation, wherein they've been
+defined, you can declare variables of those types like...
+<span class="alt-text">
+  DEFINE_SERVICE(AppendThis)
+  Service_AppendThis Hello;</span>
+
+Heres another macro you can try...
+<span class="alt-text">
+  #define GIVE(return_type) return_type
+  #define A_Func(this) \
+      Generic(umbrella) \
+      That_A_Func(this)</span>
+
+Now when you declare it as a function declaration, it'll look like...
+<span class="alt-text">
+  Generic(umbrella) That_A_Func(AnotherType *this);</span>
+
+The purpose of the first line is to enable flexible declaration of function return types using macros,
+and without it the macro Generic(umbrella) would not be expanded correctly in the definition of `A_Func`.
+since the #define follows the first one, the definition of `GIVE` is still active, and it will be
+available for use within the definition of `A_Func`. So you can kinda see how the preprocessor works.
+
+`do-while(0)` within a macro is a common C programming idiom. It allows the macro to be used as a
+single statement in all contexts, particularly in if-else statements, without causing issues, e.g.,
+<span class="alt-text">
+  #define GOOD_MACRO(x) \
+    do \
+      { \
+        if (x) \
+          foo(); \
+        bar(); \
+      } \
+    while (0)</span>
+
+  <em>// Call the macro somewhere</em><span class="alt-text">
+  GOOD_MACRO(y);</span>
+
+The backslashes are purely cosmetic for readability and you can alternatively have it defined like...
+<span class="alt-text">
+  #define GOOD_MACRO(x) do { if(x) foo(); bar(); } while(0)</span>
+
+The next example demonstrates an offset (youll remember we explained how
+structs use offsets to access members) note: on my machine `size_t`  is a 64 bit unsigned int
+<span class="alt-text">
+  #define offsetof(s,m) ((size_t) &amp; (((s*)0)-&gt;m))
+
+  struct s {
+    char *a;
+    int b;
+    size_t c;
+  };
+
+  int main() {
+    printf("a -- %zu\n", offset(struct s, a));
+    printf("b -- %zu\n", offset(struct s, b));
+    printf("c -- %zu\n", offset(struct s, c));
+    return 0;
+  }</span>
+
+`(*s)` dereferences the pointer to the structure.
+`(*s)-&gt;m` accesses the member `m` within the structure.
+`&amp;((*s)-&gt;m)` gets the address of the member within the structure.
+`(size_t) &amp;((*s)-&gt;m)` casts this address to `size_t`
+and then, from __main__ our macro, *offset(struct..* takes 2 arguments `struct s, x`
+
+if for some reason you just cant stomach the macro, here's an alternative method
+to offsetof,  to set a field's value indirectly.
+<span class="alt-text">
+  struct example {
+    int a;
+    double b;
+    int c;
+  };
+
+  int main() {
+    struct example ex = {0, 0.0, 0};
+
+    </span><em>// First calculate offset</em><span class="alt-text">
+    size_t offset_c = offsetof(struct example, c);
+
+    int new_value = 42;
+    *(int *)((char *)&amp;ex + offset_c) = new_value;
+
+    return 0;
+  }</span>
+
+In practice, you can simplify your expression by adjusting the cast scope. For instance,
+take the example of a preprocessor condition, whereby we're doing something that may not
+be valid C—as explicit casting is not meaningful w/ preprocessor directive like `#if`
+that do not support runtime constructs—though they are in the case of normal macros..
+That doesnt mean that your allowed to have a directive w/ a macro called in the
+condition, that itself handles the casting. It will cause a compilation error.
+
+Therefore it probably will not work to try this in `#if`, but it helps for demonstrating w/.
+Lets say we've casted `int_example` type to the <em>first</em> level, tangent to each variable...
+If we move the cast to one of the outermost levels, we'll have, in turn, casted to each variable
+encapsulated within the same level of the shared parentheses... does that make sense?...
+<span class="alt-text">
+  #if !((int_example((E + 1) / A) &lt;&lt; (F - 2)) &amp; (int_example)G)</span>
+
+In conclusion, we're trying to use our type `int_example` to cast within a preprocessor
+condition (but as we said the preprocessor will not understand or perform type casting)
+
+Here ive chosen to cast at the second parentheses level, which means ive excluded `G`
+from the `int_example` association, and so ive added the cast tangent to it.
+You could very well just add the cast to a parentheses that encapsulates ALL,
+and have it applied to all of them, and thats usually what is the easiest to do.
+
+Preprocessor directives like #if, #ifdef, and #ifndef are used in conditional compilation
+to include or exclude parts of code based on certain conditions. We can of course make
+our example into a macro instead, for a relative notion of what the difference is now.
+<span class="alt-text">
+  #define TRYEXAMPLE(E, A, F, G) \
+    (((((E + 1) / (A)) &lt;&lt; ((F) - 2)) &amp; ((int)(G))))</span>
+
+  Congratulations...
+You've reached the end.
+
+go <a class="reserve" href="struct.html">back</a> or return to <a class="reserve" href="index.html">index</a>
+
+</body></html>

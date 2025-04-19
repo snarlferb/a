@@ -1,0 +1,174 @@
+<!-- page10 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>manip nd attrib</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<h3>___ Bit Manip ___</h3>
+In the following we are going to look at bit fields and bitwise operations.
+You cannot declare expressions that perform bit-level manipulations DIRECTLY,
+as such you must define them in a struct for example, then use them.
+Bit fields allow you to specify how many bits that variable should hold,
+effectively adding more bit positions-or rather a field of bits,
+of which can be either 0 or 1
+
+The following declares bit field (1000) i.e. the 4th bit set, in a struct.
+This implies you can group related flags together within a structure.
+Afterward it is set yet again when we do (1 &lt;&lt; 3) which is equivalent to (1 * (2^(3))),
+or you could say we shifted a 1 bit (0001) three positions to the left
+Whereby we OR (1000) and (1000) together, which equals (1000), as thats what
+OR does w/ equivalent bits <em>(as it does e.g., 1010 | 0101 = 1111 w/ indifferent bits)</em>
+
+When you think of OR, think of <em>amalgamation  or always active when indifferent</em>  or
+better yet refer to AXONN for memorizing every logic gate easily.
+<span class="alt-text">
+  struct {
+    unsigned int is_hidden : 4;
+  } FilePermit;
+
+  int main() {
+    FilePermit.is_hidden |= (1 &lt;&lt; 3);</span>
+
+    <em>// Check if the 4th bit is set</em><span class="alt-text">
+    int isFourthBitSet = (FilePermit.is_hidden &amp; (1 &lt;&lt; 3)) != 0;
+    printf("4th bit set to: %d\n", isFourthBitSet);
+
+    return 0;
+  }</span>
+
+Here's an arbitrary example that does the same thing w/ bitwise shift.
+<span class="alt-text">
+  #define KERMIT (1 &lt;&lt; 0) | (1 &lt;&lt; 1) | (1 &lt;&lt; 2) | (1 &lt;&lt; 3)</span>
+  <em>// Individualized flags, for clarity</em><span class="alt-text">
+  #define THEFROG (1 &lt;&lt; 0)
+  #define THETOAD (1 &lt;&lt; 1)
+  #define THEPIG (1 &lt;&lt; 2)
+  #define THEGOOSE (1 &lt;&lt; 3)
+
+  struct FilePermit {
+    unsigned char is_hidden;
+  };
+
+  int main() {
+    struct FilePermit permit = {0};
+    permit.is_hidden |= THEGOOSE;
+    int isFourthBitSet = (permit.is_hidden &amp; THEGOOSE) != 0;
+    printf("4th bit set to: %d\n", isFourthBitSet);
+    return 0;
+  }</span>
+
+Experiment with it.
+
+<h3>___ Wat dem der attibutes uh fer? ___</h3>
+
+e.g., __attribute__((__noreturn__))
+
+The "attribute" keyword is considered the beginning of the attribute.. Where as e.g., "noreturn" specifies a characteristic of a given entity.
+
+[[deprecated]]
+[[__deprecated__]]
+[[deprecated("reason")]] ... which indicates that the use of the name or entity declared with this attribute is allowed, but discouraged for i.e. <em>reason</em>
+[[__deprecated__("reason")]]
+[[fallthrough]] ... indicates that the fall through from the previous case label is intentional and should not be diagnosed by a compiler that warns on fall-through
+[[__fallthrough__]]
+[[nodiscard]]
+[[__nodiscard__]]
+[[nodiscard("reason")]] ... encourages the compiler to issue a warning if the return value is discarded
+[[__nodiscard__("reason")]] 	
+[[maybe_unused]] ... suppresses compiler warnings on unused entities, if any
+[[__maybe_unused__]]
+[[noreturn]]
+[[__noreturn__]]
+[[unsequenced]] ... indicates that a function is stateless, effectless, idempotent and independent
+[[__unsequenced__]]
+[[reproducible]] ... indicates that a function is effectless and idempotent
+[[__reproducible__]]
+
+every standard attribute whose name is of form   attr  can be also spelled as  __attr__  and its meaning is not changed.
+this means that, for example,  __attribute__((attr))  can be simplified to __attr__  ... And likewise  __attribute__((packed))
+can being written as  __packed__ ... or to better illustrate this, take the e.g.,
+<span class="alt-text">
+  void do_something(int x) __attribute__((noreturn));</span>
+
+which is declaring a function that uses this attribute. It could instead be written as...
+<span class="alt-text">
+  void do_something(int x) __noreturn__;</span>
+
+it is not always the case that you can simplify them, as you'll see in the GCC-specific examples.
+note, that you can declare these functions before their definition (separating declaration from implementation)
+
+but here's a few additional things or outliers i can allude to...
+<span class="alt-text">
+  __attribute__ ((aligned (16)) char stack0[4096 * NCPU];</span>
+
+this array is intended to allocate a separate stack for each CPU core in a
+multi-core system, each stack being 4096 bytes in size (4096 bytes is a
+common size for a stack on many systems).
+
+generally speaking, its considered attribute that specifies alignment,
+and declares an array of characters. It combines alignment specification
+(aligned (16)) with array declaration  char stack0[4096 * NCPU]; 
+to allocate a contiguous block of memory (stack0) that is both aligned
+on a 16-byte boundary and sized to accommodate multiple stacks for a
+specified number of CPU cores (NCPU).
+
+`4096 * NCPU`  calculates the total size of the array. If NCPU is, for example,
+  4, then stack0 would be  4096 * 4 = 16384 bytes (16 KB)
+
+it ensures that the memory allocated for stack0 starts at an address that is
+divisible by 16. This is relevant for scenarios where hardware/ software
+requires data to be aligned to certain boundaries for efficient memory access,
+or to optimize the performance for multi-core systems.
+
+an example might be w/ SIMD instructions in processors which often
+require data to be aligned on boundaries such as 16 bytes to perform efficiently.
+
+here's another example of an attribute...
+<span class="alt-text">
+  void my_function() __attribute__((noreturn));</span>
+
+this `(noreturn)` indicates that my_function does not return to its caller.
+<span class="alt-text">
+  typedef int my_int_type __attribute__((aligned(4));</span>
+
+this example aligns instances of my_int_type on a 4-byte boundary, and
+they can be used to all sorts of things like this.
+
+you can apply multiple attributes to a single declaration...
+<span class="alt-text">
+  __attribute__((aligned(16), packed)) struct my_struct { ... };</span>
+
+here, aligned(16) aligns the struct on a 16-byte boundary, and packed ensures
+that the struct's members are tightly packed without any padding.
+
+these are of course specific to gcc, nevertheless it gives you some fairly
+useful utilities like this. it also provides hooks for function entry and exit,
+<span class="alt-text">
+  void __attribute__((no_instrument_function)) __cyg_profile_func_enter(void *this_func, void *call_site) {
+    printf("Entering function %p from %p\n", this_func, call_site);
+  }
+
+  void __attribute__((no_instrument_function)) __cyg_profile_func_exit(void *this_func, void *call_site) {
+    printf("Exiting function %p to %p\n", this_func, call_site);
+  }</span>
+
+when you compile your program with the -finstrument-functions flag, it'll
+automatically insert calls to __cyg_profile_func_enter and
+__cyg_profile_func_exit  at the entry and exit points of
+every function in your program.
+
+other common attributes you might see,
+
+__attribute__((__bounded__))
+__attribute__((__format__))
+__attribute__((__unused__))
+__attribute__((__used__))
+
+you can learn more about gcc attributes here, https://gcc.gnu.org/onlinedocs/gcc/Function-Attributes.html
+
+or you can continue to <a class="reserve" href="page11.html">this page</a> for an example program.
+</body></html>

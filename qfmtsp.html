@@ -1,0 +1,460 @@
+<!-- page1 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>type</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+<div id="ctrl-anch"><b>Control Flow</b></div>
+<!-- See full comment @ #jump-here -->
+Conditional code is an essential aspect of programming, enabling you to control the
+flow of execution based on specific criteria. Understanding how to effectively use
+contructs like if statements, for loops, while loops, is crucial in developing
+algorithms that respond dynamically to varying inputs and states.
+
+It's best to get use to writing conditonal code because alot of what you will be
+thinking and doing is similar—that is to say you have to think about the range and
+behavior of something, and then set those conditions that either allow or prevent
+the execution of subsequent actions or statements.
+
+The `if` statement allows you to execute a block of code if a specified condition is
+true/false or <em>equal to</em>.
+
+When you have a single statement, the very first function call is associated with
+that `if`,  but the second one is not, e.g.
+<span class="alt-text">
+  if (my_condition)
+    do_something();
+    do_something_else();</span> <em>// not part of it</em>
+
+It makes more sense when you write it in one line  `if (my_condition) do_something();`,
+and helps you understand what you are doing before creating a multi-branch, compound
+statement. A single statement ends once the program reaches the first semicolon.
+
+We'll be explaining the pieces to this next example later, but assume we have a function,
+`int get_resource(void){...}`
+<span class="alt-text">
+  void use_resource(void) {
+    int resource = get_resource();
+    if (!resource) return;
+  }</span>
+
+`!resource` checks if resource is "0" (false). If resource is in fact 0, the function
+returns, i.e. it exits immediately—no further code runs. If its "1" (true), then the
+`return`  inside the if block is skipped, and all remaining code in `use_resource(void)`
+function, after that line, is skipped (return w/no value defaults to `return 0`)
+
+So although a function continues executing the code that follows the if block, it depends.
+And in our example, `return` actually changes the flow of execution <em>(we'll speak more on return)</em>
+
+An `else` and/or `else if` following an `if` can also be used as single statements
+associated w/ a single block, or as multi-branch statements.
+
+`else` &amp; `elseif` provide an alternative branch or block of code to be executed,
+given the condition is true/false or "equal to". In that sense, switch statements are then
+used for multi-way branching sequences to be evaluated based on the value of some expression.
+
+Specifically, `else if` allows you to specify another <em>condition</em> to test the previous
+`if` or `else if` conditions.
+
+Its at that point that the associated `else` statement would be evaluated instead,
+if an `else` statement is present. Conditions may depend on a given expression, as
+well as whatever the operator is evaluated to. When talking about `else if` versus
+having `else` w/ a nested if block, there's a subtle difference between the two...
+
+The `else if` method collapses the conditions, so checks may be applied broadly,
+potentially causing logic errors if conditions aren't mutually exclusive.
+Nested `if` in `else` keeps conditions clearly separated, so that checks
+are only applied to relevant subsets. You should experiment with the two
+in order to grasp where the discrepancy in behavior lies!...
+
+When you have a function within the condition of an `if` statement, it leads to the function
+being executed at that point in the program flow, presuming the following provisions are met:
+A) The function's return value must evaluate to true according to C's truthiness rules. That
+is, any non-zero return value is considered true, and zero is treated as false, and...
+
+B) The function name in the condition must refer to an actual function w/ braces, e.g.
+`if (my_condition())`. Function names in C are treated as pointers to the function, so in an if
+condition like  `if (my_condition)`, you're actually checking if the address of the function
+is non-zero (i.e., that the function exists). However, this does not call the function.
+
+To call the function and check its return value, you must include the parentheses just like we demonstrated.
+
+This rule applies not only to if statements but also to other control flow statements, such as loops
+(while, for, etc.), where the function in the condition will be called each time the condition is evaluated.
+
+<b>Loops</b>
+
+Loops in C are constructs that allow you to execute a block of code repeatedly until the
+respective conditions are no longer true (repeated execution so as long as a condition holds true).
+This eliminates the need to write the same code multiple times. I'll try to portray the intricacies involed.
+
+<em>Note: You can also write code iteratively without using traditional loops. Iterative
+solutions can often be achieved through recursion or by using functions that internally
+handle iteration. In cases where you want to understand the individual components of a loop
+it then might be necessary, however you could just as easily write it out as pseudocode.</em>
+
+In a for loop, the first part of the loop (before the first semicolon) is specifically
+for initializing variables BEFORE the loop starts. These initializations are executed
+only once, right before the loop begins its first iteration. `for (i = j = ...`, would
+be an example of having TWO variables initialized before the loop begins, where as in
+this example  `for (i = j; j = ..`,  "j" is being set after the loop begins, albeit at
+the start of each loop iteration.
+
+I am of course demonstrating this in the ANSI C89 style of creating for loops, where you
+have presumably initialized them earlier in the function. Most of the time, with some
+simple adjustments you can interpret one interchangeably with the other style; Its just
+a matter of making sure that when you move the declaration of e.g. "int i" into the
+condition of the for loop, that nothing else depends on "int i", otherwise you should
+keep the "int i" declaration, and then change the for loop to the style you prefer.
+
+Before every iteration, the loop condition (e.g., `i &lt; 5` in a for loop) is checked.
+If the condition is true, the loop body is executed; if it's false, the loop terminates.
+As the loop iterates, each statement in the loop body is executed sequentially.
+
+You might see the `continue` keyword used in the loop body. When the program encounters
+`continue`, it skips the remaining lines of code in the current iteration (of the body)
+and then immediately proceeds to the next iteration of the loop. The loop condition is
+still checked before the next iteration begins. Here's how it can be used meaningfully
+w/ an if statement inside of a for loop,
+<span class="alt-text">
+  for (int i = 0; i &lt; 5; i++) {
+    if (i == 2) {
+        continue;</span> <em>// Skip the rest of the loop body when i is 2
+        // .. where upon this will be skipped</em><span class="alt-text">
+    }</span>
+    <em>// .. This is also skipped when i = 2</em><span class="alt-text">
+    printf("i = %d\n", i);
+  }</span>
+
+If (some condition), then continue past the rest of the iteration. In our example, the output
+will only leave out "i = 2" since that is what we skipped.
+
+The `break` keyword is used to exit a statement/loop prematurely. When it see's  `break` the
+loop immediately terminates, and control is passed to whatever comes after it. So if `break`
+is responsible for breaking at the point that its encountered, `return` (which is optional)
+exits the transfer's control from a given block of code or function  to another, or optionally
+returns a value to the caller. For example  `if (j == 2) {  break; ... `, will exit the inner
+loop when j is 2. In a switch statement, if it matches, e.g.  `case 1: ... break;`, it will
+exit the switch statement once it see's the `break`, bypassing remaining case labels and
+the default case.
+
+In the context of control statements (w/ return type, "void"), without having specified the
+value associated w/ the return statement, return will function to exit, as long as said
+condition is met. If the condition is "false", the function will continue executing the rest
+of the code. A void function is explicitly defined to not return any value, so attempting to
+return a value (e.g., return 0;) would violate the rules, which results an error.
+see <a class="reserve" href="func.html">func.html</a> to learn more about return statements.
+
+The start and end of the statement also marks the memory allocation boundary, or
+rather a new sequence of memory. You might then call the start or redirection of a
+proceeding sequence "control flow transfer" or "control flow manipulation" -which refers
+to the mechanism by which the program's execution flow is redirected based on the condition
+or loop. Its something you have to be conscious of in situations where specific sequences of
+memory matter (or more importantly) situations where the exact format-layout of the code matters.
+the same is the case where you have ordered vs non-ordered arrays. In C, these are ordered by default. 
+
+A `do...while` loop is similar to a while loop, with one key difference:
+the `do...while` loop guarantees that the code inside the loop will be executed at least once,
+regardless of whether the condition is true initially. This is because the condition is evaluated
+after the code block has been executed.
+
+A goto statement provides a way to transfer control to a labeled statement within a function.
+Once the program has encountered it, it jumps to the specified label. Execution continues sequentially
+from that point unless explicitly redirected or interrupted by control flow statements (including `goto`
+jumping the program elsewhere...)—execution under a label continues to occur even if another label falls
+within the sequence of that execution, and as such continues to execute until it encounters a return
+statement, or reaching the end of the function.
+
+The structured use of goto and labels helps avoid collisions or conflicts in control flow because
+each labeled section serves a specific purpose within the function. There are no ambiguities about
+which code path or branch to follow after jumping to a label. It creates an explicit divide,
+so you'll often see functions that design themselves in such a way where they can recall
+the same code multiple times, which may have otherwise been problematic without.
+
+Lets dig a little deeper. Control flow statements primarily work by altering the program
+counter (the CPU register that keeps track of the next instruction as explained)
+they don't directly navigate memory in the sense of manipulating memory addresses.
+For example, when an `if` statement is encountered, the condition is evaluated.
+If the condition is true, the program counter is updated to point to the first
+instruction within the `if` block.
+
+These instructions are then fetched and executed from memory. If the condition is false
+and an `else` block exists, the program counter is updated to point to the first instruction
+within the `else` block; Otherwise, the program continues execution from the next
+instruction after the `if` statement.
+
+`setjmp`, as well as longjmp can be used to control the flow of execution. They are different from
+the normal control flow mechanisms like if, else, for, while, and do-while, which operate within
+the boundaries of a function. longjmp and setjmp can jump across function boundaries (non-locally)
+as well as back to previous code, e.g. `setjmp(jmp_buf)` might be used to save the current state
+of the program into a `jmp_buf` buffer, where `longjmp(jmp_buf, 1)` jumps back to the saved state,
+effectively causing the program to execute the code at the point where setjmp was called.
+
+Understanding control flow is crucial not just for writing functional code but also for secure
+and error-free applications. `if` statements can help mitigate some of the more deviant errors
+that may arise during program execution. By properly managing conditions and branches, you can
+reduce the risk of errors like overflow errors (like a max integer bound that could potentially
+wrap around) buffer or integer overflows, memory leaks, and null pointer dereferences are just
+a few of the errors that you should be mindful of, for example;
+<span class="alt-text">
+  int main() {
+    unsigned int var = UINT_MAX;
+    unsigned int value = 0;
+
+    if (var == UINT_MAX) {
+      printf("Overflow would occur!\n");
+      var = value;
+    } else {
+      value++;</span>
+      <em>/* This is a silly example for demonstration:
+       * The post-increment means the value remains the same
+       * until after the current statement (more about unary
+       * operators later)
+       * Checking the value of 'var' in the condition and
+       * then incrementing it within the loop body can lead
+       * to redundancy, as both instances of 'var' will iterate.
+       * (unlikely to be the intended behavior)
+       * however its just for illustration purposes so you
+       * understand that the scope of unary operators locally
+       * apply to variables of the same name.
+       */</em><span class="alt-text">
+      printf("Incremented var: %u\n", var);
+    }
+    return 0;
+  }</span>
+
+An overflow occurs here because `var` is of type unsigned int, which has a maximum value
+defined (65535) (on 32 bit and 64 bit this is not the case, but lets just say it is for
+demonstration purposes) When we attempt to increment it beyond this value, it wraps around
+to 0, causing an overflow condition. Also, its quite common to use an if statement to check a
+condition and perform an action at once. For more information on errors <a class="reserve" href="err.html">see this</a>
+
+This is typical for values that either wrap around to zero, or become negative, when they're
+in fact too large to be represented in the <em>current</em> data type. For context, say you
+add "1" to UINT_MAX, the result will be UINT_MIN (the minimum value an int can hold). So,
+if we were to check whether or not an overflow would occur, it would be more accurate to
+say,  "if (code_is LESS_THAN max...)"
+
+From the Arithmetic Logic Unit's perspective, it wouldnt inherently know the difference between
+an overflow and a negative value when it comes to signed integer types, so it distinguishes
+them using an overflow flag for overflow and the "sign bit/flag" (most significant bit) for
+a negative value, to correctly signal when the result of an arithmetic operation goes beyond
+the range. For zero values, a zero flag is used, for both signed and unsigned integers.
+
+Obviously unsigned integers dont have negative values, so it only uses two flags, the carry
+flag for overflow and the zero flag. Extra information (carry, zero, sign and overflow) about
+the data we've received makes use of a 1-bit register.
+
+When you compare data, its really just performing subtraction between the two; A negative value
+is "less than", a zero value means that its "equal to", and a positive value is "greater than".
+
+
+<div id="fmt-anch"><b>Format Specifiers</b></div>
+The function `printf()` is interesting (and we'll talk more about it later), but it allows you to
+specify the number of characters that a given object is aligned to, and what kind of data you want
+to have in the output. So say you were printing an arbitrary integer, `printf("%3d", 5)`; It will
+output "5", but itll also have three characters (two spaces) included w/ it.
+
+You can also shift that number so it is on the left, by using `-` next to it, like `%-3d` (without
+the hyphen, it should be automatically right aligned). You can also use an asterisk to reference a
+variable, say `int x = 14` was declared; Now that can referenced in place of the character/align,
+<span class="alt-text">
+  printf("%*s", x, "hivehollow");
+</span>
+And this logic carries over into floating point, such that you are always specifying the
+`"%width.precisionf"` that you want in the output:
+<span class="alt-text">
+  printf("%width.precisionf", value);
+</span>
+Below is a list of format specifiers that determine what type of data should be printed
+or scanned in input and output operations.
+<table style="width: 1000px;">
+  <tbody>
+    <tr>
+      <td width="308"><b>Data Type</b></td>
+      <td width="308"><b>Specifier</b></td>
+    </tr>
+    <tr>
+      <td width="308">pointer</td>
+      <td width="308"><span class="alt-text">%p</span></td>
+    </tr>
+    <tr>
+      <td width="308">char (or string)</td>
+      <td width="308"><span class="alt-text">%c</span> (or <span class="alt-text">%s</span> until encountering '\0')</td>
+    </tr>
+    <tr>
+      <td width="308">signed char</td>
+      <td width="308"><span class="alt-text">%c</span> (<span class="alt-text">%hhi</span> for numerical output)</td>
+    </tr>
+    <tr>
+      <td width="308">unsigned char</td>
+      <td width="308"><span class="alt-text">%c</span> or <span class="alt-text">%u</span> (<span class="alt-text">%hhu</span> for numerical output)</td>
+    </tr>
+    <tr>
+      <td width="308">short<br>short int<br>signed short<br>signed short int</td>
+      <td width="308"><span class="alt-text">%hi</span></td>
+    </tr>
+    <tr>
+      <td width="308">unsigned short<br>unsigned short int</td>
+      <td width="308"><span class="alt-text">%hu</span></td>
+    </tr>
+    <tr>
+      <td width="308">int<br>signed<br>signed int</td>
+      <td width="308"><span class="alt-text">%i</span> or <span class="alt-text">%d</span></td>
+    </tr>
+    <tr>
+      <td width="308">unsigned<br>unsigned int</td>
+      <td width="308"><span class="alt-text">%u</span></td>
+    </tr>
+    <tr>
+      <td width="308">unsigned octal</td>
+      <td width="308"><span class="alt-text">%o</span></td>
+    </tr>
+    <tr>
+      <td width="308">unsigned hexadecimal</td>
+      <td width="308"><span class="alt-text">%x</span></td>
+    </tr>
+    <tr>
+      <td width="308">long<br>long int<br>signed long<br>signed long int</td>
+      <td width="308"><span class="alt-text">%li</span></td>
+    </tr>
+    <tr>
+      <td width="308">unsigned long<br>unsigned long int</td>
+      <td width="308"><span class="alt-text">%lu</span></td>
+    </tr>
+    <tr>
+      <td width="308">long long<br>long long int<br>signed long long<br>signed long long int</td>
+      <td width="308"><span class="alt-text">%lli</span></td>
+    </tr>
+    <tr>
+      <td width="308">unsigned long long<br>unsigned long long int</td>
+      <td width="308"><span class="alt-text">%llu</span></td>
+    </tr>
+    <tr>
+      <td width="308">float</td>
+      <td width="308"><span class="alt-text">%f</span> (auto-promoted to double for printf)<br><span class="alt-text">%a</span> (hexadecimal floating point)</td>
+    </tr>
+    <tr>
+      <td width="308">double</td>
+      <td width="308"><span class="alt-text">%f</span> (<span class="alt-text">%F</span>)<br><span class="alt-text">%lf</span> (<span class="alt-text">%lF</span>) for scanf()<br><span class="alt-text">%g %G</span><br><span class="alt-text">%e %E</span> (scientific notation)</td>
+    </tr>
+    <tr>
+      <td width="308">long double</td>
+      <td width="308"><span class="alt-text">%Lf %LF</span><br><span class="alt-text">%Lg %LG</span><br><span class="alt-text">%Le %LE</span></td>
+    </tr>
+  </tbody>
+</table>
+<!-- We need to make this like a Nintendo Entertainment System overworld level-select, that which "unlocks" those examples locked behind `func.html`, e.g. (1) Declare array,
+     (2) let currentIndex = 0, (3) Create generate function that ensures index stays in bounds + unlock condition, (4) Define said function for that condition (5) Call generate function -->
+<span id="jump-here"><b>Operators</b></span>
+
+<span class="alt-text">                &amp;&amp;    ||    !</span>    <!--logical \-->
+<span class="alt-text">    +     -     *     /     %</span>    <!--arithmetic \-->
+<span class="alt-text">                    ++    - -</span>    <!--unary aerith \-->
+
+At this point, you, the user have not learned about functions.
+So skip over that which is unfamiliar, and come back to it (in the future it will be more straightforward)
+
+The modulus operator ensures that values stay within a fixed range. So instead of using loops or conditional checks
+to manually wrap around when reaching the end of the alphabet for example, modulus handles it automatically. If we
+consider that the alphabet starts at 0, and ends at 26, then  `(x+13)mod(26)` each character (you have to extend
+the algorithm if you want a non-zero base). We do this check for both upper/lowercase:
+<span class="alt-text">
+  char intern_case_audition(char c) {
+    return (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') ? ((c - 'A' + 13) % 26) + 'A' :</span>  <em>// continues on next line...</em><span class="alt-text">
+           (c &gt;= 'a' &amp;&amp; c &lt;= 'z') ? ((c - 'a' + 13) % 26) + 'a' : c;
+  }
+
+  void rot13_str_recursive(char *str) {
+    if (*str) {
+        *str = intern_case_audition(*str);
+        rot13_str_recursive(str + 1);
+    }
+  }</span>
+
+The if (*str) statement acts as a stop condition by checking/and preventing the function from making further
+recursive calls once it reaches the null terminator ('\0') at the end of the string. We could have used a loop
+in place of doing the recursive step, however I liked how it followed from the if statement theme we had earlier.
+
+Going back to the ternary operator in the first function; Ternary is a shorthand for if-else, and it has the following ingredients:
+
+  condition ? expression_if_true : expression_if_false;
+
+If `condition` is true, the result is "expression_if_true"; otherwise, if `condition` is false, the result is "expression_if_false".
+
+Next: When you use the unary increment (++) or decrement (- -) operators on a variable  <!--\-->
+they directly modify the variable's value within its lifetime.                      <!--\-->
+
+This means that the change to the variable's value persists regardless of whether the  <!--\-->
+variable is being assigned to another variable or used as an r-value (the right-hand side of an assignment or in an expression)
+<span class="alt-text">                                        ==    !=    &gt;     &lt;    &gt;=     &lt;=</span>    <!--relational    \-->
+<span class="alt-text">                                           &amp;    |    ^    ~    &lt;&lt;     &gt;&gt;</span>    <!--bitwise         \-->
+<span class="alt-text">   =   +=     -=     *=    /=     %=     &lt;&lt;=    &gt;&gt;=     &amp;=     ^=     |=</span>    <!--assignment        \-->
+
+Here's an interesting demonstration of the unary pre-increment, consider `if (++example == newvalue)`.
+In this case `++example` increments the value of `example` by 1 before performing the comparison,
+whereby the incremented value of `example` is then compared with `newvalue`.
+This sometimes depends on factors such as the size of the "type" that it points to.
+
+During post-increment, the evaluation of the condition happens with the original value of the
+variable, **before** the increment takes place. After the comparison, then `example` is incremented...
+And because unary increment/decrement affect the variable in the lifetime of a given statement,
+than it still remains effective. Post/pre increment or decrement cannot be an lvalue.
+
+Your key takeaway should be that post or pre increment/decrement has TWO effects.. in the case of
+assignment, it literally adds/subtracts (1) to itself in memory (remaining in affect for the scope
+that its in) as well as performing the post or pre increment/decrement for the given assignment,
+condition, function argument or an array index (note, there's one important distinction here,
+e.g. `(*x)++`  increments the value stored at the memory location x points to, where as `*(x++)` de-
+references x before incrementing the pointer itself (pointer moves, but the value at old x is unchanged)
+
+Comparison operators can be used within expressions that are on the right-hand side (r-value),
+producing a boolean "1" for true, or "0" for false, which is then assigned to the l-value.
+<span class="alt-text">
+  int result = (a &gt;= b);</span>
+
+This example is signed, however the comparison of unsigned expressions w/ ‘&gt;= 0’ is always true,
+seeing as they are by definition &gt;= 0, which would result in a warning (warnings are considered errors)
+
+
+<div id="storage-class-anch"><b>Storage Class Specifiers</b></div>
+The term static, as used in programming, specifies the storage duration or lifetime of a variable or function.
+A static variable retains its value between function calls, meaning it preserves its state across the program's
+execution, unlike local variables that are created and destroyed each time a function is entered and exited
+(the terms entered and exited can be thought of as, “read or no longer read” if that helps you imagine it conceptually)
+
+Linkage (or visibility) refers to the scope or reach of a variable or function. When a variable is declared
+as a local variable, it typically has automatic linkage, meaning it’s only visible and accessible within the
+function or block where it's declared. However, a global variable, on the other hand, has external linkage
+by default, making it visible across multiple translation units (or source files) in the program.
+This means the variable or function can be accessed anywhere in the code after its declaration,
+as long as the necessary references are included (such as with extern).
+
+The keyword extern is used to declare a variable or function that is defined in another translation unit.
+It signals that the variable or function has external linkage—i.e., it's visible and can be accessed across
+different source files (translation units). Without extern, the variable or function would be treated as
+having internal linkage, meaning it’s limited to the scope of the current file.
+
+<div id="type-qualifier-anch">Type Qualifiers</div>
+`const` is used to specify that a variable's value cannot be modified after initialization
+consider it also a form of documentation and a contract with the caller that a function shouldnt
+attempt to modify the provided variable.
+
+The value of a const-qualified object however is not a constant expression in the full sense of the term,
+and cannot be used for array dimensions, case labels, and the like. (C is unlike C++ in this regard.)
+When you need a true compile-time constant, use a preprocessor #define (or enum)!
+
+i always get confused by these terms like, const-qualified, logically quantified, etc...
+look up the following terms if you want resolve any confusion that may be caused by like-terms, e.g.
+modifiers (modify other identifiers), quantifiers (in mathematics they specify quantities of a set)
+identifiers (the names of the entities in the programming language), delimeters (specify boundaries,
+e.g. commas). also a semicolon at the end of a statement is an example of a statement terminator.
+
+go to the <a class="reserve" href="func.html">next page</a>
+
+or <a class="reserve" href="index.html">back</a>
+
+</body></html>

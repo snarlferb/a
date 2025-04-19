@@ -1,0 +1,427 @@
+<!-- page4 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>struct</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<div id="struct-anch"><b>struct</b></div>
+In C, structures are user-defined data types that group related variables.
+in technical terms they would be described as contiguous blocks of memory,
+wherein the fields (members) are accessed using offsets.
+
+More specifically, all of its members exist independently of each other,
+and they are stored at different memory locations. In a union, all the
+members share the same memory space, which means they overlap at the
+same memory location. Therefore, a struct is ideal when you need a
+receptacle that holds various types of data together (when they
+must not overlap at the same memory address)
+
+The following is just to demonstrate how memory is aligned in a struct (Note:
+Hold your phone sideways if on mobile, or else the diagram will look disorganized)
+<span class="alt-text">
+  struct align {
+    char a;</span>   <em>// 1 byte</em><span class="alt-text">
+    int  x;</span>   <em>// 4 bytes</em><span class="alt-text">
+    char b;</span>   <em>// 1 byte</em><span class="alt-text">
+  };
+
+  Memory Address:  a = 0x00   0x01   0x02   0x03, x = 0x04
+  x = 0x05   0x06   0x07,  b  =  0x08  0x09  0x0A  0x0B
+  +-----------------+-----------------+-----------------+
+      a := 1 byte   |(3 bytes padding)|   x := 1 byte   -&gt;
+  +-----------------+-----------------+-----------------+
+      x := 1 byte   |  x := 1 byte    |   x := 1 byte   -&gt;
+  +-----------------+-----------------+-----------------+
+      b := 1 byte   |(3 bytes padding)|
+  +-----------------+-----------------+</span>
+
+1-byte blocks are shown in the diagram. Each of those blocks represents 1 byte of memory,
+except for where it shows 3 bytes of padding
+a occupies 1 byte at 0x00 (offset 0).
+There are 3 bytes of padding to align  x  to 4-byte boundary (represented here by three blocks)
+Thus, x occupies 4 bytes, starting at 0x04. b occupies 1 byte at 0x08 and needs 3 more bytes of
+padding afterward to maintain proper alignment for the entire struct size (i.e. a multiple of 4)
+
+structs can store any data type:
+<span class="alt-text">
+  struct example {
+    float x;
+    double y;
+  };</span>
+
+using a struct within a function might look like
+<span class="alt-text">
+  void function(){
+    struct example newname;
+    struct example *something = &amp;newname;
+  }</span>
+
+You can then declare a variable (newname) in this case
+that points to x or y in the original struct, and same for
+(something), which it now equals the address of member.
+
+When you see this `Object.Member, its referred to as a Member that is
+being accessed through the pointer to Object... you use the dot when there's
+direct access (used with a struct variable and not a pointer) and the (-&gt;)
+arrow operator when its indirect (i.e. when it's being accessed from a pointer already)
+
+Methods: C does NOT have true methods like C++, but you can still call an `Object.function()`,
+but only if function is a <b>function pointer</b> <em>inside Object</em> (or more specifically,
+inside the struct associated with the instance of Object). Anyway, lets not get ahead of ourselves.
+
+Returning to our struct demonstration, `newname.x` could be declared w/ direct access, and
+`something-&gt;x` would have indirect access, seeing as its two levels away from `example`
+
+Because the arrow operator is used to access members of a struct through a pointer
+to that struct, its combining a dereference of the pointer with accessing of the struct
+member all in one step.
+<span class="alt-text">
+  List *this = &that;
+  this-&gt;num = 6;
+  strcpy(this-&gt;name, "Activity");</span>
+
+Whereby `this-&gt;num` is equivalent to `(*this).num`, and the same is true for it in
+the proceeding line. In other words, it makes the syntax slightly less involved,
+and slightly more specific in regards to indirectly accessing through this member.
+
+For further reading on more situations w/ structs and pointers, such as those that arise when
+you want to access things from <a class="reserve" href="vac.html">multiple structs away, go here</a>.
+
+Lets try simply declaring a struct now (lets assume we have a `struct example {}` already)
+<span class="alt-text">
+  struct example newA;</span>
+
+Here's how you might declare and access members of structures,
+this time w/ an array using the dot (.) operator.
+<span class="alt-text">
+  struct example BarrF[3];
+  BarrF[0].x = 101;</span>
+
+`BarrF` is the name of the array. It's a variable that holds a collection of
+three `example` structures (from the struct we created in the beginning).
+
+so `BarrF` will hold objects of type `example`. hopefully thats not too
+confusing to understand. anything you dont understand you can revisit again.
+
+you can construct a structure as an anonymous struct with a tag, but...
+<span class="alt-text">
+  struct {
+    int x;
+    int y;
+  } example;</span>
+
+we couldnt directly use typedef to create an alias for an unnamed or
+anonymous structure. Therefore, consider the struct we made was named
+`struct example {...}`, using typedef we can create an alias for the struct:
+<span class="alt-text">
+  typedef struct example example;</span>
+
+lets you declare w/
+<span class="alt-text">
+  example ex;</span>
+
+as opposed to reusing `struct example ...`, since struct example is a named
+structure, `typedef struct example example;` creates an alias "example",
+which you can use to declare variables.
+
+and since you've created a typedefined name, it can be used as
+a type of some member in a new struct. Note, this is also a common
+way typedefined structs are created:
+<span class="alt-text">
+  typedef struct {
+    example whatever;
+  } data;</span>
+
+and since youve already included `typedef`, you can omit the `struct` keyword
+in the declaration as we had mentioned.
+<span class="alt-text">
+  data newA;</span>
+
+<em>or you can access and manipulate its members, like `newA.whatever`, just as
+you would with any other struct variable</em>
+
+During definition, you can have the same name used for the struct name and struct tag, e.g.
+<span class="alt-text">
+  typedef struct example {
+    float z;
+  } example;</span>
+
+typedef also means that the type (in this case `data`)
+is available for use as a "type of function"..
+<span class="alt-text">
+  data CreateFunction(){
+    ...
+  }</span>
+
+You can also have what's called a self-referential struct within the struct it's
+been defined in, i.e.
+<span class="alt-text">
+  typedef struct name {
+    struct name *anothername;
+  } newname;</span>
+
+The only stipulation is that it must be a pointer. You dont need to make the struct typedef,
+but without typedef, you need to always use `struct name` to refer to the type, where as w/ the
+typedef, you can use the alias `name` instead of `struct name` thereafter. Type definition is
+more common in C than it is in C++. In conclusion, `typedef` in a definition refers to the
+type, e.g. `struct name ...`, and a struct tag creates a type alias for, e.g. `name new_variable;`,
+or in the case of a nameless struct, the struct tag is then what then provides the self-referential
+struct with `name`.
+
+Designated initializers, that we'll be looking at, provide a way of explicitly
+intitializing struct members. The following is considered, <b>default order initialization</b>:
+<span class="alt-text">
+  struct test {
+  int a;
+  char b;
+  } data = {10, 'c'};</span>
+
+That is, the members of the structure are initialized in the order
+in which they are declared in the structure definition (a is 10, c is b)
+and this one is "explicit order initialization":
+<span class="alt-text">
+  struct test data = {.b = 'c', .a = 10};</span>
+
+now we should see what it looks like in context:
+<span class="alt-text">
+  struct Ext {
+    int x;
+    char *y;
+  };
+
+  int main() {
+    struct Ext t = {.x = 3, .y = "word"};
+    printf("%d, %s\n", t.x, t.y);
+    return 0;
+  }</span>
+
+C also allows designated initializers, where you can initialize specific
+members of a structure by name using this syntax:
+<span class="alt-text">
+  struct test {
+    int a;
+    char b;
+  } data = {.a = 10, .b = 'c'};</span>
+
+This provides a way to directly access the fields of the structure by name
+in the initialization list (note, the dot (.) acts as the designator).
+You can do alot with these. Continuing on, lets return to the
+beginning of what we learned...
+<span class="alt-text">
+  struct whatever {
+      int x;
+      int y;
+  };</span>
+
+if you want you can do...
+<span class="alt-text">
+  struct whatever points[] = {
+      {10, 20},
+      {30, 40},
+      {50, 60}
+  };</span>
+
+and you can then declare/access the array elements like normal.
+p.s. if you want you can even make it an anonymous structure array,
+but lets look at several different examples. first we have...
+<span class="alt-text">
+  struct whatever {
+    int a;
+    int b;
+  };
+
+  void plop(struct whatever p) {
+    }</span>
+
+youve already seen a compound literal before, where the struct literal created
+this way is unnamed and temporary. now that example was just for demonsrtation,
+lets take a look at another example.. humour me on this..
+<span class="alt-text">
+  void plop(struct whatever p);</span>
+
+compound literals can be used within function calls, both in the actual function
+call and as part of the function prototype or declaration when explaining their usage.
+Lets demonstrate by calling `plop`, initializing its members to "1" and "2"...
+<span class="alt-text">
+  plop((struct whatever){1, 2});</span>
+
+In `{...}` is where the members would presumably be. the temporary struct object
+`whatever` only exists within the scope of the expression.
+
+but lets see one more example to be sure <em>(for conventionary reasons, we should use
+tagged anonymous structs)</em>
+<span class="alt-text">
+  typedef struct {
+    int x;
+    int y;
+  } point;
+
+  int main() {
+    point p = {10, 20};
+  }</span>
+
+now that we've seen three examples of this in a row, surely you got the idea.
+lets go back to basics; Take this structure embedding for example:
+<span class="alt-text">
+  typedef struct {
+    int x;
+    int y;
+  } Point;
+
+  typedef struct {
+    Point position; // Embedded struct
+    int radius;
+  } Shape;
+
+  int main() {
+    Shape c = {{10, 20}, 5};
+    printf("Shape center: (%d, %d), Radius: %d\n", c.position.x, c.position.y, c.radius);
+    return 0;
+  }</span>
+
+In main, we have an aggregate initialization for `Shape c`. The {10, 20} part represents an
+unnamed temporary value that is being used to initialize the `Point` part of the `Shape` struct.
+
+It creates an anonymous temporary object (a Point struct in this case). The "5" initializes the
+radius field of the `Shape` struct. It's a simple literal value that doesn't refer to any variable.
+
+<em>We could have put a string, or variable, or any other type within the `{{ }, }` context.</em>
+
+Now lets suppose i have a struct that i want to declare, just for the sake of argument...
+<span class="alt-text">
+  typedef struct STable *S</span>
+
+because it is a pointer, you should utilize pointer notation (i.e., -&gt; instead of dot)
+when accessing its fields. however if it wasnt a pointer then you would refer to those
+instances of it directly with the (.) dot. Also, because `S` is already a pointer type
+(struct STable *), you don’t need to add another pointer (*) in the declaration of newMember.
+<span class="alt-text">
+  struct NewStruct {
+      S newMember;
+  }</span>
+
+Continuing on, if you learned about function pointers...
+<span class="alt-text">
+  typedef struct {
+    const char *group_name;
+    void (*action)();
+  } AutoGroup;</span>
+
+then here is something cool you can do now:
+<span class="alt-text">
+  AutoGroup auto_groups[] = {
+    {"group1", action1},
+    {"group2", action2},
+    {"group1", action3}
+  };</span>
+
+in other words, function pointers let you omit the `(int *)` or type that precedes
+the given variable and have a clean-looking string pair (and/or any other way you want)
+
+Theres some common conventions i find myself reusing, such as...
+<span class="alt-text">
+  typedef struct {
+    Example *d;</span><em>
+    // ...</em><span class="alt-text">
+  } AppContext;
+
+  AppContext App = {
+    NULL,</span><em> /* whatever */
+    // ...</em><span class="alt-text">
+  };</span>
+
+Declaring and assigning struct members, i often declare `Example *d;` in a function,
+And later assign that variable to an object of the same name,  `d = App.whatever`
+or directly with `Example *d = App.whatever`. Continuing, the following goes back
+to function pointers, i.e. a function pointer of `struct` type:
+<span class="alt-text">
+  struct fourth (*proc_ptr)(
+    const struct fourth *insert,
+    float mode,
+    const struct ftres *amount,
+    float color,
+    float width
+  );</span>
+
+`struct fourth` is the return type of the function pointed to by `proc_ptr`
+The `*proc_ptr` pointer indicates that its a pointer to a function.
+`const struct fourth* insert`, is a pointer to `const struct fourth`,
+and the rest should be self explanatory.
+
+And next, this is getting back to compound literals and using them in an interesting way.
+Say you have a struct called `modern_config`, you can use a compound literal, i.e.
+`(type-name){ .field = value, ... }`, to create and return a struct value on the spot:
+<span class="alt-text">
+  struct modern_config function(struct legacy_config *old) {
+    return (struct modern_config){
+        // ...
+        .flags = 0
+    };
+  }</span>
+
+And this is equivalent to had we called each individually (statements terminated w/semicolons):
+`struct modern_config temp`, `temp.flags = 0` and `return temp`.
+
+An enum is for when you want to create, whats called "enumerated constants"
+They define a set of named integer constants, a collection of related values like
+states or options. The following structure is efficient in terms of memory, combining
+the use of  enum   alongside a union, as only the memory of the <em>current shape</em> type is
+allocated at a time (which is the definitive reason for using  unions  in the first place)
+<span class="alt-text">
+  enum ShapeType {
+    CIRCLE,
+    RECTANGLE };
+
+  struct Shape {
+    enum ShapeType type;
+    union {
+        struct { int radius; } circle;
+        struct { int width, height; } rectangle;
+    };
+  };</span>
+
+Unions require less memory, however only one member of its allocated memory is used,
+as it assigns one common storage space for all of its members.
+Regarding nested structs within unions...
+<span class="alt-text">
+  struct s {double i;} f(void);
+  union {
+    struct {
+      int f1;
+      struct s f2;
+        } u1;
+    struct {
+      struct s f3; 
+      int f4;
+      } u2;
+  } g;
+    
+  struct s f(void) {
+    return g.u1.f2;
+  }
+    </span>/* ... */<span class="alt-text">
+
+  g.u2.f3 = f();</span>
+
+The first line is a fun trick—and a compact way of writing:
+<span class="alt-text">
+  struct s { double i; };
+  struct s func(void);</span>
+
+see here <a class="reserve" href="http://www.lysator.liu.se/c/tc1.html">http://www.lysator.liu.se/c/tc1.html</a>
+
+Regarding anonymous structs and unions—There apart of the C11 spec, often compiled
+w/ -fms-extensions flag , and there are some considerations. Anonymous unions must
+be declared within a containing struct or union, where members of the anonymous
+struct or union are accessed directly as if they were members of the containing struct or union.
+
+More links on C Standards are <a class="reserve" href="std.html">here</a>
+next, see <a class="reserve" href="macro.html">macros</a>
+
+or <a class="reserve" href="arr.html">back</a>
+
+</body></html>

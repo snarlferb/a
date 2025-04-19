@@ -1,0 +1,237 @@
+<!-- page8 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>compilation steps</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<b>Introduction</b>
+If you're interesting in the compiler specifics, we should have
+a high level overview of it... keep mind there may also be optimi-
+zation steps interspersed throughout the process, as well as specific
+implementations/intermediate representations specific to C/GCC...
+
+<b>Preprocessor</b> <a class="reserve" href="headers.html">[or see list of C standard headers]</a>
+This involves processing the source code before actual compilation begins;
+Expands macros (textual substitutions), includes header files and handles
+conditional compilation directives. For macro expansion, it'll replace macros
+w/ their corresponding code per `#define` statement. Then it processes
+`#include` directives to include the content of headers into the source code.
+Conditions are handled such as; `#ifdef`, `#ifndef`, `#else`, `#elif` and `#endif`
+directives to include (or exclude) portions of code based on preprocessor-
+defined conditions. Comments are removed as well during this time.
+And lastly, it generates line information for the compiler to use
+in error messages and debugging.
+
+<b>Lexer</b>
+In order to intuit the lexical analysis and any subsuquent stages, we have
+to understand what it means to do such a thing. The three main steps are:
+(1) Reading input (using buffering), wherein the lexer fetches the source code,
+(2) Matching input against token patterns (using DFA or similar, based on pre-
+specified tokens), which is where token recognition happens. The lexer uses a
+DFA-based pattern to scan said input and identify valid tokens by matching it
+against pre-defined patterns (e.g., regular expressions for identifiers, etc.)
+where each match corresponds to "recognizing a token".
+
+(3) After recognition, the lexer produces the identified tokens and passes
+them to the parser. In summary, we're defining a language construct or a comp-
+onent of how that language construct comes to be. We begin first w/ the input
+source code itself, which is recognized as lexemes. This means that the lexer
+identifies fundamental constructs such as literals, keywords, literals, operators,
+identifiers, whitespace. Then each construct is associated w/ a token TYPE and a
+VALUE, representing its category and specific content.
+
+For example, the character(s) `5` might be recognized as a numeric, literal token
+called `NUMBER` with a value `5`, while the characters `int` might be recognized
+as a keyword token `TYPE_SPECIFIER`, w/ a value of `INT`. The output of the lexical
+analysis stage looks like a sequence of tokens, each representing the "recognized
+construct" in the input source code. While the lexer identifies tokens and their
+types values, it also processes individual characters to recognize token boundaries
+and patterns. For example, when the lexer encounters the characters `int`... it'll
+recognize that as being a keyword token (as in the bilateral method we described),
+but it also processes each character individually (i, n, t) and determines if they
+match the pattern for a said keyword token. In conclusion, characters must be analyzed,
+and subsequent words must be tokenized into tokens.
+
+<b>Parser</b>
+After lexical analysis it does infix to postfix conversion w/ a special algorithm. Then,
+takes the stream of tokens produced by the lexer and constructs an Abstract Syntax Tree (AST)
+using the Context Free Grammar (which describes the syntactic structure of the programming
+language) Production rules specify how it'll be composed of other constructs. One aspect
+to this would involve the precedence and associativity of operators. Parentheses ( ) are
+used to indicate grouping or precedence in expressions. They will help clarify the order
+of operations and ensure that expressions are evaluated correctly. Terminal symbols are
+those TOKEN/VALUES that the lexer produced. Non-Terminal symbols are a broader concept of
+token that says something about the relationship between both Terminal and non Terminal
+(For example an identifier and a declaration) So they can be expanded into sequences of
+terminal OR non-terminal symbols. Non-terminal symbols represent abstract syntactic cat-
+egories or constructs in the language, such as expressions, statements, declarations, etc.
+
+A parse tree is a hierarchical representation of the syntactic structure of a program,
+where each node is associated with a non-terminal symbol in the grammar, and each leaf
+corresponds to a terminal symbol in the input. Trees (such as a leftmost derivation)
+describe these structures where each right-hand production rule is replaced with the
+leftmost non-terminal symbol in the current sentential form, therefore starting from
+the left-most symbol and iterating through the rest of the grammar rules  we make a
+representation of the language that can be further analyzed or parsed. Parentheses and
+other grouping symbols in the input are reflected in the structure of the parse tree,
+along w/ their associated nodes (nodes that represent the grouping of expressions)
+
+Shift-reduce parsing comes into play during this phase. It is a bottom-up parsing
+technique used to construct the parse tree. The shift operation reads the next input
+symbol and pushes it onto a stack. The reduce operation looks at the top of the stack
+to find a sequence matching the right-hand side of a production rule and replaces it
+with the corresponding non-terminal from the left-hand side of the rule.
+This continues until the entire input is consumed and the stack contain
+the start symbol of the grammar, indicating successful parsing.
+
+A parse tree also has parse leaves, and these parse leaves are considered the terminal
+symbols at the bottom level of the parse tree. The bottom level is the "Last" remaining
+things evaluated in a tree such as a digit (e.g. 3), or a TOKEN that was once an identifier
+Once the parser reaches a parse leaf, it has successfully recognized a complete unit of the
+input language, and no further parsing is required for that subtree.
+
+In recursive descent parsing, each non terminal symbol in the grammar is associated with a
+parsing function. These parsing functions are responsible for recognizing and processing
+a prior language construct represented by the non-terminals, for example if there's a
+non-terminal symbol `Expr` representing an expression in the grammar, there would be a
+parsing function named `parseExpr` to handle expressions. The parsing process typically
+starts with a designated non-terminal symbol representing the entire statement.
+
+Each parsing function contributes to the construction of the parse tree, building the
+tree from the root (start symbol) down to the leaves (terminal symbols). The starting symbol
+serves as the entry point for parsing the input sentences.
+
+When the parser encounters a non-terminal symbol during parsing, it calls the associated
+parsing function to handle that symbol. These parsing functions are considered recursive,
+as they refer to a nested structure, for e.g... a parsing function for `Expr` may recursively
+call itself to handle sub-expressions. Each parsing function has a base case that handles
+terminal symbols in the input. When a parsing function encounters a terminal symbol, it
+matches the token against the expected input and consumes the token if it indeed matches.
+If the token does NOT match the expected input, the parsing function may report an error,
+where it'll backtrack and try alternative parsing paths to recover from errors.
+
+<b>Semantic Analysis</b>
+Checks the meaning and consistency of the program beyond its syntactic structure.
+It goes beyond the grammar rules and examines the program's semantics to catch potential
+errors and ensure that the program behaves as intended.
+
+During this phase (specifically for C++) the subsequent name mangling of functions and
+variables alike begins here. The compiler checks for semantic correctness (like type
+checking and scope resolution) and starts to assign mangled names to functions and
+variables based on their signatures and contexts.
+
+<b>Intermediate Code Gen</b>
+The AST is translated into an intermediate code representation. This code is typically
+closer to the target machine code but remains independent of the specific hardware architecture.
+This code generation handles complex expressions, assignments, control flow, structures,
+and other language constructs, translating them into a form suitable for optimization.
+The compiler will manage a symbol table which keeps track of variable names, types,
+and other relevant information. This information is crucial for later stages.
+
+<b>Optimization</b>
+This stage invokes those simplifications that may require constant folding, reducing algebraic
+expressions, and common subexpression eliminiation. It analyzes and modifies the code structure
+to enhance control flow; This can include loop unrolling, loop fusion, and other techniques to
+enhance branch predition. It'll also examine how data is used and propogated through the program,
+renaming variables and eliminiating any dead code. Then it replaces function calls with the actuial
+code of the function, reducing the overhead of said call instructions. This optimization can span
+multiple functions, and it'll make sure to manage memory process registers and any concurrent loops.
+
+<b>Code Generation</b>
+Maps the abstract operations in the intermediate code to specific machine instructions or
+assembly language instructions; Assigns variables and values to processor registers,
+As well as optimizing exectution time and minimzing memory access. This means it'll
+determine how memory addresses are calculated and accessed, as well as the order of
+instructions theat make the most efficient use of the processor's resources.
+It also inserts code to handle exceptions and interrupts. Next, it allocates
+and manages space on the call stack for funtion parameters, local variables,
+and return addresses. Finally it'll generate the machine code or assembly
+based on the decisions made during instruction selection, register alloc-
+ation, and other considerations.
+
+<b>Assembly</b> <a href="asm.html#p10-anch" id="comp1-anch">[or go to asm.html]</a>
+The compiler translates high-level code (through intermediate representations) into assembly
+language, which the assembler then processes, or to put it plainly, it generates assembly
+code from the AST. The assembly code itself consists of human-readable mnemonics and
+operands that correspond to the machine instructions of the target architecture.
+
+Symbol resolution is required to maintain a symbol table that tracks labels (symbolic
+names) defined in the assembly code. It assigns memory addresses to labels, either explicitly
+or during later stages. Instruction encoding is for translating assembly instructions into
+machine code opcodes (operation codes) and encoded operands. It'll map each assembly
+instruction to its corresponding machine code instruction, potentially involving
+multiple machine code instructions for complex operations. It inserts opcodes and
+encoded operands based on instruction type, operand types, and addressing modes
+specified in the assembly code.
+
+Relocation Processing is optional, in scenarios where absolute memory addresses
+cannot be determined completely during assembly (e.g., linking with external libraries),
+relocation entries might be generated. These entries mark locations within the object
+file that require adjustment during the linking stage when final memory addresses become available.
+
+The final output of the assembly stage is an object file. This file contains the machine code
+instructions translated from the assembly code, along with additional information such as:
+ymbol tables (if not stripped), Relocation entries (if applicable) Header information
+describing the object file format.
+
+<b>Assembler</b>
+Translates assembly language code into machine code. It takes the human-readable assembly
+code and converts it into the binary code that the computer's CPU can execute directly.
+The assembler performs tasks such as resolving symbolic addresses (like labels) to actual
+memory addresses, generating machine code instructions, and producing an object file
+containing the translation of binary instructions and additional information.
+
+<b>Linking</b> <a class="reserve" href="fw.html" id="comp2-anch">[about frameworks]</a>
+If your program consists of multiple source files or modules, the linker combines the
+object files and resolves references between them. It ensures that functions and variables
+used in one module are correctly linked to their definitions in other modules.
+The linker may also incorporate external libraries into the executable.
+The output of the linking process is an executable file that can be
+run independently.
+
+For static linking, the library code is copied directly into the executable file
+at compile time, resulting in a larger executable that includes all necessary code.
+This ensures that the executable can run without needing external library files at runtime.
+
+For dynamic linking, the executable contains references to shared libraries, where libraries
+are not copied into, but are instead "linked" at runtime. This keeps the executable smaller
+and allows multiple programs to share the same library code in memory.
+
+<b>Loader</b>
+The loader has an important responsibility, so i though i would give a comprehensive look
+at what a real loader is doing, and what its duties would ential. It is a separate step
+handled by the operating system's loader, and doesnt come into play unless you run /exe
+
+First you have to "validate and identify"; That is when the loader first validates the
+file to ensure it's a valid ELF file. This involves checking the ELF header's magic number,
+architecture compatibility, and other essential information.
+
+Based on the program header table, the loader allocates memory space for the various segments
+of the ELF file. (Segments again define how the executable should be laid out in memory,
+e.g. code, data, read-only sections)
+
+The loader reads each section from the file based on the section header table. Some sections,
+like .text (code) and .rodata (read-only data), are loaded into memory according to their
+permissions. Other sections, like .bss (uninitialized data), may be allocated memory but
+left uninitialized. Then the loader processes relocation information (typically stored
+in sections like .rel.text or .rela.text) to adjust symbol references within the
+loaded code. This ensures functions and variables are addressed correctly based
+on their actual memory locations.
+
+Then, it sets up the program's execution environment, including the stack pointer
+and program arguments. It then transfers control to the program's entry point
+(usually the _start function) to begin execution. Additional considerations
+might include the ELF file references symbols from shared libraries,
+wherein the loader will locate and load these libraries dynamically
+at runtime.
+
+It'll also set appropriate memory permissions (read, write, execute) for different
+program segments. (Security checks may be performed at this point as well)
+
+go <a class="reserve" href="index.html">back</a>
+
+</body></html>

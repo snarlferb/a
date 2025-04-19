@@ -1,0 +1,42 @@
+<!-- grub efi -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>grub efi</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+You can try these steps to create a custom GRUB EFI image that can reside on non-FAT filesystems
+and manage booting your operating systems, even on systems with restrictive or buggy UEFI firmware.
+
+I'm still in the process of testing this out myself, but its something you can give a try yourself.
+First mount the ext4 partition and create the necessary directories:
+<span class="alt-text">
+  mkdir -p /mnt/myos/boot/grub/x86_64-efi</span>
+
+Create the custom EFI image using grub-mkimage:
+<span class="alt-text">
+  grub-mkimage -o /mnt/myos/boot/efi/EFI/myos/core.efi --format=x86_64-efi '--prefix=(hd0,gpt7)/boot/grub' ext2 part_gpt</span>
+
+Copy the necessary GRUB modules:
+<span class="alt-text">
+  cp -r /usr/lib/grub/x86_64-efi/* /mnt/myos/boot/grub/x86_64-efi/</span>
+
+Create the GRUB configuration file:
+<span class="alt-text">
+  cat &gt; /mnt/myos/boot/grub/grub.cfg &lt;&lt;EOF
+  menuentry "My Operating System" {
+    linux /vmlinuz root=/dev/sda1
+    initrd /initrd.img
+  }
+  EOF</span>
+
+Then, copy the EFI image to the ESP:
+<span class="alt-text">
+  cp /mnt/myos/boot/efi/EFI/myos/core.efi /boot/efi/EFI/myos/core.efi</span>
+
+go <a class="reserve" href="install.html">back</a>
+
+</body></html>

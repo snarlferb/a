@@ -1,0 +1,48 @@
+<!-- asm (2) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>assembly2</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+<em>Note, you can convert any C file to assembly w/    gcc -S hive.c -o hive.s</em>
+
+Lets begin to experiment. We can try to generate an assembly out of a simple C source file.
+At that point, we can try mirroring what we began doing by adding the _start to it somewhere...
+
+When you run the compiled binary, it starts executing from the function _start provided by the
+C runtime, which performs various initializations, like setting up the stack and environment, etc.
+ 
+After these initializations, the CRT's _start calls main(), the user-defined entry point. 
+
+`Scrt1.o` is the default entry point provided by the C runtime, which gcc links against by default.
+If we were to provide our own  _start symbol, it would conflict with this predefined entry point.
+
+Our custom program must be able to bypass this process, and by using the -e _start flag, you tell
+the linker to treat your custom _start function as the entry point, instead of the default entry
+point provided by the C runtime. We must also construct the Makefile differently by compiling w/
+`gcc` specified, telling gcc not to use its default startup files, instead, to use our custom
+entry point.
+<span class="alt-text">
+all: hive
+
+hive: hive.o
+	gcc -o hive hive.o -nostartfiles -e _start -lc
+
+hive.o: hive.s
+	as -o hive.o hive.s
+
+clean:
+	rm -f hive hive.o</span>
+
+-nostartfiles  tells gcc not to use the standard startup files (like Scrt1.o)
+-e _start  sets the entry point to  _start (custom entry point)
+     Without this flag, the linker expects to start at  main
+-lc  links against the C standard library (libc)
+     which is necessary for  printf
+
+go <a class="reserve" href="asm.html">back</a>
+
+</body></html>

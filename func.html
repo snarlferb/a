@@ -1,0 +1,832 @@
+<!-- page2 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>func</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+
+<div id="data-anch"><b>Common Terminology</b></div>
+Int represents a signed integer (positive/negative numbers and zero), and uint
+is for unsigned integers (positive numbers and zero)
+<span class="alt-text">
+  unsigned int x;</span>             <em>// A declaration of variable (it has `extern` linkage when defined globally)</em><span class="alt-text">
+  x = x + 5;</span>                  <em>// [variable] = [expression]; inside a function, it is a "statement", and 'x' is local to said function</em><span class="alt-text">
+  char S = 'D';</span>               <em>// Initialization of a character to 'D'</em><span class="alt-text">
+  char str[] = "some string";</span> <em>// Initialization of a string to "some string"</em><span class="alt-text">
+  char *str = "some string";</span>  <em>// Pointer to a string literal</em>
+
+to learn more, see <a class="reserve" href="arr.html">arrays</a>
+
+Initialization happens at the point of declaration (initialized to an integer or some variable) but when its not assigned
+to anything its just a declaration. You can think of declaration as <b>establishing a connection between memory and variable</b>.
+
+<b>Data Types</b>
+
+In C, a variable or object can be of any data type, including primitive types
+(int, float, char, etc.) or even user-defined structures.
+
+When a function is defined, its signature  `returntype functionName(parameter_list)`
+includes the return type, which tells the compiler what kind of data the function
+will return (if any)
+
+char type is considered a small integer type and is typically used to represent
+characters, however those characters have to be stored as integer values
+(thus, small integer type). The range of numbers that an integer type can
+represent in C depends on the specific integer type and whether it is
+signed or unsigned (e.g., signed char is −128 to 127)
+
+The "size" of a data type refers to its memory allocation in bytes, and is directly
+proportional to the range and precision of the values it can store. <em>Wide</em> data types
+have larger sizes and greater capacity for storing extensive character (characters that are
+outside the ASCII range) while regular data types are more limited in what they can express.
+
+a floating point type represents decimal number values of some precision-<em>that is,
+the number of digits a floating-point number can accurately represent.</em>
+
+<div id="void-anch"><b>Void Pointers</b></div>
+Pointers in C are very important. They can point to objects of any data type...
+"void" simply means "no return type".. <em>it is still possible to include a return
+statement within a void function</em>. "int" or (non-void) functions MUST have a return type.
+It is not legal to have a parameter of type void; Although a pointer to a void is legal
+because its representative of a function thats passing a pointer of any data type;
+the function can treat it as a generic pointer without knowing its specific type.
+
+You are going to be using them anytime you know a variable will be used to allocate
+memory at runtime (such as `void *`, who's size is unknown before hand), as well as
+anytime you want to access data indirectly, (which is more efficient than copying
+around or rather, passing around by value) You can therefore reach the original
+data of a function or variable as long as you've properly pointed to it-
+if not the compiler can help catch these errors for you.
+<div id="ptr-anch"><b>Pointers</b></div>
+Here's the easiest introduction/prelude to pointers. Notice, they are ALL pointers (for demonstration)
+<span class="alt-text">
+  int *B;</span> <em>// It is risky to declare something implicitly, as its not pointing to anything specific</em><span class="alt-text">
+  int *A = B;
+  int *C = B;</span>
+
+  <em>// Dereference A; Copying A into mA</em><span class="alt-text">
+  int mA = *A;</span>
+
+  <em>// Dereference, and direct assignment; Reassigning C to the location pointed to by A</em><span class="alt-text">
+  *C = *A;</span>
+
+Here's a simple example of declaring pointer 'p' that holds the address of 'x' (explicit values in both x and y)
+<span class="alt-text">
+  int x = 9;
+  int y = 8;
+
+  int *p = &amp;x;
+  int *t = &amp;y;
+
+  p = t;</span> <em>// re-assigning p = t (the address stored in 'p')</em><span class="alt-text">
+
+  printf("%d\n", *p);</span>  <em>// Dereference 'p', and effectively you get the value of 'x'</em>
+
+Once you dereference (*p) it will revert to the original type (int), and itll access the variable it was last pointing to...
+<b>This gives you a pretty nice clue on what the basic syntax of pointers looks like now.</b>
+
+Dereferencing is performed using (*), which allows you to interact with the data
+that said pointer is holding, rather than with the pointer itself. You typically
+dereference a pointer in scenarios where you want to access the value of a variable
+indirectly, such as when manipulating values in arrays, structures, or dynamically
+allocated memory, using pointers to navigate to specific elements.
+
+if you try to <b>dereference a pointer of one type</b> and assign the result
+to a variable of a different type, the compiler will throw an error because
+the <b>types don’t match</b>. Next, assume we have a struct type declared
+for `blue` and `green`, one with a member variable1 and the other w/ variable2.
+We then declare those variables of this type, and assign a value to blue.variable1 = 99, such that
+<span class="alt-text">
+  int *pointer_to_variable1 = &amp;blue.variable1;
+  grn.variable2 = &amp;blue.variable1;</span>
+
+is how we set the pointers acccordingly, thereby having a connection between `variable2` and `variable1`.
+Notice we dont need `int` before `grn.variable2` since its implicitly known that `&amp;blue.variable1` is an `int *`
+
+long story short, a pointer behaves like a special type that you can assign a pointer variable
+to, assuming that variable hasnt been dereferenced. And, the compiler knows how to deduce its type.
+this gets into specifics around (implicit) type conversions, and (explicit) type casting (we'll discuss below)
+
+<em>Note: References in C++ are a little different, and are often used like an alias/nickname,
+for an existing variable, where you'll see something like:   int &amp;ref = a;</em> , alas it's
+important try to realize C++ reference behavior doesnt directly translate to C since <b>pointers</b>
+are what youd use in C to store the address of another variable.
+
+In printf functions, use the %p specifier and (&amp;A) for example, to print out an address:
+<span class="alt-text">
+  printf("%p\n", &amp;A);</span>
+
+or declare `*ptr` again to dereference the original pointer. The "address of" (or reference)
+operator's primary role is to facilitate pointer operations and enable functions to modify
+variables indirectly through their addresses (as well as, in this case, printing the address of)
+
+There are situations where you cannot directly assign the  *ptr  to the address of
+a variable. Specifically, this restriction applies to cases where the variable's
+address is not known at compile time, or when dealing with certain types of variables.
+
+There are no situations where you can have a non-pointer directly assigned to a pointer; Unless its being (or has been) dereferenced.
+
+You can use pointers when passing the address of a variable to a function.
+this function can then modify the original value through the pointer
+(note: you can also pass value, address, array and struct w/ parameters)
+<span class="alt-text">
+  void accessExample(int *ptr) {
+    *ptr = 1;
+  }</span>
+
+`*ptr = 1;` dereferences the pointer called `ptr`, meaning it accesses the
+integer variable located at the memory address stored in ptr. 
+
+You will get more familiar with when, and when not to dereference a variable,
+for example, when you just want to change where the pointer points to, like
+we did in the example w/ `ptr = &amp;A;`
+
+Continuing on, we can access the address of said variable from another function:
+<span class="alt-text">
+  void anotherFunction(int *ptr) {
+    printf("access in another function %d\n", *ptr);
+  }</span>
+
+function parameters in C are local to the function in which they are defined.
+this means they exist only within the scope of that function and do not
+affect other functions. As such you can reuse parameter names across different
+functions without conflict. This local scope is very useful for modular and
+clear code design.
+
+Here's an example of type-casting, and it also demonstrates some things that are illegal:
+
+  //float *result = (float *)A_Value * B_Value; // This is completely wrong<span class="alt-text">
+  float result = (float)A_Value * B_Value;</span>
+
+In C, <b>you cannot assign arithmetic between pointers, if the l-value is itself a pointer.</b>
+Also, when performing operations between different types, the compiler implicitly promotes
+`B_Value` to float to match the type of `A_Value` (we couldve used any type here btw)
+
+You can of course dereference a variable, e.g. `ptr`, and do arithmetic (say, `*ptr` was
+earlier assigned to `&amp;variable`, the "address of" variable...)
+<span class="alt-text">
+  int register = (*ptr) * y;</span> <em>// dereferencing ptr, multiplying the value it points to by 'y'</em>
+
+Lets assign a pointer to a type-casted value. We could have assigned the value to a variable, and
+casted to the variable instead, since directly assigning a memory address isnt typically safe,</em>
+<span class="alt-text">
+  int *SRC_REG = (int *)0x1000;</span>
+
+However when a hex value represents a clear, fixed value like a bitmask or alignment boundary, then
+it makes sense (e.g. 0xFF instead of 255 for a byte mask). However, when its used without explanation
+in an unfamiliar context, then it doesnt make sense. You'll have to learn for yourself how
+to preserve the logic, attitude and safety in the context of your own program.
+<span class="alt-text">
+  volatile int *SRC_REG = (volatile int *)0x1000
+  int compute(int x) {
+    int result = x * (*SRC_REG);</span> <em>// w/ volatile, itll prevent precomputing based on assumed constant</em><span class="alt-text">
+    return result;
+}</span>
+
+"volatile" represents a kind of transparent gate that always checks the actual state of the
+data each time it is accessed. We want something to go IN.. but that thing going IN is
+going to be assigned <b>once</b>.. When it goes OUT to external places it has the
+possibility of being changed, hence changing it when those external factors go IN.
+
+We want to preserve the fact that the compiler itself cannot change how its accessed
+due to said external factors. This is critical when dealing w/ registers or threads.
+This means it cannot optimize away, cache, or reorder reads/writes to the variable,
+such that access in the code translates to an actual memory operation.
+
+And just for absoluteness, the "inline" keyword embeds a function's code directly
+where its been called, skipping runtime mechanics like stack setup, jumps, or returns,
+and prioritizing optimizations: constant folding, loop unrolling. Its best for frequently
+accessed functions.
+
+Lets also show example w/ explicit type casting w/ dereferencing,
+<span class="alt-text">
+  DST_REG = *(int *)(SRC_REG + offset);</span>
+
+We're now going to move into the realm of functions and creating a buffer, which also
+creates the possibility of passing a pointer, and making use of dynamic memory.
+When you pass `&amp;buf` to the following function, you're passing a copy of the pointer
+itself. This copy points to the same memory location as the original `buf` in the
+calling function, which lends itself to the value of `buf` in the end:
+<span class="alt-text">
+  void memset_ints(int *buffer, int value, size_t len) {
+    while (len--) {
+      *buffer = value - 1;
+    }
+  }
+
+  int main() {
+    int buf;
+    memset_ints(&amp;buf, 42, 1);
+    printf("%d\n", buf);
+
+    return 0;
+  }</span>
+
+Had we not worked with a pointer, there'd be questionable results. There's also a problem.
+The loop decrements `len`, but `buffer` never moves to the next position, meaning, if this
+was meant to be for a real program and buffer was responsible for filling memory, `buffer`
+would repeatedly overwrite the same memory location without advancing. So if our intent is
+to set `len` elements in an array, we should replace `*buffer` w/ `*buffer++`, so that it
+increments each time (hopefully you understand why `buffer` is a pointer in the first place)
+
+Now at that point, the pointer `buffer` should advance, correctly filling multiple elements.
+The while loop should execute as long as `len` is nonzero, wherein, `len--`
+returns the current value of `len`, then decrements it.
+
+Note, we are declaring `buf` as an integer. If we want to make this program actually do
+something more than 1 time, we need to make it an array, e.g. `int buf[4]`. Now, we can
+print all elements of the array by making a for loop inside of main():
+
+  /* ... */<span class="alt-text">
+  int main() {
+    int buf[4];
+    memset_ints(buf, 42, 4);
+
+    for (int i=0; i &lt; 4; i++) {
+        printf("%d\n", buf[i]);
+    }
+    return 0;
+  }</span>
+
+<em>p.s. our `memset_ints()` works different than `memset()`, in the sense that we minus one
+from `value`, which is just a weird design choice I made.</em>
+
+also, memset is normally used to initialize or modify a block of memory with a specific value.
+
+In conclusion, pointers allow direct access to a memory address, providing us a way to
+interact and manipulate with data dynamically, significant for tasks like memory allocation
+(`malloc`) and working with complex data structures. The previous example also demonstrates
+the importance of `int main()` as every function has a main function. That is, it needs
+to know how to begin this cascade of execution.
+
+Passing a pointer to a function is often more efficient than passing large data
+structures by value because only the memory address is passed, not the whole data.
+This gets into malloc too which we'll be talking about as we go...
+
+Although it depends on the context, its generally smart to pass through pointers when
+its `n &gt; 64 bytes` of data, as it avoids the excessive copying that would come w/ value copying.
+
+Note, you should use `const` pointers if you only need to read the data. Without const, it communicates mutability.
+Mutability refers to whether a variable can be changed after it’s created. On the contrary, for read-only data that
+won’t be modified, you can also choose to use restrict:
+<span class="alt-text">
+  void process_data(const my_struct *restrict data);</span>
+
+restrict tells the compiler that data won’t alias other variables, allowing optimizations. Aliasing
+is a situation where two (or more) pointers refer to the same memory location, where modifying the
+value through one pointer affects the value seen by the other pointer.
+
+When you want a copy and immutability—where the function should not modify the original structure,
+passing by value allows the caller's data to remain unchanged. Passing by value also avoids race
+conditions because each function gets a fresh copy.
+<span class="alt-text">
+  void safe_function(my_struct s) {
+    s.value = 42;</span>  <em>// Changes are local, original struct is unchanged</em><span class="alt-text">
+  }</span>
+
+Double pointers say something additional about a value that they're pointing to.
+its a way to get the "value of the value", that is, to hold the address of
+ANOTHER pointer  `**ptr`
+
+Dereferencing a double pointer allows access to the value of the variable
+that the single pointer (*ptr) points to. Scenarios that you'll see double
+pointers in include situations where dynamic memory allocation is happening,
+or when handling arrays of pointers <b>on the stack</b> (or when a function
+needs to change the pointer to point to new memory), stuff like that.
+
+One thing to remember about pointers and return statements, is that you
+cannot return a reference to a local variable, because the address would no
+longer be available in the current stack frame (out of scope) from the point
+that it was returned.
+
+That is, when you try to read from it during the proceeding (current)
+action, you wont be pointing to the memory you think but rather whatever
+the last value was (whatever actions occurred) between those two points.
+
+Instead, it must be assigned to a static variable  `static int x = 10;` first,
+and then you can  `return &amp;x;`  or in the case of a dynamic allocation,
+it must be assigned to `*ptr`, and then returned as  `return ptr;`
+
+You should always be conscious about memory in this way. Local variables
+are only accessible within the function or block where they are declared,
+and once the function returns, the memory for these variables is automatically released (scope)
+
+Global variables are accessible from any function or part of the
+program after they are declared.
+
+Local variables are usually stored in the stack, which means their
+memory is automatically managed (allocated when called, deallocated
+when the function exits). Lifetime means its limited to the duration
+of the function call—Global variables will persist for the entire
+duration of the program.
+
+Dynamically allocated memory (from calloc or malloc) resides in the heap,
+which persists across function calls until it's explicitly freed (see <a class="reserve" href="malloc.html">malloc</a>)
+
+Another general rule of thumb in the context of pointers, is to
+initialize some variable/object  `int *ptr = NULL;`, which signifies
+that the pointer doesnt currently point to a valid memory location.
+
+NULL is typically defined and/or self-defined like this:
+<span class="alt-text">
+  #define NULL ((void *) 0)</span>
+
+In C, this `NULL` is only for pointers to indicate that they don't point to anything valid.
+
+<em>Macros, as you'll come to learn are typically constant as far as convention is
+concerned, and are easy to spot since they're in all uppercase.</em>
+
+For regular variables (non-pointers), you simply check their value (e.g.,
+`if (x)`, is for any value NOT equal to zero,  where  `if (!x)`, is for zero
+(which represents the checking of a variable being <em>"not equal to"</em>)
+
+To ensure the value is set to zero for primitive data types, you'd
+typically do, e.g.  `int num = 0;`  or `float value = 0.0` ...
+
+For larger structures of data, or an array, its more efficient to use `memset()`,
+which'll set all elements of an array to zero. Its good practice to initialize
+objects to their appropriate default values when they are created. There are
+of course some intricacies to be mindful of so you dont accidentally set
+something to an invalid memory location. For more info see <a class="reserve" href="err.html">common errors</a>
+
+So you already know about  `main`, and how it's the entry point of the program.
+Its essentially its own function  and should be treated as such. You might sometimes
+see parameters such as `argc` (argument count) or `argv` used as parameters in main.
+`int argc`  is an integer that represents the number of command-line arguments
+passed to the program. The value of argc  includes the name of the program itself
+as the first argument, so it is always at least 1.
+
+`char *argv[]`, or sometimes `char **argv` ,interchangeably represent an argument
+vector, which is an array of strings (character pointers) representing the actual
+command-line arguments. Considering that by default argc is always "1", you can
+check for a single argument passed to argv, e.g.
+<span class="alt-text">
+  printf("%s",argv[0]);</span>
+
+This'll print out the name of the program on the command line, since <em>argv</em> will
+see the first argument it sees, which is the name of the program you've executed.
+
+A variable is a named object in C. It's an identifier that you use to access a
+particular object (memory region). For example, when you declare (e.g. int x)
+`x` is a variable that refers to an object capable of storing an integer value.
+
+You can use objects before they are explicitly assigned or defined in two very specific
+situations — which ties in w/ two specific features in C, neither of which are exclusively
+synonymous with objects automatically springing to life, but may mistakingly be used to
+describe it. One is called  <em>forward declaration</em>, and the other is  <em>relaxed
+declaration ordering from C11—onward.</em>
+
+A forward declaration is used to declare the existence and type of a function or
+variable before its full definition. It informs the compiler about the identifier
+so it can understand its usage even if the definition comes later (often in separate files).
+
+So in short, you can have prototypes in headers or at the beginning of source files.
+
+Relaxed declaration ordering on the other hand allows the use of a variable within a block
+before its formal declaration, so long as the declaration appears later within the same block.
+The compiler performs a special name lookup to ensure the identifier will be declared properly.
+<span class="alt-text">
+  void an_example() {</span>
+    <em>// Use the variable 'value' before its declaration</em><span class="alt-text">
+    int result = value * 2;</span>
+
+    <em>// Declaration of 'value' (later in the same block)</em><span class="alt-text">
+    int value = 10;
+  }</span>
+
+Implicit declaration (automatically creating a variable when used without prior declaration)
+is generally discouraged because it can lead to unexpected behavior and compilation errors.
+
+You can have forward declaration of variables using `extern` . That is, without extern,
+defining a variable before its actual definition would cause a compilation error.
+
+Variables in C can are thus normally declared before their use, and this is typically referred
+to simply as a declaration rather than a forward declaration.
+Example:  `extern int thumb;`  declares <em>thumb</em> without defining it.
+
+This is a declaration rather than a forward declaration because it's not about defining it
+later in a separate file but rather about declaring its existence and type.
+
+<div id="proto-anch"><b>Function Prototypes</b></div>
+Here's the best rule of thumb/convention in regards to functions and function
+prototypes w/ storage class specifiers (static, extern  and  n/a)
+
+Anything outside of a function is a function prototype, and anything within a function is a
+function call. That makes it a hell of a lot simpler to categorize in your head, with the
+following key notions included…
+
+A function prototype is a type of forward declaration that includes the parameter types,
+giving the compiler more information for type checking.
+
+A forward declaration is a declaration of a function before its definition, without necessarily
+specifying parameter details. It tells the compiler that a function exists but does not provide a full definition, i.e.  int foo();
+
+(1) For functions that are used within their own file, a static prototype(s) are declared <b>at
+the top of the file</b>, before their definitions later in the file. It is one of the most common
+prototype conventions in C, and it’ll save you alot of trouble in the future.
+
+(2) If the functions are used across multiple files, it should be declared in a header file
+and included where needed.
+
+(3) If the function is in another compilation unit but not declared in a header, you can then
+use   extern  to reference it—both in the function prototype and definition (although use
+within function definitions may be redundant since extern is the default linkage behavior
+of a function. Still, it is more explicit, and can help the user know which functions
+coincide with an extern.
+
+quick note: in the old C style of prototyping, function parameter names were omitted in function
+prototypes, for example... `static int function(char *, int);` and so this anonymous prototyping
+is perfectly legal in ANSI C, as well as any other version (we'll talk more about different versions later)
+
+if we look back at regular variable assignment, we know we can do arithmetic operations, obviously—
+it's also quite common to perform arithmetic operations in function calls, such as when you need to
+manipulate its data, or pass its values dynamically, for example:
+<span class="alt-text">
+  call(var1, var2 + (var3 - var4 + 1));</span>
+
+<div id="variadic-anch"><b>Variadic Functions</b></div>
+since we use `printf` to see the results of everything we should understand what kind
+of function it is—its a special function that takes a variable amount of arguments,
+that is, they are presented with an ellipsis "..." within a given function parameters
+<span class="alt-text">
+  int printf(const char *format, ...)</span>
+
+This is the definition provided by the standard lib header, so linking w/
+`#include &lt;stdio.h&gt;`  lets you use `printf`. Keep in mind, you include C library
+headers w/ &lt;file.h&gt;  and user-defined headers w/ "file.h"
+<span class="alt-text">
+  printf("Example text %d, %d, %d\n", var1, var2, var3);</span>
+
+So here we are demonstrating what both a function declaration is, and how `printf` works.
+Question: What are function parameters even for?... They allow a function to encapsulate
+its behavior, in the sense that they are inherited by the function body, and accessed
+accordingly.
+
+This is true of variadic functions as well, and, because its variadic, it may conceivably,
+take an infinite amount of variables. More specifically, the first part (the part "in
+quotation marks") will accept your personalized text as well as format specifiers.
+
+These format specifiers align with each proceeding variable (found after the comma)
+`printf` in particular is used for printing formatted output to the screen, hence print -f(formatted)
+
+Now lets back up for a second and verify what a function is for. A function brings a
+specific set of instructions, depending on how you define them.
+
+Lets say you create a function prototype that is, you want to tell the program that
+theres a function defined somewhere and you want to call it
+<span class="alt-text">
+  void func(int x);</span>
+
+it would have to find this function defined within the program somewhere...
+<span class="alt-text">
+  void func(int x) {
+  }</span>
+
+r-values represent parts of a given expression (typically on the right side) that
+are attributed to the value of an expression. An l-value is attributed to a location
+in memory for a said value. A pointer thats assigned to the r-value (literal or
+function call) becomes an l-value, designating the memory location.
+
+It should also be said that a function can be the r-value assigned to a given variable.
+One notable consequence is the ability to directly capture the internal instructions of
+the function:
+<span class="alt-text">
+  int func(int a,int b) {
+    int c = a + b;
+    return c;
+  }
+
+  int main() {
+    int a2 = 2;
+    int b2 = 3;
+    int intern = func(a2, b2);
+    printf("intern is %d\n", intern);
+    return 0;
+  }</span>
+
+This then demonstrates how some function with a given return statement should work
+and how new variables (passed in as arguments) should take effect.
+
+You should recall that any function w/ a type (return type) other than void should
+have a return statement. here we are returning a variable. when the type of the value
+returned by a return statement does not match the declared return type of the function,
+the compiler typically issues a warning or error; ergo, assigning variables in such
+a way to make sure that its return type is the same as the function it is within
+will help ensure you are using the compatible data type at the end.
+
+or just create that function with the same data type you know you'll be returning,
+to prevent casting w/ possible data loss scenarios if you can.
+
+in conclusion, functions can use return statements not only to pass back computed
+values but also to indicate success or failure of their operation. 
+You can have arithmetic expressions directly in a given return
+statement, as well as w/ comparison (`return a &gt;= b`), or
+you can even have e.g. `return (function(param))`
+
+It's a common convention to use `return 0;` to indicate success and non-zero values
+(typically 1 or -1) to indicate errors or some other kind of failure (that is, for
+functions or branches that are indicative of some kind of error too). For functions
+that return pointers, `NULL` is often used to indicate an error  or  failure to
+allocate memory. This is particularly common in functions that are expected to
+return a pointer to a dynamically allocated resource. When NULL is returned,
+it signifies that the requested resource could not be created or allocated.
+
+it's also useful to define more specific error codes sometimes, thereby providing
+more detailed information about the nature of the error that occurred.
+
+Lets show the same example again (a bad example version) this time with a
+pointer type to the function, and those subsequent variables that are to
+interact with it, like so:
+<span class="alt-text">
+  int *func(int a,int b) {
+    int c = a + b;
+    return &amp;c;
+  }
+
+  int main() {
+    int a2 = 2;
+    int b2 = 3;
+    int *intern = func(a2, b2);
+    printf("intern is %d\n", *intern);
+    return 0;
+  }</span>
+
+So, theres some issues with this. We had to return `&amp;c` since we started dealing
+w/ a pointer, and this variable and function commerce becomes invalid once `func` returns
+(that particular stack frame w/ said function is destroyed once the function ends, and so
+is the `&amp;c`)
+
+We have to start by adding a new variable inside `int func()` called `int *result`, that
+will be assigned `(int*)malloc(sizeof(int));`
+
+We'll talk more about malloc later. Also in `int func()` we will have `*result = a + b;`
+and  `return result;` wherein, the only other change would be to have a call to
+`free(intern);` after  printf()  inside  main().
+
+You want to avoid using pointers as much as you can, so dont take this example as
+incentive to make as many pointer types as you can. The fact that we have to use
+`malloc` for this should be reason enough to treat pointers as <b>something you use
+only when you have to use them.</b>
+
+One last thing we should cover is global versus local scope, and how a global variable
+retains its value, where as a local variable has no guarantee that it'll hold its value.
+Take the following example...
+<span class="alt-text">
+  my_function() {
+    if ((variable = value * 10) &lt; max) {
+        do_this = thing;
+    }
+  }</span>
+
+is exactly the same, logically speaking, as if we did...
+<span class="alt-text">
+  my_function() {
+    variable = value * 10;
+    if (variable &lt; max) {
+        do_this = thing;
+    }
+  }</span>
+
+Of course, this is not the same once the variable is outside of the function, like in
+the global space for example...
+<span class="alt-text">
+  variable = value * 10;
+  my_function() {
+    if (variable &lt; max) {
+        do_this = thing;
+    }
+  }</span>
+
+<div id="function-pointer-anch"><b>Function Pointers</b></div>
+Unlike pointers to local variables, function pointers don’t have to worry
+about stack frames or malloc. That is, because functions live in a static
+memory region (the code segment), their addresses are always valid during
+the program’s life. Function pointers are thus more about  <b>abstraction,</b>
+letting you pass around the inherent behavior of the function without having
+to hardcode it, and they let you program w/ a certain design motif (similar
+to aspect-oriented programming) where you are using dynamic dispatch,
+callbacks or swappable operations. That is, function pointers let you
+“<em>inject</em>” different implementations into a system without
+altering its core logic.
+
+<em>These examples might seem a weird to the uninitiated, especially when
+combined w/ unnamed parameters/return types, however it is <b>all</b> legal.</em>
+
+Just imagine we're moving down a tree of possibilities, where each example
+is another possibility that outlines what you can do. First create a function:
+<span class="alt-text">
+  void Function(int param) {
+  }</span>
+
+declare a function pointer
+<span class="alt-text">
+  void (*pointerToFunction)(int);</span>
+
+assign the function pointer to point to the function's address
+(capture its internal instructions)
+<span class="alt-text">
+  pointerToFunction = &amp;Function;</span>
+
+Note: We've reached an anti-impasse, multiple roads, into the past,
+where we couldve declared and assigned the function pointer directly instead:
+<span class="alt-text">
+  void (*pointerToFunction)(int) = Function;</span>
+
+now its equal to some original function we had in this example you dont even need to
+include braces, but you should note that you dont include void anyway when you call
+a void function from within another function. however, function pointers and origins
+that do not have parameters should be filled out with void,   func(void) {}
+
+Last but not least, you can call the function through the function pointer, and
+assign a value to its parameter:
+<span class="alt-text">
+  pointerToFunction(42);</span>
+
+here's the next example
+<span class="alt-text">
+  void ThisFunction(void (*NewParam)(int));</span>
+
+you might also call this the function pointer's signature it would have to find this
+function defined within the program
+<span class="alt-text">
+  void ThisFunction(void (*NewParam)(int)) {
+  }</span>
+
+continuing on, heres a function that matches its signature
+<span class="alt-text">
+  void SomeNewFunction(int Param) {
+  }</span>
+
+you can call it now since it shares the same signature
+<span class="alt-text">
+  ThisFunction(&amp;SomeNewFunction);</span>
+
+Looking back at the `ThisFunction` definition, it has received a function pointer, but
+isn’t calling it yet. Function pointers can be used in MANY ways, and this is just one:
+  <span class="alt-text">
+  void ThisFunction(void (*NewParam)(int)) {
+    if (NewParam) {
+        NewParam(100);
+    }
+  }</span>
+
+Experiment with these, and see what you can some up w/. For now, here's
+an even simpler illustration of a function pointer in action:
+<span class="alt-text">
+  void printNum(int num) {
+    printf("Number: %d\n", num);
+  }
+
+  int function(void (*ptr)(int)) {
+    (*ptr)(2);
+    return 0;
+  }
+
+  int main() {
+    function(printNum);
+    return 0;
+  }</span>
+
+The `(*ptr)(2);` syntax is correct, but  `ptr(2)` also works because function pointers
+can be called like regular functions:
+<span class="alt-text">
+  (*ptr)(2);</span>  <em>// Explicit dereferencing</em><span class="alt-text">
+  ptr(2);</span>     <em>// Implicit dereferencing (more readable, less obvious)</em>
+
+The function pointer holds the address of a function, and calling it directly behaves just
+like calling a normal function. I know that there are alot of directions one can go with
+function pointers, and you just have to experiment with yourself to find out which route
+makes the most sense to you.
+
+You can use `typedef` in function pointers (not for regular functions) this is VERY useful
+for creating parameters (example from C11 threads)
+<span class="alt-text">
+  typedef struct thrd_t_struct thrd_t;
+  typedef int (*thrd_start_t)(void*);
+  int thrd_create(thrd_t *thr, thrd_start_t func, void *arg);</span>
+
+since we made `thrd_start_t` a type, you can use it as a `type variable` bearing in mind,
+im demonstrating whats possible with functions. once you understand function pointers and
+matching signatures, rest assured everything else will be a cakewalk, if not easier...
+ <span class="alt-text">
+  typedef struct Node {
+    int *value;
+    struct Node *next;
+    void (*modify)(struct Node *, int);
+  } Node;</span>
+
+The above is a function pointer declared within a struct, providing a way to
+encapsulate resource management in a modular way; Once defined, we have this function:
+<span class="alt-text">
+  Node *create_node(int initial_value) {
+    Node *new_node = (Node *)malloc(sizeof(Node));
+    if (!new_node) {
+        perror("Failed to allocate node");
+        exit(1);
+    }</span> <em>// ...</em><span class="alt-text">
+  return new_node;
+}</span>
+
+We assign new_node to hold the memory address of some newly allocated Node.
+This also means  new_node  is a pointer to a `Node *`. <em>note: `perror()` is
+useful when dealing with system-level functions like malloc, open, read, etc.</em>
+I like to use function pointers—in the realm of aspect oriented programming.
+
+or one more example, if we have  `typedef int (*operation_t)(int);` declared,
+then  operation_t  is a type alias for the function pointer type int (*)(int).
+This means that instead of writing the full pointer type every time, you can
+simply use `operation_t` to declare function pointers of this type:
+<span class="alt-text">
+  operation_t op1;</span> <em>// Declare a function pointer op1 of type `int (*)(int)`</em>
+
+Or we could define a function, `void apply_operation(int *data, operation_t op){...}`
+
+We're just showing whats possible in the land of hypothetical. When i say <em>whats possible</em>
+i mean what is feasible, conceivable and functional, and not like, mis-match-o'nomics and going
+to the edge of whats possible within the rules &amp; constructs, without regard to conventions.
+in other words, im trying to convery as much possibilities as i can...
+<span class="alt-text">
+  struct unboundedint {
+  };
+
+  struct unboundedint constructor(int num_blocks) {
+    struct unboundedint result;
+  }</span>
+
+this example is just a regular function that happens to be of type `struct`. In this context,
+a "constructor" refers to a function that initializes a particular data structure or object.
+
+Another feature that people dont know about is function calls that appear like this (assuming
+that the function has been defined first)
+<span class="alt-text">
+  CreatedFunction(qwac.brack, exac-&gt;nar.buffer);</span>
+
+but you can also have a compound literal in the context of a function argument, like,
+<span class="alt-text">
+  compound_conf((struct config){ .name = "x", .val = 42 });</span>
+
+Returning to the former w/ pointer access, when we will call a function within a function,
+that which passes parameters to the called function , e.g.
+<span class="alt-text">
+  void abcd(XType exac) {</span>
+  <em>// ... </em><span class="alt-text">
+    elmnop(
+      qwac.brack,
+      exac-&gt;nar.buffer,
+    );</span>
+  <em>// ... </em><span class="alt-text">
+  }</span>
+
+This kind of syntax, where function parameters include struct members, pointers, and nested accesses, is valid and
+very much useful for passing complex data structures into functions. You can also have a struct defined within a
+function (we'll talk more about <a class="reserve" href="struct.html">structs and unions on the page after the next page</a>)
+<span class="alt-text">
+  void process_data() {
+    struct TempData {
+        int id;
+        char name[20];
+    };
+
+    struct TempData data = {1, "Temporary"};
+    printf("ID: %d, Name: %s\n", data.id, data.name);
+  }</span>
+
+Since the struct is only accessible within the function, it's useful for grouping related variables
+that are only needed temporarily. This keeps the global scope clean and avoids unnecessary memory allocations.
+
+Note, of course you cannot have a function definition within another function (no true nested
+functions in C) alas, this syntax is canon since ANSI C89, and is still present, so you shouldnt
+be surprised to see it.
+
+when you use the __attribute__((constructor)) and __attribute__((destructor)) attributes
+(which are GCC-specific) GCC places references to these functions in special sections of
+the object file, specifically `.ctors` for constructors and `.dtors` for destructors in
+the ELF (Executable and Linkable Format).
+
+for more information on attributes, i made this <a class="reserve" href="page10.html">page</a>
+or for dynamic memory management the page is <a class="reserve" href="malloc.html">here</a>
+
+constructors are automatically executed before the main() function is called.
+when an ELF executable or shared object (dynamic library) is loaded, the dynamic linker
+(ld.so on Linux) looks for the .ctors section.
+
+if this section is found, the dynamic linker calls the functions referenced in it,
+and goes upon initializing resources and setting up the environment.
+
+It should be noted that poor resource management practices or design choices—whether or
+not they involve RAII—can lead to issues such as memory fragmentation and inefficient
+cache usage. Fragmentation often arises from non-uniform allocation and deallocation
+patterns, while inefficient cache usage can result from data being scattered in memory.
+Its important to realize the full breadth of an objects lifetime to avoid such problems,
+and the continued practice to provide effective resource management, and careful consid-
+eration for all memory allocation scenarios that you endeavor should solve.
+
+learn more about <a class="reserve" href="struct.html">structures</a> or continue w/ functions like <a class="reserve" href="memcpy.html">memcpy</a>
+else go to next  <a class="reserve" href="arr.html">page...</a>
+
+or <a class="reserve" href="qfmtsp.html">back</a>
+
+</body></html>

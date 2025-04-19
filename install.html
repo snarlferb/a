@@ -1,0 +1,380 @@
+<!-- linux installation -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>install instructions</title>
+<meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport>
+<script src="style.js" defer></script>
+</head><body>
+&emsp;&emsp; <em>There are many many distributions of linux.
+&emsp;&emsp; Once you know which you'd like to install you should
+&emsp;&emsp; go about finding that distro's installation page.
+&emsp;&emsp; You can also take these instructions as a solid
+&emsp;&emsp; foundation on what you need to do.</em>
+
+&emsp;&emsp; Init System:  w/ runit,  however dinit or S6 may be preferred for a
+&emsp;&emsp; different init utilizing a service directory structure, OpenRC uses
+&emsp;&emsp; SysVinit-esque service management through scripts, found inside  /etc/rc.d
+
+&emsp;&emsp; Initial Boot: The installer (if present) often sets the newly installed system
+&emsp;&emsp; as the default boot option in the BIOS or UEFI firmware (we'll talk about BIOS/UEFI)
+&emsp;&emsp; This means that when the computer is powered on, it will attempt to boot
+&emsp;&emsp; the installed Linux system. The installer may configure the init system
+&emsp;&emsp; to start specific services during the initial boot process. These services
+&emsp;&emsp; might include essential system components like networking, file systems,
+&emsp;&emsp; and package management. The installer typically installs a bootloader,
+&emsp;&emsp; like GRUB, that is responsible for loading the kernel and init system
+&emsp;&emsp; when the computer starts.
+
+&emsp;&emsp; : Instructions:
+&emsp;&emsp; : [```]=optionals
+&emsp;&emsp; : Helpful Shortcuts:
+&emsp;&emsp; : <b>Shift+ZZ</b>=save file
+&emsp;&emsp; : Switch <b>Esc</b> w/ <b>Caps_lock</b> key, just a suggestion
+
+&emsp;&emsp; See ArtixLinux.org for more information, e.g.
+&emsp;&emsp; https://wiki.artixlinux.org/Main/runit
+&emsp;&emsp; https://wiki.artixlinux.org/Main/Installation
+&emsp;&emsp; **Legacy Tree Example**
+&emsp;&emsp; sda disk solid state drive e.g
+&emsp;&emsp;  --sda1 /boot
+&emsp;&emsp;  --sda2 /part2
+&emsp;&emsp;  --sda3 /
+&emsp;&emsp; sdb disk hard drive e.g.
+&emsp;&emsp;  --sdb1 /example
+&emsp;&emsp;  --sdb2 /part2
+&emsp;&emsp; sdc disk flash drive e.g
+&emsp;&emsp;  --sdc1 /open
+&emsp;&emsp;  --sdc2 /encrypted
+
+&emsp;&emsp; burn iso w/ `dd` selection/command
+&emsp;&emsp; file system: fat32 is the most compatible file system but
+&emsp;&emsp; we'll be exploring the use of other file systems as well
+&emsp;&emsp; note, make sure everythings plugged in during this time
+
+&emsp;&emsp; **Important**
+&emsp;&emsp; The term  "BIOS" is often colloquially used, and can mean either UEFI or PC BIOS...
+&emsp;&emsp; BIOS or UEFI is sometimes considered a 1st-stage bootloader, while GRUB is the 2nd...
+&emsp;&emsp; (U)EFI System Class 1 and Class 2, has a BIOS compatible mode called "Legacy BIOS" or
+&emsp;&emsp; "CSM" (short for Compatiblity Support Module), which makes the UEFI behave like a PC BIOS.
+&emsp;&emsp; UEFI System Class 3, the standard since around 2020, no longer has a CSM...
+&emsp;&emsp; If you plan to make an MBR (dos) partition table, than you should be in
+&emsp;&emsp; "Compatible Support Module" or "Legacy Mode", but if you're going w/ a
+&emsp;&emsp; GPT partition table you should be in "UEFI" boot mode.
+
+&emsp;&emsp; **[Enter]BIOS**
+&emsp;&emsp; Once computers on,
+&emsp;&emsp; Press the “Del”
+&emsp;&emsp; or “F1” , “Esc”, “Fn 2”
+&emsp;&emsp;    or “F10”, “F2” or “F12”
+&emsp;&emsp; to open the BIOS...
+&emsp;&emsp; “Alt” is sometimes hidden settings.
+&emsp;&emsp; select the "usb" boot option in BIOS
+
+&emsp;&emsp; || NOTE: Make sure you have internet/wifi
+&emsp;&emsp; || Your keyboards last config WILL persist
+&emsp;&emsp; || Save bluetooth, sound, etc devices until afterwards
+&emsp;&emsp; || Advanced: If you need to re-discover and chroot into
+&emsp;&emsp; || an existing filesystem,  <a class="reserve" href="troubleshoot">this</a> <a class="reserve" href="troubleshoot">page</a>
+
+&emsp;&emsp; root:root,pass:artix
+&#8595;
+<style>
+hr.dotted {
+  border-top: 3px dotted #bbb;
+}
+</style>
+<hr class="dotted">
+&emsp;&emsp;                     **Commands**:
+<span class="alt-text">
+&emsp;&emsp; ls</span>           list
+<span class="alt-text">
+&emsp;&emsp; dd if=artix-base-runit-10110010-x86_64.iso of=/dev/sdc status='progress' &amp;&amp; sync</span>
+&emsp;&emsp;                     reads/writes artix-base.iso to device
+&emsp;&emsp;                     ```(optional if already installed)```
+
+<span class="alt-text">
+&emsp;&emsp; lsblk</span>        list your partitions
+&emsp;&emsp;                     the following example will acount for making (3) partitions on 1 drive
+&emsp;&emsp;                     ```you may need to run `swapon --show` to see if a swap partition is being used
+&emsp;&emsp;                     wherein you can run `swapoff /dev/sda5`, or whichever one it listed for you```
+<span class="alt-text">
+&emsp;&emsp; fdisk /dev/sda</span>
+<span class="alt-text">
+&emsp;&emsp; p</span>            list partitions throughout the process
+<span class="alt-text">
+&emsp;&emsp; d</span>            ```delete 3 OPTIONAL```
+<span class="alt-text">
+&emsp;&emsp; d</span>            ```delete 2 OPTIONAL```
+<span class="alt-text">
+&emsp;&emsp; d</span>            ```delete 1 OPTIONAL```
+&emsp;&emsp;                     When it comes to sectors, fdisk will automatically convert human-readable formats e.g. (30GB) into sectors
+&emsp;&emsp;                     and you can then accept the default value ([Enter]) for the last sector.
+&emsp;&emsp;                     However, in case you do have to calculate both sectors, if you see something like "2048-1465149134", that represents the "start-end" sectors
+&emsp;&emsp;                     available... What i do is specify "2048" as my First sector, and then i calculate the amount i want to manually specify (starting w/ 1GB)
+&emsp;&emsp;                     and using this conversion principle:... `1GB * 1024MB = 1024MB/GB,  1024 * 1024 = 1048576KB/MB,  104857 * 1024 = 107373568 bytes/KB, 
+&emsp;&emsp;                     107373568 / 512 bytes = 209714`  ... and thats what youd specify as the Last sector for the first partition... for the second partition,
+&emsp;&emsp;                     you take the TOTAL amount you want to specify (31GB), calculate the conversion factor in the same way we did... And that would be the
+&emsp;&emsp;                     Last sector for the second partition, where you specify the First sector as "one step, or sector" greater than the Last sector of the
+&emsp;&emsp;                     first partition.
+
+<span class="alt-text">
+&emsp;&emsp; g</span>            ```to create a new empty GPT partition table```
+<span class="alt-text">
+&emsp;&emsp; o</span>            ```to create a new empty MBR partition table```
+&emsp;&emsp;                     Creating a separate boot partition depends on the system's boot method (BIOS/UEFI) and partitioning scheme (MBR/GPT). For BIOS-based systems
+&emsp;&emsp;                     using MBR partitioning GRUB embeds its core image in the MBR gap, so a separate boot partition isn't necessary. On UEFI-based systems using
+&emsp;&emsp;                     GPT partitioning, there's an EFI System Partition (ESP) for storing boot loaders. GRUB for UEFI systems is installed to the ESP, which typically
+&emsp;&emsp;                     requires only a few hundred megabytes of space. It's essential to allocate sufficient space for the ESP and other partitions based on your system
+&emsp;&emsp;                     requirements. GRUB will automatically install to the ESP on UEFI systems. For BIOS-based systems, while a separate boot partition isn't typically
+&emsp;&emsp;                     required, ensuring adequate space for the core image is necessary, so creating a small boot partition for it is recommended.
+
+<span class="alt-text">
+&emsp;&emsp; n</span>            new partition [Enter] [Enter] [+1GB] [y]
+<span class="alt-text">
+&emsp;&emsp; t</span>            ```whichever partition is going to be your boot partition, youll need to establish w/...```
+<span class="alt-text">
+&emsp;&emsp; 1</span>            ```press 1 for EFI system, optional...```
+<span class="alt-text">
+&emsp;&emsp; n</span>            new partition [Enter] [Enter] [Enter] [+30GB] [y]
+<span class="alt-text">
+&emsp;&emsp; n</span>            new partition [Enter] [Enter] [Enter] [Enter] [y]
+
+<span class="alt-text">
+&emsp;&emsp; w</span>            writes, finalizes the partitions/&amp;leaves fdisk
+<span class="alt-text">
+&emsp;&emsp; q</span>            if for some reason you did something wrong then you can quit and redo it
+&emsp;&emsp;                     and if for some reason you want to start completely over, you can  <b>reboot -h now</b>
+
+<span class="alt-text">
+&emsp;&emsp; lsblk</span>        list your partitions
+<span class="alt-text">
+&emsp;&emsp; mkfs.ext4 /dev/sda3</span>
+&emsp;&emsp;                     You can name these however you want and order them in any way however, it must remain consistent here after
+<span class="alt-text">
+&emsp;&emsp; mkfs.ext4 /dev/sda2</span>
+<span class="alt-text">
+&emsp;&emsp; mkfs.vfat /dev/sda1</span>
+&emsp;&emsp;                     Assuming this is for your boot partition, mkfs.vfat will create a FAT32 if said partition is large enough.
+&emsp;&emsp;
+&emsp;&emsp;                     ```EFI system partitions hold EFI boot loader files and related data, so it doesn't typically contain a traditional filesystem like Ext4, and..
+&emsp;&emsp;                     instead it usually has a FAT32 filesystem. Therefore you dont run `mkfs.ext4` on that partition if you've created an "EFI system"...
+&emsp;&emsp;                     and you run the following    `mkfs.fat -F32 /dev/sda1` which is a more explicit version of mkfs.vfat```
+
+&emsp;&emsp;                     ```These are optionals if you had a swap partition```
+<span class="alt-text">
+&emsp;&emsp; mkswap /dev/sda5</span>
+<span class="alt-text">
+&emsp;&emsp; swapon /dev/sda5</span>
+&emsp;&emsp;                     Keep in mind, we'll be creating things in the `/mnt` directory because that is where we are recreating the directory structure of the system.
+&emsp;&emsp;                     Since /mnt is the mount point for e.g. /dev/sda3, it treats this as the base for the root filesystem, where the rest of the root directory structure will belong,
+&emsp;&emsp;                     so you HAVE to do `/mnt` first  BEFORE you <b>mkdir</b> and <b>mount</b> the others.```
+<span class="alt-text">
+&emsp;&emsp; mount /dev/sda3 /mnt</span>
+<span class="alt-text">
+&emsp;&emsp; mkdir /mnt/part2</span>
+<span class="alt-text">
+&emsp;&emsp; mkdir /mnt/boot</span>
+<span class="alt-text">
+&emsp;&emsp; mount /dev/sda2 /mnt/part2</span>
+<span class="alt-text">
+&emsp;&emsp; mount /dev/sda1 /mnt/boot</span>
+<span class="alt-text">
+&emsp;&emsp; ls /mnt</span>      List those mounted directories, while making sure they reflect what you made and that no corruptions occurred in the process
+&emsp;&emsp;                     Use  `umount`  to unmount if something went wrong.
+
+&emsp;&emsp;                     <em>NOTE: You do not always receive a confirmation after using a command. You can of course test whether a command runs successfully or not w/ e.g.
+<span class="alt-text">
+&emsp;&emsp; (man runit && echo "command ran successfully") || echo "Error: command was not executed"</span>
+<span class="alt-text">
+&emsp;&emsp; ls -lap | more</span>
+&emsp;&emsp;                     its worth learning how to use `more` and `less` commands for viewing by pages, e.g.  man dir | less
+&emsp;&emsp;                     Try `command --help` for available options, as --debug  or  -v --verbose results</em>
+
+&emsp;&emsp;                     *Network*:
+&emsp;&emsp;                     For ethernet you simply do this:
+<span class="alt-text">
+&emsp;&emsp; sv start connmand</span>
+&emsp;&emsp;                     And for Wifi, you do the following...
+<span class="alt-text">
+&emsp;&emsp; rfkill unblock wifi</span>
+<span class="alt-text">
+&emsp;&emsp; ip addr show</span>
+&emsp;&emsp;                     Here you'll see the interface name e.g. "wlan0", an IPv4 address, "inet 192.168.1.10/24" and a broadcast address "brd 192.168.1.255", etc
+<span class="alt-text">
+&emsp;&emsp; ip link set <em>interface</em> up</span>
+&emsp;&emsp;                     replace interface w/ wireless network e.g. wlan0
+
+&emsp;&emsp;                     "Connman" and "NetworkManager" seem to interfere w/ each other.. So consider using "connmanctl" first to connect,
+&emsp;&emsp;                     and ignore the NetworkManager until the end, where you can presumably use connmand or nmcli (NetworkManager's controller).
+<span class="alt-text">
+&emsp;&emsp; connmanctl agent on</span>
+<span class="alt-text">
+&emsp;&emsp; connmanctl scan wifi</span>
+<span class="alt-text">
+&emsp;&emsp; connmanctl services</span>
+<span class="alt-text">
+&emsp;&emsp; connmanctl connect wifi_1234567890</span>
+<span class="alt-text">
+&emsp;&emsp; <b>connmanctl passphrase EXAMPLE</span>
+<span class="alt-text">
+&emsp;&emsp; connmanctl exit</span>
+
+<span class="alt-text">
+&emsp;&emsp; dmesg | grep firmware</span>
+&emsp;&emsp;                     checks for firmware being loaded
+<span class="alt-text">
+&emsp;&emsp; dmesg | grep iwlwifi</span>
+&emsp;&emsp;                     ```to identify any issues optional,
+&emsp;&emsp;                     see; Installing driver/firmware https://wiki.archlinux.org/title/Network_configuration/Wireless
+&emsp;&emsp;                     or Dynamic_Kernel_Module_Support```
+<span class="alt-text">
+&emsp;&emsp; ping 185.199.108.133 -c 4</span>
+
+&emsp;&emsp;                     *Basestrap+configuration*:
+<span class="alt-text">
+&emsp;&emsp; basestrap /mnt base base-devel runit elogind-runit linux linux-firmware vim</span>
+
+<span class="alt-text">
+&emsp;&emsp; fstabgen -U /mnt &gt;&gt; /mnt/etc/fstab</span>
+&emsp;&emsp;                     ```mkdir /mnt/etc``` if one does not exist
+<span class="alt-text">
+&emsp;&emsp; blkid ext4 /dev/sdb1 &gt;&gt; /etc/fstab</span>
+&emsp;&emsp;                     ```an example to append the UUID of a drive to your fstab```
+
+<span class="alt-text">
+&emsp;&emsp; artix-chroot /mnt</span>
+<span class="alt-text">
+&emsp;&emsp; bash</span>         You can use this shell or (`sh`) which can be exited at any time
+<span class="alt-text">
+&emsp;&emsp; export EDITOR=vim</span>
+&emsp;&emsp;                     ```After  artix-chroot, you may have to make sure all mountpoints are listed and correspond w/
+&emsp;&emsp;                     the  /etc/fstab   If the mountpoints/something else does not appear..```
+<span class="alt-text">
+&emsp;&emsp; cat /etc/fstab</span> 
+&emsp;&emsp;                     ```and if thats the case   blkid /dev/sda1   manually construct and append```
+<span class="alt-text">
+&emsp;&emsp; echo "UUID=<boot_partition_UUID>  /boot  vfat rw,relatime  0  2" | tee -a /etc/fstab</span>
+&emsp;&emsp;                     e.g.
+&emsp;&emsp;                     UUID=ABCDE-123-1234  /boot  vfat  rw,relatime  0  2
+<span class="alt-text">
+&emsp;&emsp; pacman -S grub efibootmgr</span>
+&emsp;&emsp;                     grub install and EFI system
+<span class="alt-text">
+&emsp;&emsp; grub-install --target=i386-pc /dev/sda</span>
+&emsp;&emsp;                     alternatively, `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub /dev/sda`
+&emsp;&emsp;                     if for some reason its not writing to a non-FAT filesystem, i have a list of steps <a class="reserve" href="uefi.html">here you can try</a>
+&emsp;&emsp;                     
+&emsp;&emsp;                     alternatively, linux has a feature called EFI boot stub, which lets it act as a <a class="reserve" href="efi.html">bootable EFI application</a> without the need for GRUB
+
+<span class="alt-text">
+&emsp;&emsp; grub-mkconfig -o /boot/grub/grub.cfg</span>
+
+&emsp;&emsp;                     *Language and region*:
+<span class="alt-text">
+&emsp;&emsp; vim /etc/pacman.d/mirrorlist</span>
+&emsp;&emsp;                     prioritize top,to bottom... ... e.g. Server = https://us-mirror.artixlinux.org/$repo/os/$arch
+<span class="alt-text">
+&emsp;&emsp; ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime</span>
+<span class="alt-text">
+&emsp;&emsp; ls -l /etc/localtime</span>
+&emsp;&emsp;                     list view, localtime
+<span class="alt-text">
+&emsp;&emsp; hwclock --systohc</span>
+&emsp;&emsp;                     system to computers time
+
+<span class="alt-text">
+&emsp;&emsp; vim /etc/locale.gen</span>
+&emsp;&emsp;                     list localizations language
+&emsp;&emsp; en_US.UTF-8 UTF-8 en_US ISO-8859-1 (save file)
+<span class="alt-text">
+&emsp;&emsp; locale-gen</span>   <em>for generating locals</em>
+<span class="alt-text">
+&emsp;&emsp; vim /etc/locale.conf</span>  new file
+&emsp;&emsp; LANG=en_US.UTF-8 (save file)
+
+<span class="alt-text">
+&emsp;&emsp; vim /etc/hostname</span>
+&emsp;&emsp; exComp               <em>your computer's name here</em>
+&emsp;&emsp; (save file)
+
+<span class="alt-text">
+&emsp;&emsp; vim /etc/hosts</span>
+&emsp;&emsp; ~
+&emsp;&emsp; ~
+&emsp;&emsp; 127.0.0.1 localhost
+&emsp;&emsp; ::1 localhost
+&emsp;&emsp; 127.0.0.1 exComp.localdomain exComp
+&emsp;&emsp;                     <em>exComp replace w/ your own ComputerName</em>
+&emsp;&emsp; (save file)
+
+&emsp;&emsp;                     *Warning*:
+&emsp;&emsp;                     There's a slight issue, that is connman (albeit present during root installation) is not present on the canonical
+&emsp;&emsp;                     system, which can be resolved if you download it prior to reboot. This is an issue because if you dont have connman,
+&emsp;&emsp;                     you have no way to get on the internet, and that includes accessing through ethernet. So download/or configure every-
+&emsp;&emsp;                     thing you need thats internet related before hand or youll have to start from the beginning again.
+<span class="alt-text">
+&emsp;&emsp; pacman -S connman connman-runit networkmanager networkmanager-runit</span>
+&emsp;&emsp;                     Download both Connman and NetworkManager to ensure you have a way to access internet. These are just the front ends
+&emsp;&emsp;                     for `iw` &amp; `wpa_supplicant`, which you dont have initially until you download those packages that require them.
+&emsp;&emsp;                     <em>some people find networkmanager gives them trouble, but for me its always connman and the others that dont work</em>
+
+&emsp;&emsp;                     *Reboot or shutdown*:
+&emsp;&emsp;                     <em>Dont forget to set a password for root before shutting down, or you will not be able to log in</em>.
+<span class="alt-text">
+&emsp;&emsp; passwd</span>       New password: EXAMPLE
+
+&emsp;&emsp;                     You should consider rebooting to make sure that you did everything up to this point right.
+&emsp;&emsp;                     It will eliminate some upcoming variables on the off chance you're troubleshooting a problem.
+<span class="alt-text">
+&emsp;&emsp; exit</span>         You can do this by exiting back into the initial root system, and running...
+<span class="alt-text">
+&emsp;&emsp; umount -R /mnt</span>  and then  <b>reboot</b>  or  <b>reboot -h now</b> (its recommended to un-mount for proper shutdown)
+
+&emsp;&emsp;                     *Lastly*: Booting into the canonical system, for Wifi and Ethernet
+<span class="alt-text">
+&emsp;&emsp; ln -s /etc/runit/sv</span>
+&emsp;&emsp;                     Lists auto-startups
+<span class="alt-text">
+&emsp;&emsp; ln -s /etc/runit/sv/NetworkManager/ /run/runit/service</span>
+&emsp;&emsp;                     normal start-up option
+<span class="alt-text">
+&emsp;&emsp; ln -s /etc/runit/sv/NetworkManager/ /etc/runit/runsvdir/current</span>
+&emsp;&emsp;                     auto-matic start-up
+<span class="alt-text">
+&emsp;&emsp; sv start NetworkManager</span>
+&emsp;&emsp;                     which is what you use to start the ethernet connection.
+<span class="alt-text">
+&emsp;&emsp; nmcli device wifi connect YourSSID password YourPassword</span>
+<span class="alt-text">
+&emsp;&emsp; nmcli connection show</span>
+<span class="alt-text">
+&emsp;&emsp; visudo</span>       uncomment `% sudo`
+<span class="alt-text">
+&emsp;&emsp; export EDITOR=vim</span>
+<span class="alt-text">
+&emsp;&emsp; useradd -m new_user</span>
+&emsp;&emsp;                     is imperative to make a regular user account and, <b>passwd new_user</b>.
+
+&emsp;&emsp; X Windowing system as well as some inclination of a gpu driver...
+&emsp;&emsp; Beyond that, i recommend  <b>dwm</b>  as its a decent window manager...
+
+&emsp;&emsp; If you run into any compromising situations...
+<span class="alt-text">
+&emsp;&emsp; jobs</span>          lists all the jobs still running, <b>fg</b> to resume a job
+<span class="alt-text">
+&emsp;&emsp; ps aux</span>        display information about running processes
+&emsp;&emsp; <b>&lt;Key&gt;</b>Alt+Shift+Q   default key to close all or (Alt+Shift+C individual window)
+&emsp;&emsp; <b>&lt;Key&gt;</b>Ctrl+C, ^C    control sequence which sends a SIGINT to all processes.
+&emsp;&emsp; <b>&lt;Key&gt;</b>Ctrl+D, Ctrl+Z (Ctrl+Alt+Del restarts the computer)
+&emsp;&emsp; <b>&lt;Key&gt;</b>Ctrl+Alt+Fn+2 opens a new TTY[Fn, wherein you can kill a session from outside those running instances.
+<span class="alt-text">
+&emsp;&emsp; killall -u user_name</span>
+&emsp;&emsp;                     to kill a user's process or session. You can learn more about <a class="reserve" href="sh.html">process termination and signals here.</a>
+
+&emsp;&emsp; Welcome to Linux!YAY!
+
+go <a class="reserve" href="index.html">back</a>
+
+</body></html>
